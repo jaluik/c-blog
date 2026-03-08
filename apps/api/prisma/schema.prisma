@@ -1,0 +1,93 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Article {
+  id              Int      @id @default(autoincrement())
+  title           String
+  slug            String   @unique
+  content         String
+  summary         String?
+  coverImage      String?
+  status          String   @default("draft")
+  publishedAt     DateTime?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  viewCount       Int      @default(0)
+  metaTitle       String?
+  metaDescription String?
+
+  categoryId      Int?
+  category        Category? @relation(fields: [categoryId], references: [id])
+  tags            ArticleTag[]
+  comments        Comment[]
+
+  @@index([slug])
+  @@index([status, publishedAt])
+  @@index([categoryId])
+  @@map("articles")
+}
+
+model Category {
+  id          Int       @id @default(autoincrement())
+  name        String
+  slug        String    @unique
+  description String?
+  sortOrder   Int       @default(0)
+  articles    Article[]
+
+  @@map("categories")
+}
+
+model Tag {
+  id       Int          @id @default(autoincrement())
+  name     String       @unique
+  slug     String       @unique
+  articles ArticleTag[]
+
+  @@map("tags")
+}
+
+model ArticleTag {
+  articleId Int
+  tagId     Int
+  article   Article @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  tag       Tag     @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([articleId, tagId])
+  @@map("article_tags")
+}
+
+model Comment {
+  id             Int      @id @default(autoincrement())
+  content        String
+  isApproved     Boolean  @default(false)
+  createdAt      DateTime @default(now())
+  githubUserId   String
+  githubUsername String
+  githubAvatar   String?
+
+  articleId Int
+  article   Article @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  parentId  Int?
+  parent    Comment?  @relation("CommentReplies", fields: [parentId], references: [id], onDelete: Cascade)
+  replies   Comment[] @relation("CommentReplies")
+
+  @@index([articleId, createdAt])
+  @@index([articleId, isApproved])
+  @@map("comments")
+}
+
+model Admin {
+  id           Int      @id @default(autoincrement())
+  username     String   @unique
+  passwordHash String
+  createdAt    DateTime @default(now())
+
+  @@map("admins")
+}
