@@ -4,7 +4,10 @@
       "Bash(git init:*)",
       "Bash(git:*)",
       "Bash(pnpm install:*)",
-      "Bash(pnpm:*)"
+      "Bash(pnpm:*)",
+      "Bash(docker ps:*)",
+      "Bash(npx tsx:*)",
+      "Bash(curl:*)"
     ]
   }
 }
