@@ -33,3 +33,6 @@ postgres_data/
 uploads/
 
 .turbo
+
+# Claude local settings
+.claude/
