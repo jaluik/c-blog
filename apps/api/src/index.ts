@@ -2,6 +2,8 @@ import 'dotenv/config';
 import fastify from 'fastify';
 import cors from '@fastify/cors';
 import { publicPostRoutes } from './routes/public/posts';
+import { categoryRoutes } from './routes/public/categories';
+import { tagRoutes } from './routes/public/tags';
 
 const app = fastify({ logger: true });
 
@@ -18,6 +20,8 @@ const start = async () => {
 
     // 公开路由
     await app.register(publicPostRoutes, { prefix: '/api' });
+    await app.register(categoryRoutes, { prefix: '/api' });
+    await app.register(tagRoutes, { prefix: '/api' });
 
     const port = Number(process.env.PORT) || 4000;
     await app.listen({ port, host: '0.0.0.0' });
