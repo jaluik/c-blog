@@ -7,7 +7,9 @@
       "Bash(pnpm:*)",
       "Bash(docker ps:*)",
       "Bash(npx tsx:*)",
-      "Bash(curl:*)"
+      "Bash(curl:*)",
+      "Bash(lsof:*)",
+      "Bash(pkill:*)"
     ]
   }
 }
