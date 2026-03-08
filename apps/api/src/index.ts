@@ -9,6 +9,8 @@ import { commentRoutes } from './routes/public/comments';
 import { adminAuthRoutes } from './routes/auth/admin';
 import authPlugin from './plugins/auth';
 import { adminPostRoutes } from './routes/admin/posts';
+import { adminCategoryRoutes } from './routes/admin/categories';
+import { adminTagRoutes } from './routes/admin/tags';
 
 const app = fastify({ logger: true });
 
@@ -43,6 +45,8 @@ const start = async () => {
 
     // 管理员路由
     await app.register(adminPostRoutes, { prefix: '/api' });
+    await app.register(adminCategoryRoutes, { prefix: '/api' });
+    await app.register(adminTagRoutes, { prefix: '/api' });
 
     const port = Number(process.env.PORT) || 4000;
     await app.listen({ port, host: '0.0.0.0' });
