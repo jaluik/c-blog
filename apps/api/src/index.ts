@@ -11,6 +11,7 @@ import authPlugin from './plugins/auth';
 import { adminPostRoutes } from './routes/admin/posts';
 import { adminCategoryRoutes } from './routes/admin/categories';
 import { adminTagRoutes } from './routes/admin/tags';
+import { adminCommentRoutes } from './routes/admin/comments';
 
 const app = fastify({ logger: true });
 
@@ -47,6 +48,7 @@ const start = async () => {
     await app.register(adminPostRoutes, { prefix: '/api' });
     await app.register(adminCategoryRoutes, { prefix: '/api' });
     await app.register(adminTagRoutes, { prefix: '/api' });
+    await app.register(adminCommentRoutes, { prefix: '/api' });
 
     const port = Number(process.env.PORT) || 4000;
     await app.listen({ port, host: '0.0.0.0' });
