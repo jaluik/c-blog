@@ -35,7 +35,7 @@ export async function githubAuthRoutes(app: FastifyInstance) {
         }),
       });
 
-      const tokenData = await tokenRes.json();
+      const tokenData = await tokenRes.json() as { error?: string; error_description?: string; access_token?: string };
 
       if (tokenData.error) {
         return reply.status(400).send({ error: tokenData.error_description });
@@ -49,7 +49,7 @@ export async function githubAuthRoutes(app: FastifyInstance) {
         },
       });
 
-      const user: GitHubUser = await userRes.json();
+      const user = await userRes.json() as GitHubUser;
 
       // 生成 JWT
       const token = app.jwt.sign({

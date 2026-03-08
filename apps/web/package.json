@@ -11,10 +11,14 @@
   "dependencies": {
     "@blog/shared-types": "workspace:*",
     "@blog/shared-utils": "workspace:*",
+    "highlight.js": "^11.11.1",
     "next": "14.1.0",
     "next-auth": "^4.24.5",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-markdown": "^10.1.0",
+    "rehype-highlight": "^7.0.2",
+    "remark-gfm": "^4.0.1",
     "swr": "^2.2.4"
   },
   "devDependencies": {
