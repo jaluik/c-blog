@@ -72,6 +72,29 @@ docker-compose up -d
 
 访问 http://localhost
 
+## 管理员账号
+
+### 初始账号
+
+| 字段 | 值 |
+|------|-----|
+| **用户名** | `admin` |
+| **密码** | `admin123` |
+
+**登录地址：** http://localhost:3001/login
+
+### 修改密码
+
+1. 生成新的密码哈希
+```bash
+cd apps/api
+npx tsx scripts/hash-password.ts 你的新密码
+```
+
+2. 复制生成的哈希值，更新 `apps/api/.env` 文件中的 `ADMIN_PASSWORD_HASH`
+
+3. 重启 API 服务使配置生效
+
 ## 目录结构
 
 ```
