@@ -9,7 +9,13 @@
       "Bash(npx tsx:*)",
       "Bash(curl:*)",
       "Bash(lsof:*)",
-      "Bash(pkill:*)"
+      "Bash(pkill:*)",
+      "Bash(npx prisma:*)",
+      "Bash(echo No process found:*)",
+      "Bash(echo:*)",
+      "Bash(npx tsc:*)",
+      "Bash(__NEW_LINE_cf86c649884d0cbb__ echo:*)",
+      "Bash(__NEW_LINE_b6ec51a38eefe846__ curl:*)"
     ]
   }
 }

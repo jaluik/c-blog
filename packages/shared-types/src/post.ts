@@ -1,3 +1,6 @@
+import type { Category } from './category';
+import type { Tag } from './tag';
+
 export interface Post {
   id: number;
   title: string;
@@ -13,6 +16,12 @@ export interface Post {
   viewCount: number;
   metaTitle?: string;
   metaDescription?: string;
+}
+
+export interface PostWithRelations extends Post {
+  category?: Category | null;
+  tags?: Tag[];
+  commentCount?: number;
 }
 
 export interface CreatePostInput {
