@@ -1,0 +1,11 @@
+node_modules
+.git
+.env
+.env.local
+.next
+dist
+build
+*.log
+.DS_Store
+uploads
+postgres_data
