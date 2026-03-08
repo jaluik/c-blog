@@ -10,6 +10,7 @@ import { categoryRoutes } from './routes/public/categories';
 import { tagRoutes } from './routes/public/tags';
 import { commentRoutes } from './routes/public/comments';
 import { adminAuthRoutes } from './routes/auth/admin';
+import { githubAuthRoutes } from './routes/auth/github';
 import authPlugin from './plugins/auth';
 import storagePlugin from './plugins/storage';
 import { adminPostRoutes } from './routes/admin/posts';
@@ -59,6 +60,7 @@ const start = async () => {
     await app.register(commentRoutes, { prefix: '/api' });
 
     // 认证路由
+    await app.register(githubAuthRoutes, { prefix: '/api' });
     await app.register(adminAuthRoutes, { prefix: '/api' });
 
     // 管理员路由

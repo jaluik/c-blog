@@ -35,15 +35,31 @@ export async function commentRoutes(app: FastifyInstance) {
     return { data: comments };
   });
 
-  // 发表评论（需要 JWT - 暂时留空，等 Task 11 完成）
-  app.post('/comments', async (request, reply) => {
+  // 发表评论（需要 JWT）
+  app.post('/comments', {
+    onRequest: [app.authenticate],
+  }, async (request, reply) => {
     const body = createCommentSchema.safeParse(request.body);
 
     if (!body.success) {
       return reply.status(400).send({ error: 'Invalid input', details: body.error });
     }
 
-    // TODO: 从 JWT 获取用户信息（Task 11 实现）
-    return reply.status(501).send({ error: 'Not implemented yet' });
+    const { articleId, parentId, content } = body.data;
+    const user = request.user;
+
+    const comment = await prisma.comment.create({
+      data: {
+        articleId,
+        parentId,
+        content,
+        githubUserId: String(user.userId),
+        githubUsername: user.username,
+        githubAvatar: (user as any).avatar,
+        isApproved: false,
+      },
+    });
+
+    return { data: comment, message: 'Comment submitted for moderation' };
   });
 }
