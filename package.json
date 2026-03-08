@@ -1,0 +1,20 @@
+{
+  "name": "blog-system",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "lint": "biome lint .",
+    "format": "biome format --write .",
+    "check": "biome check --write .",
+    "db:migrate": "pnpm --filter @blog/api db:migrate",
+    "db:generate": "pnpm --filter @blog/api db:generate",
+    "db:seed": "pnpm --filter @blog/api db:seed"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^1.5.3",
+    "turbo": "^1.12.0"
+  },
+  "packageManager": "pnpm@9.0.0"
+}
