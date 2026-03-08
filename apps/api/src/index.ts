@@ -1,10 +1,12 @@
 import 'dotenv/config';
 import fastify from 'fastify';
 import cors from '@fastify/cors';
+import jwt from '@fastify/jwt';
 import { publicPostRoutes } from './routes/public/posts';
 import { categoryRoutes } from './routes/public/categories';
 import { tagRoutes } from './routes/public/tags';
 import { commentRoutes } from './routes/public/comments';
+import { adminAuthRoutes } from './routes/auth/admin';
 
 const app = fastify({ logger: true });
 
@@ -16,6 +18,12 @@ const start = async () => {
       credentials: true,
     });
 
+    // 注册 JWT
+    await app.register(jwt, {
+      secret: process.env.JWT_SECRET!,
+      sign: { expiresIn: process.env.JWT_EXPIRES_IN || '7d' },
+    });
+
     // 健康检查
     app.get('/health', async () => ({ status: 'ok' }));
 
@@ -24,6 +32,9 @@ const start = async () => {
     await app.register(categoryRoutes, { prefix: '/api' });
     await app.register(tagRoutes, { prefix: '/api' });
     await app.register(commentRoutes, { prefix: '/api' });
+
+    // 认证路由
+    await app.register(adminAuthRoutes, { prefix: '/api' });
 
     const port = Number(process.env.PORT) || 4000;
     await app.listen({ port, host: '0.0.0.0' });
