@@ -36,3 +36,6 @@ uploads/
 
 # Claude local settings
 .claude/
+
+# Worktrees
+.worktrees/
