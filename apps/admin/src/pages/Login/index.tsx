@@ -1,10 +1,10 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { LoginForm, ProFormText } from '@ant-design/pro-components';
-import { message, Tabs, Checkbox, Form } from 'antd';
-import { UserOutlined, LockOutlined } from '@ant-design/icons';
-import { login } from '@/services/user';
-import type { LoginCredentials } from '@/services/user';
+import { login } from "@/services/user";
+import type { LoginCredentials } from "@/services/user";
+import { LockOutlined, UserOutlined } from "@ant-design/icons";
+import { LoginForm, ProFormText } from "@ant-design/pro-components";
+import { Checkbox, Form, Tabs, message } from "antd";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export function LoginPage() {
   const navigate = useNavigate();
@@ -14,7 +14,7 @@ export function LoginPage() {
 
   // Load saved username if remember me was checked
   useState(() => {
-    const savedUsername = localStorage.getItem('admin_remember_username');
+    const savedUsername = localStorage.getItem("admin_remember_username");
     if (savedUsername) {
       form.setFieldsValue({ username: savedUsername });
       setRememberMe(true);
@@ -27,20 +27,20 @@ export function LoginPage() {
       const data = await login(values);
 
       // Store token and username
-      localStorage.setItem('admin_token', data.token);
-      localStorage.setItem('admin_username', data.username);
+      localStorage.setItem("admin_token", data.token);
+      localStorage.setItem("admin_username", data.username);
 
       // Handle remember me
       if (rememberMe) {
-        localStorage.setItem('admin_remember_username', values.username);
+        localStorage.setItem("admin_remember_username", values.username);
       } else {
-        localStorage.removeItem('admin_remember_username');
+        localStorage.removeItem("admin_remember_username");
       }
 
-      message.success('登录成功');
-      navigate('/');
+      message.success("登录成功");
+      navigate("/");
     } catch (error: any) {
-      message.error(error.response?.data?.error || '登录失败');
+      message.error(error.response?.data?.error || "登录失败");
     } finally {
       setLoading(false);
     }
@@ -49,11 +49,11 @@ export function LoginPage() {
   return (
     <div
       style={{
-        backgroundColor: '#f0f2f5',
-        height: '100vh',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
+        backgroundColor: "#f0f2f5",
+        height: "100vh",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
       }}
     >
       <LoginForm
@@ -65,7 +65,7 @@ export function LoginPage() {
         loading={loading}
         submitter={{
           searchConfig: {
-            submitText: '登录',
+            submitText: "登录",
           },
         }}
       >
@@ -73,8 +73,8 @@ export function LoginPage() {
           centered
           items={[
             {
-              key: 'account',
-              label: '账号密码登录',
+              key: "account",
+              label: "账号密码登录",
             },
           ]}
         />
@@ -82,14 +82,14 @@ export function LoginPage() {
         <ProFormText
           name="username"
           fieldProps={{
-            size: 'large',
+            size: "large",
             prefix: <UserOutlined />,
           }}
           placeholder="用户名"
           rules={[
             {
               required: true,
-              message: '请输入用户名',
+              message: "请输入用户名",
             },
           ]}
         />
@@ -97,14 +97,14 @@ export function LoginPage() {
         <ProFormText.Password
           name="password"
           fieldProps={{
-            size: 'large',
+            size: "large",
             prefix: <LockOutlined />,
           }}
           placeholder="密码"
           rules={[
             {
               required: true,
-              message: '请输入密码',
+              message: "请输入密码",
             },
           ]}
         />
@@ -114,10 +114,7 @@ export function LoginPage() {
             marginBottom: 24,
           }}
         >
-          <Checkbox
-            checked={rememberMe}
-            onChange={(e) => setRememberMe(e.target.checked)}
-          >
+          <Checkbox checked={rememberMe} onChange={(e) => setRememberMe(e.target.checked)}>
             记住我
           </Checkbox>
         </div>

@@ -1,20 +1,20 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import Link from 'next/link';
-import { motion } from 'framer-motion';
-import { ArrowDown, Code2, Terminal, Cpu } from 'lucide-react';
+import { motion } from "framer-motion";
+import { ArrowDown, Code2, Cpu, Terminal } from "lucide-react";
+import Link from "next/link";
+import { useEffect, useState } from "react";
 
 const typingTexts = [
-  '探索代码的无限可能',
-  '记录技术的点滴成长',
-  '分享编程的乐趣',
-  '在虚空中书写未来',
+  "探索代码的无限可能",
+  "记录技术的点滴成长",
+  "分享编程的乐趣",
+  "在虚空中书写未来",
 ];
 
 export function Hero() {
   const [currentTextIndex, setCurrentTextIndex] = useState(0);
-  const [displayText, setDisplayText] = useState('');
+  const [displayText, setDisplayText] = useState("");
   const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
@@ -37,16 +37,16 @@ export function Hero() {
           }
         }
       },
-      isDeleting ? 50 : 100
+      isDeleting ? 50 : 100,
     );
 
     return () => clearTimeout(timeout);
   }, [displayText, isDeleting, currentTextIndex]);
 
   const scrollToContent = () => {
-    const contentSection = document.getElementById('content');
+    const contentSection = document.getElementById("content");
     if (contentSection) {
-      contentSection.scrollIntoView({ behavior: 'smooth' });
+      contentSection.scrollIntoView({ behavior: "smooth" });
     }
   };
 
@@ -61,7 +61,7 @@ export function Hero() {
         <motion.div
           className="absolute top-1/4 left-[10%] text-neon-cyan/20"
           animate={{ y: [0, -20, 0], rotate: [0, 5, 0] }}
-          transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
+          transition={{ duration: 6, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut" }}
         >
           <Code2 className="w-16 h-16" />
         </motion.div>
@@ -69,7 +69,7 @@ export function Hero() {
         <motion.div
           className="absolute top-1/3 right-[15%] text-neon-purple/20"
           animate={{ y: [0, 20, 0], rotate: [0, -5, 0] }}
-          transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
+          transition={{ duration: 8, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut" }}
         >
           <Terminal className="w-20 h-20" />
         </motion.div>
@@ -77,7 +77,7 @@ export function Hero() {
         <motion.div
           className="absolute bottom-1/4 left-[20%] text-neon-pink/20"
           animate={{ y: [0, -15, 0], rotate: [0, 10, 0] }}
-          transition={{ duration: 7, repeat: Infinity, ease: 'easeInOut' }}
+          transition={{ duration: 7, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut" }}
         >
           <Cpu className="w-14 h-14" />
         </motion.div>
@@ -105,7 +105,7 @@ export function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.1 }}
         >
-          <span className="text-white">虚空</span>
+          <span className="text-text-primary">虚空</span>
           <span className="text-gradient">代码</span>
         </motion.h1>
 
@@ -116,16 +116,15 @@ export function Hero() {
           animate={{ opacity: 1 }}
           transition={{ duration: 0.6, delay: 0.2 }}
         >
-          <p className="font-mono text-xl sm:text-2xl md:text-3xl text-gray-300">
-            <span className="text-neon-cyan">$</span>{' '}
-            {displayText}
+          <p className="font-mono text-xl sm:text-2xl md:text-3xl text-text-secondary">
+            <span className="text-neon-cyan">$</span> {displayText}
             <span className="animate-pulse text-neon-cyan">|</span>
           </p>
         </motion.div>
 
         {/* Description */}
         <motion.p
-          className="text-gray-400 text-lg sm:text-xl max-w-2xl mx-auto mb-12"
+          className="text-text-secondary text-lg sm:text-xl max-w-2xl mx-auto mb-12"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.3 }}
@@ -159,7 +158,7 @@ export function Hero() {
 
           <Link
             href="/categories"
-            className="px-8 py-4 rounded-xl border border-white/20 text-white font-medium hover:border-neon-cyan/50 hover:bg-white/5 transition-all duration-200"
+            className="px-8 py-4 rounded-xl border border-border-subtle text-text-primary font-medium hover:border-neon-cyan/50 hover:bg-white/5 transition-all duration-200"
           >
             浏览分类
           </Link>
@@ -173,15 +172,15 @@ export function Hero() {
           transition={{ duration: 0.6, delay: 0.5 }}
         >
           {[
-            { label: '文章', value: '50+' },
-            { label: '分类', value: '10+' },
-            { label: '标签', value: '30+' },
+            { label: "文章", value: "50+" },
+            { label: "分类", value: "10+" },
+            { label: "标签", value: "30+" },
           ].map((stat, index) => (
             <div key={stat.label} className="text-center">
               <div className="font-display text-2xl sm:text-3xl font-bold text-gradient mb-1">
                 {stat.value}
               </div>
-              <div className="text-gray-500 text-sm">{stat.label}</div>
+              <div className="text-text-tertiary text-sm">{stat.label}</div>
             </div>
           ))}
         </motion.div>
@@ -196,9 +195,9 @@ export function Hero() {
       >
         <motion.button
           onClick={scrollToContent}
-          className="text-gray-500 hover:text-neon-cyan transition-colors"
+          className="text-text-tertiary hover:text-neon-cyan transition-colors"
           animate={{ y: [0, 8, 0] }}
-          transition={{ duration: 2, repeat: Infinity }}
+          transition={{ duration: 2, repeat: Number.POSITIVE_INFINITY }}
         >
           <ArrowDown className="w-6 h-6" />
         </motion.button>

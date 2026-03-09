@@ -1,11 +1,11 @@
-import { useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { ProTable, type ActionType, type ProColumns } from '@ant-design/pro-components';
-import { Button, Space, Tag, Popconfirm, message, Image } from 'antd';
-import { PlusOutlined, EditOutlined, DeleteOutlined, EyeOutlined } from '@ant-design/icons';
-import type { PostWithRelations, Tag as TagType } from '@blog/shared-types';
-import { getArticles, deleteArticle } from '@/services/article';
-import type { ArticleListParams } from '@/services/article';
+import { deleteArticle, getArticles } from "@/services/article";
+import type { ArticleListParams } from "@/services/article";
+import { DeleteOutlined, EditOutlined, EyeOutlined, PlusOutlined } from "@ant-design/icons";
+import { type ActionType, type ProColumns, ProTable } from "@ant-design/pro-components";
+import type { PostWithRelations, Tag as TagType } from "@blog/shared-types";
+import { Button, Image, Popconfirm, Space, Tag, message } from "antd";
+import { useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export function ArticleList() {
   const navigate = useNavigate();
@@ -15,23 +15,23 @@ export function ArticleList() {
   const handleDelete = async (id: number) => {
     try {
       await deleteArticle(id);
-      message.success('删除成功');
+      message.success("删除成功");
       actionRef.current?.reload();
     } catch (error) {
-      message.error('删除失败');
+      message.error("删除失败");
     }
   };
 
   const columns: ProColumns<PostWithRelations>[] = [
     {
-      title: 'ID',
-      dataIndex: 'id',
+      title: "ID",
+      dataIndex: "id",
       width: 60,
       search: false,
     },
     {
-      title: '封面',
-      dataIndex: 'coverImage',
+      title: "封面",
+      dataIndex: "coverImage",
       width: 80,
       search: false,
       render: (_, record) =>
@@ -41,87 +41,85 @@ export function ArticleList() {
             alt={record.title}
             width={60}
             height={40}
-            style={{ objectFit: 'cover' }}
+            style={{ objectFit: "cover" }}
             preview={false}
           />
         ) : (
-          <div style={{ width: 60, height: 40, backgroundColor: '#f0f0f0' }} />
+          <div style={{ width: 60, height: 40, backgroundColor: "#f0f0f0" }} />
         ),
     },
     {
-      title: '标题',
-      dataIndex: 'title',
+      title: "标题",
+      dataIndex: "title",
       ellipsis: true,
       formItemProps: {
         rules: [{ required: true }],
       },
     },
     {
-      title: 'Slug',
-      dataIndex: 'slug',
+      title: "Slug",
+      dataIndex: "slug",
       ellipsis: true,
       search: false,
     },
     {
-      title: '分类',
-      dataIndex: 'category',
+      title: "分类",
+      dataIndex: "category",
       width: 120,
       search: false,
-      render: (_, record) => record.category?.name || '-',
+      render: (_, record) => record.category?.name || "-",
     },
     {
-      title: '标签',
-      dataIndex: 'tags',
+      title: "标签",
+      dataIndex: "tags",
       width: 150,
       search: false,
       render: (_, record) => (
         <Space size="small" wrap>
           {record.tags?.map((tag: TagType) => (
-            <Tag key={tag.id}>
-              {tag.name}
-            </Tag>
+            <Tag key={tag.id}>{tag.name}</Tag>
           ))}
         </Space>
       ),
     },
     {
-      title: '状态',
-      dataIndex: 'status',
+      title: "状态",
+      dataIndex: "status",
       width: 100,
       valueEnum: {
-        draft: { text: '草稿', status: 'Default' },
-        published: { text: '已发布', status: 'Success' },
+        draft: { text: "草稿", status: "Default" },
+        published: { text: "已发布", status: "Success" },
       },
     },
     {
-      title: '浏览量',
-      dataIndex: 'viewCount',
+      title: "浏览量",
+      dataIndex: "viewCount",
       width: 80,
       search: false,
       sorter: true,
     },
     {
-      title: '发布时间',
-      dataIndex: 'publishedAt',
+      title: "发布时间",
+      dataIndex: "publishedAt",
       width: 180,
       search: false,
-      valueType: 'dateTime',
+      valueType: "dateTime",
       sorter: true,
-      render: (_, record) => record.publishedAt || '-',
+      render: (_, record) => record.publishedAt || "-",
     },
     {
-      title: '创建时间',
-      dataIndex: 'createdAt',
+      title: "创建时间",
+      dataIndex: "createdAt",
       width: 180,
       search: false,
-      valueType: 'dateTime',
+      valueType: "dateTime",
       sorter: true,
     },
     {
-      title: '操作',
-      key: 'action',
+      title: "操作",
+      key: "action",
       width: 180,
-      fixed: 'right',
+      fixed: "right",
       search: false,
       render: (_, record) => (
         <Space size="small">
@@ -129,7 +127,7 @@ export function ArticleList() {
             type="link"
             size="small"
             icon={<EyeOutlined />}
-            onClick={() => window.open(`/${record.slug}`, '_blank')}
+            onClick={() => window.open(`/${record.slug}`, "_blank")}
           >
             查看
           </Button>
@@ -170,7 +168,7 @@ export function ArticleList() {
           key="add"
           type="primary"
           icon={<PlusOutlined />}
-          onClick={() => navigate('/articles/create')}
+          onClick={() => navigate("/articles/create")}
         >
           新建文章
         </Button>,

@@ -1,4 +1,4 @@
-import { Variants } from 'framer-motion';
+import type { Variants } from "framer-motion";
 
 // Fade in animation
 export const fadeIn: Variants = {
@@ -111,10 +111,10 @@ export const pageTransition: Variants = {
 // Card hover glow
 export const cardHoverGlow = {
   rest: {
-    boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+    boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)",
   },
   hover: {
-    boxShadow: '0 0 30px rgba(0, 240, 255, 0.15)',
+    boxShadow: "0 0 30px rgba(0, 240, 255, 0.15)",
     transition: { duration: 0.3 },
   },
 };

@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X } from 'lucide-react';
+import { AnimatePresence, motion } from "framer-motion";
+import { Menu, X } from "lucide-react";
+import { useEffect, useState } from "react";
 
 interface TocItem {
   id: string;
@@ -12,15 +12,15 @@ interface TocItem {
 
 export function TableOfContents() {
   const [headings, setHeadings] = useState<TocItem[]>([]);
-  const [activeId, setActiveId] = useState<string>('');
+  const [activeId, setActiveId] = useState<string>("");
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     // Extract headings from the article content
-    const article = document.querySelector('article');
+    const article = document.querySelector("article");
     if (!article) return;
 
-    const headingElements = article.querySelectorAll('h2, h3, h4');
+    const headingElements = article.querySelectorAll("h2, h3, h4");
     const items: TocItem[] = [];
 
     headingElements.forEach((heading, index) => {
@@ -31,8 +31,8 @@ export function TableOfContents() {
 
       items.push({
         id,
-        text: heading.textContent || '',
-        level: parseInt(heading.tagName[1]),
+        text: heading.textContent || "",
+        level: Number.parseInt(heading.tagName[1]),
       });
     });
 
@@ -48,9 +48,9 @@ export function TableOfContents() {
         });
       },
       {
-        rootMargin: '-100px 0px -60% 0px',
+        rootMargin: "-100px 0px -60% 0px",
         threshold: 0,
-      }
+      },
     );
 
     headingElements.forEach((heading) => observer.observe(heading));
@@ -67,7 +67,7 @@ export function TableOfContents() {
 
       window.scrollTo({
         top: offsetPosition,
-        behavior: 'smooth',
+        behavior: "smooth",
       });
     }
     setIsOpen(false);
@@ -80,7 +80,7 @@ export function TableOfContents() {
       {/* Desktop TOC - Sidebar */}
       <aside className="hidden xl:block fixed right-8 top-32 w-64 max-h-[calc(100vh-8rem)] overflow-y-auto">
         <div className="glass rounded-xl p-4">
-          <h3 className="font-display font-semibold text-white mb-4 flex items-center gap-2">
+          <h3 className="font-display font-semibold text-text-primary mb-4 flex items-center gap-2">
             <span className="w-1 h-4 bg-gradient-to-b from-neon-cyan to-neon-purple rounded-full" />
             目录
           </h3>
@@ -90,11 +90,11 @@ export function TableOfContents() {
                 key={heading.id}
                 onClick={() => scrollToHeading(heading.id)}
                 className={`w-full text-left text-sm transition-all duration-200 rounded-lg px-3 py-2 ${
-                  heading.level === 2 ? 'pl-3' : heading.level === 3 ? 'pl-6' : 'pl-9'
+                  heading.level === 2 ? "pl-3" : heading.level === 3 ? "pl-6" : "pl-9"
                 } ${
                   activeId === heading.id
-                    ? 'text-neon-cyan bg-neon-cyan/10'
-                    : 'text-gray-400 hover:text-white hover:bg-white/5'
+                    ? "text-neon-cyan bg-neon-cyan/10"
+                    : "text-text-secondary hover:text-text-primary hover:bg-text-primary/5"
                 }`}
               >
                 {heading.text}
@@ -122,18 +122,18 @@ export function TableOfContents() {
               exit={{ opacity: 0, scale: 0.9, y: 20 }}
               className="fixed bottom-24 right-4 left-4 z-50 glass rounded-xl p-4 max-h-[60vh] overflow-y-auto"
             >
-              <h3 className="font-display font-semibold text-white mb-4">目录</h3>
+              <h3 className="font-display font-semibold text-text-primary mb-4">目录</h3>
               <nav className="space-y-1">
                 {headings.map((heading) => (
                   <button
                     key={heading.id}
                     onClick={() => scrollToHeading(heading.id)}
                     className={`w-full text-left text-sm transition-all duration-200 rounded-lg px-3 py-2 ${
-                      heading.level === 2 ? 'pl-3' : heading.level === 3 ? 'pl-6' : 'pl-9'
+                      heading.level === 2 ? "pl-3" : heading.level === 3 ? "pl-6" : "pl-9"
                     } ${
                       activeId === heading.id
-                        ? 'text-neon-cyan bg-neon-cyan/10'
-                        : 'text-gray-400 hover:text-white hover:bg-white/5'
+                        ? "text-neon-cyan bg-neon-cyan/10"
+                        : "text-text-secondary hover:text-text-primary hover:bg-text-primary/5"
                     }`}
                   >
                     {heading.text}

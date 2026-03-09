@@ -1,13 +1,13 @@
-import type { GetStaticProps } from 'next';
-import { motion } from 'framer-motion';
-import Link from 'next/link';
-import { ArrowRight } from 'lucide-react';
-import type { PostWithRelations, Category, Tag, PaginatedResponse } from '@blog/shared-types';
-import { Hero } from '@/components/Hero';
-import { PostCard } from '@/components/PostCard';
-import { CategoryList } from '@/components/CategoryList';
-import { TagCloud } from '@/components/TagCloud';
-import { api } from '@/lib/api';
+import { CategoryList } from "@/components/CategoryList";
+import { Hero } from "@/components/Hero";
+import { PostCard } from "@/components/PostCard";
+import { TagCloud } from "@/components/TagCloud";
+import { api } from "@/lib/api";
+import type { Category, PaginatedResponse, PostWithRelations, Tag } from "@blog/shared-types";
+import { motion } from "framer-motion";
+import { ArrowRight } from "lucide-react";
+import type { GetStaticProps } from "next";
+import Link from "next/link";
 
 interface HomeProps {
   posts: PostWithRelations[];
@@ -24,7 +24,7 @@ interface HomeProps {
 
 export const getStaticProps: GetStaticProps<HomeProps> = async () => {
   try {
-    const API_URL = process.env.API_URL || 'http://localhost:4000';
+    const API_URL = process.env.API_URL || "http://localhost:4000";
 
     // Fetch posts, categories, and tags in parallel
     const [postsRes, categoriesRes, tagsRes] = await Promise.all([
@@ -51,7 +51,7 @@ export const getStaticProps: GetStaticProps<HomeProps> = async () => {
       revalidate: 60,
     };
   } catch (error) {
-    console.error('Error fetching data:', error);
+    console.error("Error fetching data:", error);
     return {
       props: {
         posts: [],
@@ -93,7 +93,7 @@ export default function HomePage({ posts, featuredPosts, categories, tags, meta 
                   <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full glass text-sm text-neon-cyan mb-4">
                     精选文章
                   </span>
-                  <h2 className="font-display text-3xl sm:text-4xl font-bold text-white">
+                  <h2 className="font-display text-3xl sm:text-4xl font-bold text-text-primary">
                     推荐阅读
                   </h2>
                 </div>
@@ -103,9 +103,7 @@ export default function HomePage({ posts, featuredPosts, categories, tags, meta 
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 {/* Main Featured Post */}
                 <div className="lg:col-span-1">
-                  {featuredPosts[0] && (
-                    <PostCard post={featuredPosts[0]} featured index={0} />
-                  )}
+                  {featuredPosts[0] && <PostCard post={featuredPosts[0]} featured index={0} />}
                 </div>
 
                 {/* Secondary Featured Posts */}
@@ -136,14 +134,14 @@ export default function HomePage({ posts, featuredPosts, categories, tags, meta 
                 <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full glass text-sm text-neon-purple mb-4">
                   最新发布
                 </span>
-                <h2 className="font-display text-3xl sm:text-4xl font-bold text-white">
+                <h2 className="font-display text-3xl sm:text-4xl font-bold text-text-primary">
                   最新文章
                 </h2>
               </div>
 
               <Link
                 href="/posts"
-                className="group flex items-center gap-2 text-gray-400 hover:text-neon-cyan transition-colors"
+                className="group flex items-center gap-2 text-text-secondary hover:text-neon-cyan transition-colors"
               >
                 查看全部
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
@@ -167,7 +165,7 @@ export default function HomePage({ posts, featuredPosts, categories, tags, meta 
               >
                 <Link
                   href="/posts"
-                  className="inline-flex items-center gap-2 px-8 py-4 rounded-xl glass border border-white/20 text-white font-medium hover:border-neon-cyan/50 hover:bg-white/5 transition-all duration-200"
+                  className="inline-flex items-center gap-2 px-8 py-4 rounded-xl glass border border-border-subtle text-text-primary font-medium hover:border-neon-cyan/50 hover:bg-white/5 transition-all duration-200"
                 >
                   浏览更多文章
                   <ArrowRight className="w-4 h-4" />
@@ -194,10 +192,10 @@ export default function HomePage({ posts, featuredPosts, categories, tags, meta 
               <div className="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-96 bg-neon-cyan/20 rounded-full blur-3xl" />
 
               <div className="relative z-10">
-                <h2 className="font-display text-3xl sm:text-4xl font-bold text-white mb-4">
+                <h2 className="font-display text-3xl sm:text-4xl font-bold text-text-primary mb-4">
                   准备好开始探索了吗？
                 </h2>
-                <p className="text-gray-400 max-w-2xl mx-auto mb-8">
+                <p className="text-text-secondary max-w-2xl mx-auto mb-8">
                   浏览更多技术文章，或者了解更多关于这个博客的信息。
                 </p>
                 <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -209,7 +207,7 @@ export default function HomePage({ posts, featuredPosts, categories, tags, meta 
                   </Link>
                   <Link
                     href="/about"
-                    className="w-full sm:w-auto px-8 py-4 rounded-xl glass border border-white/20 text-white font-medium hover:border-neon-cyan/50 transition-colors"
+                    className="w-full sm:w-auto px-8 py-4 rounded-xl glass border border-border-subtle text-text-primary font-medium hover:border-neon-cyan/50 transition-colors"
                   >
                     关于博客
                   </Link>

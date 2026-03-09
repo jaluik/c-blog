@@ -1,25 +1,31 @@
-import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { ProForm, ProFormText, ProFormTextArea, ProFormSelect, ProFormRadio } from '@ant-design/pro-components';
-import { Button, Card, message, Space, Upload, Image } from 'antd';
-import { UploadOutlined, ArrowLeftOutlined } from '@ant-design/icons';
-import MDEditor from '@uiw/react-md-editor';
-import type { CreatePostInput } from '@blog/shared-types';
-import { createArticle } from '@/services/article';
-import { getCategories } from '@/services/category';
-import { getTags } from '@/services/tag';
-import { uploadImage } from '@/services/user';
-import type { CategoryWithCount } from '@/services/category';
-import type { TagWithCount } from '@/services/tag';
+import { createArticle } from "@/services/article";
+import { getCategories } from "@/services/category";
+import type { CategoryWithCount } from "@/services/category";
+import { getTags } from "@/services/tag";
+import type { TagWithCount } from "@/services/tag";
+import { uploadImage } from "@/services/user";
+import { ArrowLeftOutlined, UploadOutlined } from "@ant-design/icons";
+import {
+  ProForm,
+  ProFormRadio,
+  ProFormSelect,
+  ProFormText,
+  ProFormTextArea,
+} from "@ant-design/pro-components";
+import type { CreatePostInput } from "@blog/shared-types";
+import MDEditor from "@uiw/react-md-editor";
+import { Button, Card, Image, Space, Upload, message } from "antd";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export function ArticleCreate() {
   const navigate = useNavigate();
   const [form] = ProForm.useForm();
   const [, setLoading] = useState(false);
-  const [content, setContent] = useState('');
+  const [content, setContent] = useState("");
   const [categories, setCategories] = useState<CategoryWithCount[]>([]);
   const [tags, setTags] = useState<TagWithCount[]>([]);
-  const [coverImage, setCoverImage] = useState<string>('');
+  const [coverImage, setCoverImage] = useState<string>("");
 
   useEffect(() => {
     fetchCategoriesAndTags();
@@ -27,14 +33,11 @@ export function ArticleCreate() {
 
   const fetchCategoriesAndTags = async () => {
     try {
-      const [categoryData, tagData] = await Promise.all([
-        getCategories(),
-        getTags(),
-      ]);
+      const [categoryData, tagData] = await Promise.all([getCategories(), getTags()]);
       setCategories(categoryData);
       setTags(tagData);
     } catch (error) {
-      message.error('获取分类或标签失败');
+      message.error("获取分类或标签失败");
     }
   };
 
@@ -55,10 +58,10 @@ export function ArticleCreate() {
       };
 
       await createArticle(data);
-      message.success('创建成功');
-      navigate('/articles');
+      message.success("创建成功");
+      navigate("/articles");
     } catch (error: any) {
-      message.error(error.response?.data?.error || '创建失败');
+      message.error(error.response?.data?.error || "创建失败");
     } finally {
       setLoading(false);
     }
@@ -68,16 +71,16 @@ export function ArticleCreate() {
     try {
       const url = await uploadImage(file);
       setCoverImage(url);
-      message.success('上传成功');
+      message.success("上传成功");
     } catch (error) {
-      message.error('上传失败');
+      message.error("上传失败");
     }
   };
 
   return (
     <>
       <div style={{ marginBottom: 16 }}>
-        <Button icon={<ArrowLeftOutlined />} onClick={() => navigate('/articles')}>
+        <Button icon={<ArrowLeftOutlined />} onClick={() => navigate("/articles")}>
           返回列表
         </Button>
       </div>
@@ -89,7 +92,7 @@ export function ArticleCreate() {
           render: (_, dom) => (
             <Space>
               {dom}
-              <Button onClick={() => navigate('/articles')}>取消</Button>
+              <Button onClick={() => navigate("/articles")}>取消</Button>
             </Space>
           ),
         }}
@@ -98,14 +101,14 @@ export function ArticleCreate() {
           <ProFormText
             name="title"
             label="文章标题"
-            rules={[{ required: true, message: '请输入文章标题' }]}
+            rules={[{ required: true, message: "请输入文章标题" }]}
             placeholder="请输入文章标题"
           />
 
           <ProFormText
             name="slug"
             label="Slug"
-            rules={[{ required: true, message: '请输入Slug' }]}
+            rules={[{ required: true, message: "请输入Slug" }]}
             placeholder="请输入Slug，用于URL"
             help="将用于生成文章URL，如: my-first-post"
           />
@@ -136,8 +139,8 @@ export function ArticleCreate() {
             label="发布状态"
             initialValue="draft"
             options={[
-              { label: '草稿', value: 'draft' },
-              { label: '立即发布', value: 'published' },
+              { label: "草稿", value: "draft" },
+              { label: "立即发布", value: "published" },
             ]}
           />
 
@@ -155,18 +158,20 @@ export function ArticleCreate() {
                 <Button icon={<UploadOutlined />}>上传封面</Button>
               </Upload>
               {coverImage && (
-                <Image src={coverImage} alt="封面" width={100} height={60} style={{ objectFit: 'cover' }} />
+                <Image
+                  src={coverImage}
+                  alt="封面"
+                  width={100}
+                  height={60}
+                  style={{ objectFit: "cover" }}
+                />
               )}
             </Space>
           </div>
         </Card>
 
         <Card title="SEO 设置" style={{ marginBottom: 24 }}>
-          <ProFormText
-            name="metaTitle"
-            label="Meta 标题"
-            placeholder="自定义 SEO 标题（可选）"
-          />
+          <ProFormText name="metaTitle" label="Meta 标题" placeholder="自定义 SEO 标题（可选）" />
 
           <ProFormTextArea
             name="metaDescription"
@@ -186,11 +191,7 @@ export function ArticleCreate() {
 
         <Card title="文章内容">
           <div data-color-mode="light">
-            <MDEditor
-              value={content}
-              onChange={(value) => setContent(value || '')}
-              height={500}
-            />
+            <MDEditor value={content} onChange={(value) => setContent(value || "")} height={500} />
           </div>
         </Card>
       </ProForm>

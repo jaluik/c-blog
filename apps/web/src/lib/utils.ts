@@ -10,7 +10,7 @@ export function formatRelativeTime(date: Date | string): string {
   const diffInMonths = Math.floor(diffInDays / 30);
   const diffInYears = Math.floor(diffInDays / 365);
 
-  if (diffInSecs < 60) return '刚刚';
+  if (diffInSecs < 60) return "刚刚";
   if (diffInMins < 60) return `${diffInMins} 分钟前`;
   if (diffInHours < 24) return `${diffInHours} 小时前`;
   if (diffInDays < 30) return `${diffInDays} 天前`;
@@ -27,23 +27,23 @@ export function calculateReadingTime(content: string, wordsPerMinute = 200): num
 // Truncate text
 export function truncateText(text: string, maxLength: number): string {
   if (text.length <= maxLength) return text;
-  return text.slice(0, maxLength) + '...';
+  return text.slice(0, maxLength) + "...";
 }
 
 // Generate slug from text
 export function generateSlug(text: string): string {
   return text
     .toLowerCase()
-    .replace(/[^\w\s-]/g, '')
-    .replace(/\s+/g, '-')
-    .replace(/-+/g, '-')
+    .replace(/[^\w\s-]/g, "")
+    .replace(/\s+/g, "-")
+    .replace(/-+/g, "-")
     .trim();
 }
 
 // Debounce function
 export function debounce<T extends (...args: unknown[]) => unknown>(
   func: T,
-  wait: number
+  wait: number,
 ): (...args: Parameters<T>) => void {
   let timeout: NodeJS.Timeout | null = null;
 
@@ -56,7 +56,7 @@ export function debounce<T extends (...args: unknown[]) => unknown>(
 // Throttle function
 export function throttle<T extends (...args: unknown[]) => unknown>(
   func: T,
-  limit: number
+  limit: number,
 ): (...args: Parameters<T>) => void {
   let inThrottle = false;
 
@@ -99,7 +99,7 @@ export function scrollToElement(elementId: string, offset = 80): void {
 
     window.scrollTo({
       top: offsetPosition,
-      behavior: 'smooth',
+      behavior: "smooth",
     });
   }
 }
@@ -107,16 +107,16 @@ export function scrollToElement(elementId: string, offset = 80): void {
 // Get initials from name
 export function getInitials(name: string): string {
   return name
-    .split(' ')
+    .split(" ")
     .map((n) => n[0])
-    .join('')
+    .join("")
     .toUpperCase()
     .slice(0, 2);
 }
 
 // Format number with commas
 export function formatNumber(num: number): string {
-  return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
 // Random array shuffle

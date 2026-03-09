@@ -1,40 +1,40 @@
-import type { GetStaticProps } from 'next';
-import Link from 'next/link';
-import { motion } from 'framer-motion';
+import type { Category } from "@blog/shared-types";
+import { motion } from "framer-motion";
 import {
-  FolderOpen,
-  Code2,
-  Database,
-  Globe,
-  Smartphone,
+  ArrowRight,
   Cloud,
+  Code2,
   Cpu,
+  Database,
+  FolderOpen,
+  Globe,
   Layers,
   Settings,
-  ArrowRight,
+  Smartphone,
   Sparkles,
-} from 'lucide-react';
-import type { Category } from '@blog/shared-types';
+} from "lucide-react";
+import type { GetStaticProps } from "next";
+import Link from "next/link";
 
 interface CategoriesPageProps {
   categories: Category[];
 }
 
 const iconMap: Record<string, React.ElementType> = {
-  'frontend': Code2,
-  'backend': Database,
-  'fullstack': Layers,
-  'mobile': Smartphone,
-  'cloud': Cloud,
-  'devops': Settings,
-  'ai': Cpu,
-  'web': Globe,
-  'default': FolderOpen,
+  frontend: Code2,
+  backend: Database,
+  fullstack: Layers,
+  mobile: Smartphone,
+  cloud: Cloud,
+  devops: Settings,
+  ai: Cpu,
+  web: Globe,
+  default: FolderOpen,
 };
 
 export const getStaticProps: GetStaticProps<CategoriesPageProps> = async () => {
   try {
-    const API_URL = process.env.API_URL || 'http://localhost:4000';
+    const API_URL = process.env.API_URL || "http://localhost:4000";
     const res = await fetch(`${API_URL}/api/categories`);
     const data = await res.json();
 
@@ -57,7 +57,7 @@ export const getStaticProps: GetStaticProps<CategoriesPageProps> = async () => {
 export default function CategoriesPage({ categories }: CategoriesPageProps) {
   const getIcon = (slug: string) => {
     const key = Object.keys(iconMap).find((k) => slug.includes(k));
-    return iconMap[key || 'default'];
+    return iconMap[key || "default"];
   };
 
   const containerVariants = {
@@ -93,10 +93,10 @@ export default function CategoriesPage({ categories }: CategoriesPageProps) {
             <Sparkles className="w-4 h-4" />
             内容分类
           </span>
-          <h1 className="font-display text-4xl sm:text-5xl font-bold text-white mb-4">
+          <h1 className="font-display text-4xl sm:text-5xl font-bold text-text-primary mb-4">
             文章分类
           </h1>
-          <p className="text-gray-400 max-w-2xl mx-auto">
+          <p className="text-text-secondary max-w-2xl mx-auto">
             浏览不同分类的文章，找到你感兴趣的技术话题
           </p>
         </motion.div>
@@ -122,23 +122,23 @@ export default function CategoriesPage({ categories }: CategoriesPageProps) {
                         </div>
 
                         {/* Article Count */}
-                        <span className="px-3 py-1 rounded-full bg-white/5 text-gray-400 text-sm">
+                        <span className="px-3 py-1 rounded-full bg-text-primary/5 text-text-secondary text-sm">
                           {category.articleCount || 0} 篇
                         </span>
                       </div>
 
                       {/* Name */}
-                      <h2 className="font-display text-xl font-bold text-white mb-2 group-hover:text-neon-cyan transition-colors">
+                      <h2 className="font-display text-xl font-bold text-text-primary mb-2 group-hover:text-neon-cyan transition-colors">
                         {category.name}
                       </h2>
 
                       {/* Description */}
                       {category.description ? (
-                        <p className="text-gray-400 text-sm line-clamp-2">
+                        <p className="text-text-secondary text-sm line-clamp-2">
                           {category.description}
                         </p>
                       ) : (
-                        <p className="text-gray-500 text-sm">
+                        <p className="text-text-tertiary text-sm">
                           浏览 {category.name} 相关的文章
                         </p>
                       )}
@@ -156,8 +156,8 @@ export default function CategoriesPage({ categories }: CategoriesPageProps) {
           </motion.div>
         ) : (
           <div className="text-center py-20">
-            <FolderOpen className="w-16 h-16 text-gray-600 mx-auto mb-4" />
-            <p className="text-gray-400">暂无分类</p>
+            <FolderOpen className="w-16 h-16 text-text-muted mx-auto mb-4" />
+            <p className="text-text-secondary">暂无分类</p>
           </div>
         )}
       </div>

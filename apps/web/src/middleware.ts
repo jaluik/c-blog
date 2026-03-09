@@ -1,25 +1,25 @@
-import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
+import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
 
 // Paths that should not be rewritten
 const reservedPaths = [
-  'api',
-  'posts',
-  'categories',
-  'tags',
-  'about',
-  '_next',
-  'static',
-  'favicon.ico',
-  'robots.txt',
-  'sitemap.xml',
+  "api",
+  "posts",
+  "categories",
+  "tags",
+  "about",
+  "_next",
+  "static",
+  "favicon.ico",
+  "robots.txt",
+  "sitemap.xml",
 ];
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // Only process root-level paths
-  const segments = pathname.split('/').filter(Boolean);
+  const segments = pathname.split("/").filter(Boolean);
   if (segments.length !== 1) {
     return NextResponse.next();
   }
@@ -32,7 +32,7 @@ export function middleware(request: NextRequest) {
   }
 
   // Skip files with extensions
-  if (slug.includes('.')) {
+  if (slug.includes(".")) {
     return NextResponse.next();
   }
 
@@ -43,7 +43,5 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: [
-    '/((?!api/|_next/|static/|favicon.ico|robots.txt|sitemap.xml).*)',
-  ],
+  matcher: ["/((?!api/|_next/|static/|favicon.ico|robots.txt|sitemap.xml).*)"],
 };

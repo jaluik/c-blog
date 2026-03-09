@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { useEffect, useRef } from 'react';
-import { motion } from 'framer-motion';
+import { motion } from "framer-motion";
+import { useEffect, useRef } from "react";
 
 interface Particle {
   x: number;
@@ -19,7 +19,7 @@ export function AnimatedBackground() {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
     let animationId: number;
@@ -92,14 +92,14 @@ export function AnimatedBackground() {
     createParticles();
     drawParticles();
 
-    window.addEventListener('resize', () => {
+    window.addEventListener("resize", () => {
       resize();
       createParticles();
     });
 
     return () => {
       cancelAnimationFrame(animationId);
-      window.removeEventListener('resize', resize);
+      window.removeEventListener("resize", resize);
     };
   }, []);
 
@@ -118,8 +118,8 @@ export function AnimatedBackground() {
       <motion.div
         className="absolute w-[600px] h-[600px] rounded-full"
         style={{
-          background: 'radial-gradient(circle, rgba(0, 240, 255, 0.15) 0%, transparent 70%)',
-          filter: 'blur(60px)',
+          background: "radial-gradient(circle, rgba(0, 240, 255, 0.15) 0%, transparent 70%)",
+          filter: "blur(60px)",
         }}
         animate={{
           x: [0, 100, 0],
@@ -127,17 +127,17 @@ export function AnimatedBackground() {
         }}
         transition={{
           duration: 20,
-          repeat: Infinity,
-          ease: 'easeInOut',
+          repeat: Number.POSITIVE_INFINITY,
+          ease: "easeInOut",
         }}
-        initial={{ x: '10%', y: '20%' }}
+        initial={{ x: "10%", y: "20%" }}
       />
 
       <motion.div
         className="absolute w-[500px] h-[500px] rounded-full"
         style={{
-          background: 'radial-gradient(circle, rgba(184, 41, 221, 0.1) 0%, transparent 70%)',
-          filter: 'blur(60px)',
+          background: "radial-gradient(circle, rgba(184, 41, 221, 0.1) 0%, transparent 70%)",
+          filter: "blur(60px)",
         }}
         animate={{
           x: [0, -80, 0],
@@ -145,17 +145,17 @@ export function AnimatedBackground() {
         }}
         transition={{
           duration: 25,
-          repeat: Infinity,
-          ease: 'easeInOut',
+          repeat: Number.POSITIVE_INFINITY,
+          ease: "easeInOut",
         }}
-        initial={{ right: '10%', top: '30%' }}
+        initial={{ right: "10%", top: "30%" }}
       />
 
       <motion.div
         className="absolute w-[400px] h-[400px] rounded-full"
         style={{
-          background: 'radial-gradient(circle, rgba(255, 0, 128, 0.08) 0%, transparent 70%)',
-          filter: 'blur(60px)',
+          background: "radial-gradient(circle, rgba(255, 0, 128, 0.08) 0%, transparent 70%)",
+          filter: "blur(60px)",
         }}
         animate={{
           x: [0, 60, 0],
@@ -163,18 +163,14 @@ export function AnimatedBackground() {
         }}
         transition={{
           duration: 18,
-          repeat: Infinity,
-          ease: 'easeInOut',
+          repeat: Number.POSITIVE_INFINITY,
+          ease: "easeInOut",
         }}
-        initial={{ left: '30%', bottom: '20%' }}
+        initial={{ left: "30%", bottom: "20%" }}
       />
 
       {/* Particle canvas */}
-      <canvas
-        ref={canvasRef}
-        className="absolute inset-0"
-        style={{ opacity: 0.6 }}
-      />
+      <canvas ref={canvasRef} className="absolute inset-0" style={{ opacity: 0.6 }} />
 
       {/* Top gradient fade */}
       <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-bg-primary to-transparent" />

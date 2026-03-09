@@ -1,7 +1,7 @@
-import { ReactNode } from 'react';
-import { Navbar } from './Navbar';
-import { Footer } from './Footer';
-import { AnimatedBackground } from './AnimatedBackground';
+import type { ReactNode } from "react";
+import { AnimatedBackground } from "./AnimatedBackground";
+import { Footer } from "./Footer";
+import { Navbar } from "./Navbar";
 
 interface LayoutProps {
   children: ReactNode;
@@ -18,9 +18,7 @@ export function Layout({ children, showFooter = true }: LayoutProps) {
       <Navbar />
 
       {/* Main Content */}
-      <main className="relative z-10">
-        {children}
-      </main>
+      <main className="relative z-10">{children}</main>
 
       {/* Footer */}
       {showFooter && <Footer />}

@@ -1,9 +1,9 @@
-import type { GetStaticProps, GetStaticPaths } from 'next';
-import Link from 'next/link';
-import { motion } from 'framer-motion';
-import { ArrowLeft, Hash, Tag as TagIcon } from 'lucide-react';
-import type { Tag, PostWithRelations, PaginatedResponse } from '@blog/shared-types';
-import { PostCard } from '@/components/PostCard';
+import { PostCard } from "@/components/PostCard";
+import type { PaginatedResponse, PostWithRelations, Tag } from "@blog/shared-types";
+import { motion } from "framer-motion";
+import { ArrowLeft, Hash, Tag as TagIcon } from "lucide-react";
+import type { GetStaticPaths, GetStaticProps } from "next";
+import Link from "next/link";
 
 interface TagPageProps {
   tag: Tag | null;
@@ -18,7 +18,7 @@ interface TagPageProps {
 
 export const getStaticPaths: GetStaticPaths = async () => {
   try {
-    const API_URL = process.env.API_URL || 'http://localhost:4000';
+    const API_URL = process.env.API_URL || "http://localhost:4000";
     const res = await fetch(`${API_URL}/api/tags`);
     const data = await res.json();
     const tags: Tag[] = data.data || [];
@@ -29,19 +29,19 @@ export const getStaticPaths: GetStaticPaths = async () => {
 
     return {
       paths,
-      fallback: 'blocking',
+      fallback: "blocking",
     };
   } catch {
     return {
       paths: [],
-      fallback: 'blocking',
+      fallback: "blocking",
     };
   }
 };
 
 export const getStaticProps: GetStaticProps<TagPageProps> = async ({ params }) => {
   try {
-    const API_URL = process.env.API_URL || 'http://localhost:4000';
+    const API_URL = process.env.API_URL || "http://localhost:4000";
 
     // Get all tags to find the current one
     const tagsRes = await fetch(`${API_URL}/api/tags`);
@@ -53,9 +53,7 @@ export const getStaticProps: GetStaticProps<TagPageProps> = async ({ params }) =
     }
 
     // Get posts for this tag
-    const postsRes = await fetch(
-      `${API_URL}/api/posts?page=1&pageSize=20&tag=${params?.slug}`
-    );
+    const postsRes = await fetch(`${API_URL}/api/posts?page=1&pageSize=20&tag=${params?.slug}`);
     const postsData: PaginatedResponse<PostWithRelations> = await postsRes.json();
 
     return {
@@ -88,7 +86,7 @@ export default function TagPage({ tag, posts, meta }: TagPageProps) {
     return (
       <div className="min-h-screen pt-24 pb-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-2xl text-white mb-4">标签不存在</h1>
+          <h1 className="text-2xl text-text-primary mb-4">标签不存在</h1>
           <Link href="/tags" className="text-neon-cyan hover:underline">
             返回标签列表
           </Link>
@@ -108,7 +106,7 @@ export default function TagPage({ tag, posts, meta }: TagPageProps) {
         >
           <Link
             href="/tags"
-            className="inline-flex items-center gap-2 text-gray-400 hover:text-neon-cyan transition-colors mb-8 group"
+            className="inline-flex items-center gap-2 text-text-secondary hover:text-neon-cyan transition-colors mb-8 group"
           >
             <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
             返回标签
@@ -127,12 +125,10 @@ export default function TagPage({ tag, posts, meta }: TagPageProps) {
               <Hash className="w-8 h-8 text-neon-pink" />
             </div>
             <div>
-              <h1 className="font-display text-3xl sm:text-4xl font-bold text-white">
+              <h1 className="font-display text-3xl sm:text-4xl font-bold text-text-primary">
                 #{tag.name}
               </h1>
-              <p className="text-gray-400 mt-1">
-                共 {meta.total} 篇文章
-              </p>
+              <p className="text-text-secondary mt-1">共 {meta.total} 篇文章</p>
             </div>
           </div>
         </motion.div>
@@ -155,15 +151,15 @@ export default function TagPage({ tag, posts, meta }: TagPageProps) {
             animate={{ opacity: 1 }}
             className="text-center py-20"
           >
-            <TagIcon className="w-16 h-16 text-gray-600 mx-auto mb-4" />
-            <p className="text-gray-400">该标签下暂无文章</p>
+            <TagIcon className="w-16 h-16 text-text-muted mx-auto mb-4" />
+            <p className="text-text-secondary">该标签下暂无文章</p>
           </motion.div>
         )}
 
         {/* Pagination */}
         {meta.totalPages > 1 && (
           <div className="mt-12 text-center">
-            <p className="text-gray-500">
+            <p className="text-text-tertiary">
               第 {meta.page} 页，共 {meta.totalPages} 页
             </p>
           </div>

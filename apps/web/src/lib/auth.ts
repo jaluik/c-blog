@@ -1,5 +1,5 @@
-import NextAuth from 'next-auth';
-import GitHubProvider from 'next-auth/providers/github';
+import NextAuth from "next-auth";
+import GitHubProvider from "next-auth/providers/github";
 
 interface GitHubProfile {
   id: number;
@@ -27,8 +27,8 @@ export const {
         const githubProfile = profile as unknown as GitHubProfile;
         // 向后端换取 JWT
         const res = await fetch(`${process.env.API_URL}/api/auth/github`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ code: account.access_token }),
         });
 

@@ -1,55 +1,55 @@
-import { useNavigate, useLocation, Link, Outlet } from 'react-router-dom';
-import { ProLayout as AntProLayout } from '@ant-design/pro-components';
-import { Avatar, Dropdown, Button, message } from 'antd';
+import { getCurrentUser, logout } from "@/services/user";
 import {
-  FileTextOutlined,
   CommentOutlined,
-  UserOutlined,
-  LogoutOutlined,
   DashboardOutlined,
-  TagsOutlined,
+  FileTextOutlined,
   FolderOutlined,
-} from '@ant-design/icons';
-import { logout, getCurrentUser } from '@/services/user';
+  LogoutOutlined,
+  TagsOutlined,
+  UserOutlined,
+} from "@ant-design/icons";
+import { ProLayout as AntProLayout } from "@ant-design/pro-components";
+import { Avatar, Button, Dropdown, message } from "antd";
+import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 
 const menuItems = [
   {
-    path: '/',
-    name: 'Dashboard',
+    path: "/",
+    name: "Dashboard",
     icon: <DashboardOutlined />,
   },
   {
-    path: '/articles',
-    name: '文章管理',
+    path: "/articles",
+    name: "文章管理",
     icon: <FileTextOutlined />,
   },
   {
-    path: '/categories',
-    name: '分类管理',
+    path: "/categories",
+    name: "分类管理",
     icon: <FolderOutlined />,
   },
   {
-    path: '/tags',
-    name: '标签管理',
+    path: "/tags",
+    name: "标签管理",
     icon: <TagsOutlined />,
   },
   {
-    path: '/comments',
-    name: '评论管理',
+    path: "/comments",
+    name: "评论管理",
     icon: <CommentOutlined />,
   },
   {
-    path: '/user',
-    name: '用户管理',
+    path: "/user",
+    name: "用户管理",
     icon: <UserOutlined />,
     children: [
       {
-        path: '/user/profile',
-        name: '个人信息',
+        path: "/user/profile",
+        name: "个人信息",
       },
       {
-        path: '/user/change-password',
-        name: '修改密码',
+        path: "/user/change-password",
+        name: "修改密码",
       },
     ],
   },
@@ -63,30 +63,30 @@ export function ProLayout() {
 
   const handleLogout = () => {
     logout();
-    messageApi.success('退出登录成功');
+    messageApi.success("退出登录成功");
     setTimeout(() => {
-      navigate('/login');
+      navigate("/login");
     }, 500);
   };
 
   const userMenuItems = [
     {
-      key: 'profile',
+      key: "profile",
       icon: <UserOutlined />,
       label: <Link to="/user/profile">个人信息</Link>,
     },
     {
-      key: 'password',
+      key: "password",
       icon: <UserOutlined />,
       label: <Link to="/user/change-password">修改密码</Link>,
     },
     {
-      type: 'divider' as const,
+      type: "divider" as const,
     },
     {
-      key: 'logout',
+      key: "logout",
       icon: <LogoutOutlined />,
-      label: '退出登录',
+      label: "退出登录",
       onClick: handleLogout,
     },
   ];
@@ -101,21 +101,19 @@ export function ProLayout() {
           pathname: location.pathname,
         }}
         route={{
-          path: '/',
+          path: "/",
           routes: menuItems,
         }}
-        menuItemRender={(item, dom) => (
-          <Link to={item.path || '/'}>{dom}</Link>
-        )}
+        menuItemRender={(item, dom) => <Link to={item.path || "/"}>{dom}</Link>}
         rightContentRender={() => (
           <Dropdown menu={{ items: userMenuItems }} placement="bottomRight">
             <Button type="text">
               <Avatar size="small" icon={<UserOutlined />} style={{ marginRight: 8 }} />
-              <span>{username || '管理员'}</span>
+              <span>{username || "管理员"}</span>
             </Button>
           </Dropdown>
         )}
-        onMenuHeaderClick={() => navigate('/')}
+        onMenuHeaderClick={() => navigate("/")}
         layout="mix"
         fixSiderbar
         fixedHeader

@@ -1,5 +1,5 @@
-import type { Comment, PaginatedResponse, PaginationParams } from '@blog/shared-types';
-import { request, requestPaginated } from './api';
+import type { Comment, PaginatedResponse, PaginationParams } from "@blog/shared-types";
+import { request, requestPaginated } from "./api";
 
 interface CommentWithArticle extends Comment {
   article?: {
@@ -14,10 +14,12 @@ export interface CommentListParams extends PaginationParams {
   isApproved?: boolean;
 }
 
-export async function getComments(params: CommentListParams = {}): Promise<PaginatedResponse<CommentWithArticle>> {
+export async function getComments(
+  params: CommentListParams = {},
+): Promise<PaginatedResponse<CommentWithArticle>> {
   return requestPaginated<CommentWithArticle>({
-    method: 'GET',
-    url: '/admin/comments',
+    method: "GET",
+    url: "/admin/comments",
     params: {
       page: params.page || 1,
       pageSize: params.pageSize || 20,
@@ -29,7 +31,7 @@ export async function getComments(params: CommentListParams = {}): Promise<Pagin
 
 export async function approveComment(id: number, isApproved: boolean): Promise<Comment> {
   return request<Comment>({
-    method: 'PATCH',
+    method: "PATCH",
     url: `/admin/comments/${id}`,
     data: { isApproved },
   });
@@ -37,7 +39,7 @@ export async function approveComment(id: number, isApproved: boolean): Promise<C
 
 export async function deleteComment(id: number): Promise<void> {
   await request<void>({
-    method: 'DELETE',
+    method: "DELETE",
     url: `/admin/comments/${id}`,
   });
 }

@@ -1,4 +1,4 @@
-import { request, apiClient } from './api';
+import { apiClient, request } from "./api";
 
 export interface LoginCredentials {
   username: string;
@@ -17,8 +17,8 @@ export interface ChangePasswordInput {
 
 export async function login(credentials: LoginCredentials): Promise<LoginResponse> {
   const response = await request<LoginResponse>({
-    method: 'POST',
-    url: '/auth/admin/login',
+    method: "POST",
+    url: "/auth/admin/login",
     data: credentials,
   });
   return response;
@@ -26,19 +26,19 @@ export async function login(credentials: LoginCredentials): Promise<LoginRespons
 
 export async function changePassword(data: ChangePasswordInput): Promise<void> {
   await request<void>({
-    method: 'POST',
-    url: '/admin/change-password',
+    method: "POST",
+    url: "/admin/change-password",
     data,
   });
 }
 
 export async function uploadImage(file: File): Promise<string> {
   const formData = new FormData();
-  formData.append('file', file);
+  formData.append("file", file);
 
-  const response = await apiClient.post('/admin/upload', formData, {
+  const response = await apiClient.post("/admin/upload", formData, {
     headers: {
-      'Content-Type': 'multipart/form-data',
+      "Content-Type": "multipart/form-data",
     },
   });
 
@@ -47,12 +47,12 @@ export async function uploadImage(file: File): Promise<string> {
 
 export function getCurrentUser(): { username: string | null; token: string | null } {
   return {
-    username: localStorage.getItem('admin_username'),
-    token: localStorage.getItem('admin_token'),
+    username: localStorage.getItem("admin_username"),
+    token: localStorage.getItem("admin_token"),
   };
 }
 
 export function logout(): void {
-  localStorage.removeItem('admin_token');
-  localStorage.removeItem('admin_username');
+  localStorage.removeItem("admin_token");
+  localStorage.removeItem("admin_username");
 }

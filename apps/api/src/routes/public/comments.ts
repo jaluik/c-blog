@@ -1,6 +1,6 @@
-import type { FastifyInstance } from 'fastify';
-import { prisma } from '../../prisma';
-import { z } from 'zod';
+import type { FastifyInstance } from "fastify";
+import { z } from "zod";
+import { prisma } from "../../prisma";
 
 const createCommentSchema = z.object({
   articleId: z.number(),
@@ -10,11 +10,14 @@ const createCommentSchema = z.object({
 
 export async function commentRoutes(app: FastifyInstance) {
   // 获取文章评论（只返回已审核的）
-  app.get('/comments', async (request, reply) => {
-    const { articleId, articleSlug } = request.query as { articleId?: string; articleSlug?: string };
+  app.get("/comments", async (request, reply) => {
+    const { articleId, articleSlug } = request.query as {
+      articleId?: string;
+      articleSlug?: string;
+    };
 
     if (!articleId && !articleSlug) {
-      return reply.status(400).send({ error: 'articleId or articleSlug is required' });
+      return reply.status(400).send({ error: "articleId or articleSlug is required" });
     }
 
     let actualArticleId: number;
@@ -29,7 +32,7 @@ export async function commentRoutes(app: FastifyInstance) {
       });
 
       if (!article) {
-        return reply.status(404).send({ error: 'Article not found' });
+        return reply.status(404).send({ error: "Article not found" });
       }
 
       actualArticleId = article.id;
@@ -41,11 +44,11 @@ export async function commentRoutes(app: FastifyInstance) {
         isApproved: true,
         parentId: null, // 只获取顶级评论
       },
-      orderBy: { createdAt: 'desc' },
+      orderBy: { createdAt: "desc" },
       include: {
         replies: {
           where: { isApproved: true },
-          orderBy: { createdAt: 'asc' },
+          orderBy: { createdAt: "asc" },
         },
       },
     });
@@ -54,30 +57,34 @@ export async function commentRoutes(app: FastifyInstance) {
   });
 
   // 发表评论（需要 JWT）
-  app.post('/comments', {
-    onRequest: [app.authenticate],
-  }, async (request, reply) => {
-    const body = createCommentSchema.safeParse(request.body);
+  app.post(
+    "/comments",
+    {
+      onRequest: [app.authenticate],
+    },
+    async (request, reply) => {
+      const body = createCommentSchema.safeParse(request.body);
 
-    if (!body.success) {
-      return reply.status(400).send({ error: 'Invalid input', details: body.error });
-    }
+      if (!body.success) {
+        return reply.status(400).send({ error: "Invalid input", details: body.error });
+      }
 
-    const { articleId, parentId, content } = body.data;
-    const user = request.user;
+      const { articleId, parentId, content } = body.data;
+      const user = request.user;
 
-    const comment = await prisma.comment.create({
-      data: {
-        articleId,
-        parentId,
-        content,
-        githubUserId: String(user.userId),
-        githubUsername: user.username,
-        githubAvatar: (user as any).avatar,
-        isApproved: false,
-      },
-    });
+      const comment = await prisma.comment.create({
+        data: {
+          articleId,
+          parentId,
+          content,
+          githubUserId: String(user.userId),
+          githubUsername: user.username,
+          githubAvatar: (user as any).avatar,
+          isApproved: false,
+        },
+      });
 
-    return { data: comment, message: 'Comment submitted for moderation' };
-  });
+      return { data: comment, message: "Comment submitted for moderation" };
+    },
+  );
 }

@@ -1,11 +1,11 @@
-'use client';
+"use client";
 
-import { motion } from 'framer-motion';
-import Link from 'next/link';
-import { ArrowRight, Calendar } from 'lucide-react';
-import { format } from 'date-fns';
-import { zhCN } from 'date-fns/locale';
-import type { PostWithRelations } from '@blog/shared-types';
+import type { PostWithRelations } from "@blog/shared-types";
+import { format } from "date-fns";
+import { zhCN } from "date-fns/locale";
+import { motion } from "framer-motion";
+import { ArrowRight, Calendar } from "lucide-react";
+import Link from "next/link";
 
 interface RelatedPostsProps {
   posts: PostWithRelations[];
@@ -14,9 +14,7 @@ interface RelatedPostsProps {
 
 export function RelatedPosts({ posts, currentPostId }: RelatedPostsProps) {
   // Filter out current post and limit to 3
-  const relatedPosts = posts
-    .filter((post) => post.id !== currentPostId)
-    .slice(0, 3);
+  const relatedPosts = posts.filter((post) => post.id !== currentPostId).slice(0, 3);
 
   if (relatedPosts.length === 0) return null;
 
@@ -42,9 +40,7 @@ export function RelatedPosts({ posts, currentPostId }: RelatedPostsProps) {
   return (
     <section className="mt-16">
       <div className="flex items-center justify-between mb-8">
-        <h3 className="font-display text-2xl font-bold text-white">
-          相关文章
-        </h3>
+        <h3 className="font-display text-2xl font-bold text-text-primary">相关文章</h3>
         <Link
           href="/"
           className="group flex items-center gap-1 text-sm text-neon-cyan hover:underline"
@@ -67,27 +63,23 @@ export function RelatedPosts({ posts, currentPostId }: RelatedPostsProps) {
               <div className="group p-5 rounded-xl glass card-hover h-full">
                 {/* Category */}
                 {post.category && (
-                  <span className="text-xs text-neon-cyan font-medium">
-                    {post.category.name}
-                  </span>
+                  <span className="text-xs text-neon-cyan font-medium">{post.category.name}</span>
                 )}
 
                 {/* Title */}
-                <h4 className="font-display font-semibold text-white mt-2 mb-3 group-hover:text-neon-cyan transition-colors line-clamp-2">
+                <h4 className="font-display font-semibold text-text-primary mt-2 mb-3 group-hover:text-neon-cyan transition-colors line-clamp-2">
                   {post.title}
                 </h4>
 
                 {/* Summary */}
                 {post.summary && (
-                  <p className="text-gray-400 text-sm line-clamp-2 mb-4">
-                    {post.summary}
-                  </p>
+                  <p className="text-text-secondary text-sm line-clamp-2 mb-4">{post.summary}</p>
                 )}
 
                 {/* Date */}
-                <div className="flex items-center gap-1 text-xs text-gray-500">
+                <div className="flex items-center gap-1 text-xs text-text-tertiary">
                   <Calendar className="w-3 h-3" />
-                  {format(new Date(post.publishedAt || post.createdAt), 'yyyy-MM-dd', {
+                  {format(new Date(post.publishedAt || post.createdAt), "yyyy-MM-dd", {
                     locale: zhCN,
                   })}
                 </div>

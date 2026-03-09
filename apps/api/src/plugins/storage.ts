@@ -1,9 +1,9 @@
-import fs from 'fs/promises';
-import path from 'path';
-import type { FastifyInstance } from 'fastify';
-import fp from 'fastify-plugin';
+import path from "path";
+import type { FastifyInstance } from "fastify";
+import fp from "fastify-plugin";
+import fs from "fs/promises";
 
-const UPLOAD_DIR = process.env.UPLOAD_DIR || './uploads';
+const UPLOAD_DIR = process.env.UPLOAD_DIR || "./uploads";
 
 async function ensureDir(dir: string) {
   try {
@@ -13,12 +13,12 @@ async function ensureDir(dir: string) {
   }
 }
 
-export default fp(async function (app: FastifyInstance) {
+export default fp(async (app: FastifyInstance) => {
   await ensureDir(UPLOAD_DIR);
 
-  app.decorate('uploadFile', async (data: Buffer, filename: string): Promise<string> => {
+  app.decorate("uploadFile", async (data: Buffer, filename: string): Promise<string> => {
     const date = new Date();
-    const subDir = `${date.getFullYear()}/${String(date.getMonth() + 1).padStart(2, '0')}`;
+    const subDir = `${date.getFullYear()}/${String(date.getMonth() + 1).padStart(2, "0")}`;
     const dir = path.join(UPLOAD_DIR, subDir);
     await ensureDir(dir);
 
@@ -31,7 +31,7 @@ export default fp(async function (app: FastifyInstance) {
   });
 });
 
-declare module 'fastify' {
+declare module "fastify" {
   interface FastifyInstance {
     uploadFile: (data: Buffer, filename: string) => Promise<string>;
   }

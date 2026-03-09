@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import { useEffect, useRef, useState, useCallback } from 'react';
+import { useCallback, useEffect, useRef, useState } from "react";
 
 interface UseScrollAnimationOptions {
   threshold?: number;
@@ -9,9 +9,9 @@ interface UseScrollAnimationOptions {
 }
 
 export function useScrollAnimation<T extends HTMLElement = HTMLDivElement>(
-  options: UseScrollAnimationOptions = {}
+  options: UseScrollAnimationOptions = {},
 ) {
-  const { threshold = 0.1, rootMargin = '0px', triggerOnce = true } = options;
+  const { threshold = 0.1, rootMargin = "0px", triggerOnce = true } = options;
   const ref = useRef<T>(null);
   const [isVisible, setIsVisible] = useState(false);
   const [hasAnimated, setHasAnimated] = useState(false);
@@ -39,7 +39,7 @@ export function useScrollAnimation<T extends HTMLElement = HTMLDivElement>(
       {
         threshold,
         rootMargin,
-      }
+      },
     );
 
     observer.observe(element);
@@ -53,7 +53,7 @@ export function useScrollAnimation<T extends HTMLElement = HTMLDivElement>(
 }
 
 // Hook for parallax effect
-export function useParallax(speed: number = 0.5) {
+export function useParallax(speed = 0.5) {
   const ref = useRef<HTMLDivElement>(null);
   const [offset, setOffset] = useState(0);
 
@@ -66,11 +66,11 @@ export function useParallax(speed: number = 0.5) {
       setOffset(scrolled * speed);
     };
 
-    window.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener("scroll", handleScroll, { passive: true });
     handleScroll(); // Initial call
 
     return () => {
-      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener("scroll", handleScroll);
     };
   }, [speed]);
 
@@ -89,10 +89,10 @@ export function useScrollProgress() {
       setProgress(Math.min(Math.max(scrollPercent, 0), 1));
     };
 
-    window.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener("scroll", handleScroll, { passive: true });
 
     return () => {
-      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener("scroll", handleScroll);
     };
   }, []);
 
@@ -101,7 +101,7 @@ export function useScrollProgress() {
 
 // Hook for scroll direction
 export function useScrollDirection() {
-  const [scrollDirection, setScrollDirection] = useState<'up' | 'down' | null>(null);
+  const [scrollDirection, setScrollDirection] = useState<"up" | "down" | null>(null);
   const [scrollY, setScrollY] = useState(0);
   const lastScrollY = useRef(0);
 
@@ -110,19 +110,19 @@ export function useScrollDirection() {
       const currentScrollY = window.scrollY;
 
       if (currentScrollY > lastScrollY.current) {
-        setScrollDirection('down');
+        setScrollDirection("down");
       } else if (currentScrollY < lastScrollY.current) {
-        setScrollDirection('up');
+        setScrollDirection("up");
       }
 
       setScrollY(currentScrollY);
       lastScrollY.current = currentScrollY;
     };
 
-    window.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener("scroll", handleScroll, { passive: true });
 
     return () => {
-      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener("scroll", handleScroll);
     };
   }, []);
 
@@ -130,7 +130,7 @@ export function useScrollDirection() {
 }
 
 // Hook for scroll to top visibility
-export function useShowScrollToTop(threshold: number = 300) {
+export function useShowScrollToTop(threshold = 300) {
   const [show, setShow] = useState(false);
 
   useEffect(() => {
@@ -138,18 +138,18 @@ export function useShowScrollToTop(threshold: number = 300) {
       setShow(window.scrollY > threshold);
     };
 
-    window.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener("scroll", handleScroll, { passive: true });
     handleScroll();
 
     return () => {
-      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener("scroll", handleScroll);
     };
   }, [threshold]);
 
   const scrollToTop = useCallback(() => {
     window.scrollTo({
       top: 0,
-      behavior: 'smooth',
+      behavior: "smooth",
     });
   }, []);
 

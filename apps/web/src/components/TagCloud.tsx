@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import { motion } from 'framer-motion';
-import Link from 'next/link';
-import { Sparkles, Hash } from 'lucide-react';
-import type { Tag } from '@blog/shared-types';
+import type { Tag } from "@blog/shared-types";
+import { motion } from "framer-motion";
+import { Hash, Sparkles } from "lucide-react";
+import Link from "next/link";
 
 interface TagCloudProps {
   tags: Tag[];
@@ -17,11 +17,11 @@ export function TagCloud({ tags }: TagCloudProps) {
     const range = maxCount - minCount || 1;
     const normalized = (count - minCount) / range;
 
-    if (normalized > 0.8) return 'text-xl';
-    if (normalized > 0.6) return 'text-lg';
-    if (normalized > 0.4) return 'text-base';
-    if (normalized > 0.2) return 'text-sm';
-    return 'text-xs';
+    if (normalized > 0.8) return "text-xl";
+    if (normalized > 0.6) return "text-lg";
+    if (normalized > 0.4) return "text-base";
+    if (normalized > 0.2) return "text-sm";
+    return "text-xs";
   };
 
   const containerVariants = {
@@ -57,10 +57,10 @@ export function TagCloud({ tags }: TagCloudProps) {
             <Hash className="w-4 h-4" />
             热门标签
           </span>
-          <h2 className="font-display text-3xl sm:text-4xl font-bold text-white mb-4">
+          <h2 className="font-display text-3xl sm:text-4xl font-bold text-text-primary mb-4">
             通过标签发现<span className="text-gradient">更多内容</span>
           </h2>
-          <p className="text-gray-400 max-w-2xl mx-auto">
+          <p className="text-text-secondary max-w-2xl mx-auto">
             点击标签浏览相关文章，快速定位你感兴趣的技术话题
           </p>
         </motion.div>
@@ -77,15 +77,13 @@ export function TagCloud({ tags }: TagCloudProps) {
             <motion.div key={tag.id} variants={itemVariants}>
               <Link href={`/tags/${tag.slug}`}>
                 <span
-                  className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-full glass border border-white/10 hover:border-neon-cyan/50 hover:text-neon-cyan transition-all duration-200 ${getTagSize(
-                    tag.articleCount || 0
+                  className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-full glass border border-border-subtle hover:border-neon-cyan/50 hover:text-neon-cyan transition-all duration-200 text-text-primary ${getTagSize(
+                    tag.articleCount || 0,
                   )}`}
                 >
                   <Sparkles className="w-3 h-3 opacity-50" />
                   {tag.name}
-                  <span className="text-xs opacity-50">
-                    ({tag.articleCount || 0})
-                  </span>
+                  <span className="text-xs opacity-50">({tag.articleCount || 0})</span>
                 </span>
               </Link>
             </motion.div>

@@ -1,5 +1,5 @@
-import { useState, useCallback } from 'react';
-import { apiClient } from '@/lib/api';
+import { apiClient } from "@/lib/api";
+import { useCallback, useState } from "react";
 
 interface LoginCredentials {
   username: string;
@@ -15,26 +15,26 @@ export function useAuth() {
     setError(null);
 
     try {
-      const res = await apiClient.post('/auth/admin/login', credentials);
-      localStorage.setItem('admin_token', res.data.data.token);
-      localStorage.setItem('admin_username', res.data.data.username);
+      const res = await apiClient.post("/auth/admin/login", credentials);
+      localStorage.setItem("admin_token", res.data.data.token);
+      localStorage.setItem("admin_username", res.data.data.username);
       setIsLoading(false);
       return true;
     } catch (err: any) {
-      setError(err.response?.data?.error || '登录失败');
+      setError(err.response?.data?.error || "登录失败");
       setIsLoading(false);
       return false;
     }
   }, []);
 
   const logout = useCallback(() => {
-    localStorage.removeItem('admin_token');
-    localStorage.removeItem('admin_username');
-    window.location.href = '/login';
+    localStorage.removeItem("admin_token");
+    localStorage.removeItem("admin_username");
+    window.location.href = "/login";
   }, []);
 
-  const isAuthenticated = !!localStorage.getItem('admin_token');
-  const username = localStorage.getItem('admin_username');
+  const isAuthenticated = !!localStorage.getItem("admin_token");
+  const username = localStorage.getItem("admin_username");
 
   return { login, logout, isAuthenticated, isLoading, error, username };
 }

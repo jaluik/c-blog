@@ -1,5 +1,5 @@
-import type { Category } from './category';
-import type { Tag } from './tag';
+import type { Category } from "./category";
+import type { Tag } from "./tag";
 
 export interface Post {
   id: number;
@@ -8,7 +8,7 @@ export interface Post {
   content: string;
   summary?: string;
   coverImage?: string;
-  status: 'draft' | 'published';
+  status: "draft" | "published";
   categoryId?: number;
   publishedAt?: string;
   createdAt: string;
@@ -30,7 +30,7 @@ export interface CreatePostInput {
   content: string;
   summary?: string;
   coverImage?: string;
-  status: 'draft' | 'published';
+  status: "draft" | "published";
   categoryId?: number;
   tagIds?: number[];
   metaTitle?: string;

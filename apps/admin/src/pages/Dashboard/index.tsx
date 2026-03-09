@@ -1,18 +1,18 @@
-import { useEffect, useState } from 'react';
-import { PageContainer } from '@ant-design/pro-components';
-import { Card, Row, Col, Statistic, List, Tag, Space } from 'antd';
+import { getArticles } from "@/services/article";
+import { getCategories } from "@/services/category";
+import { getComments } from "@/services/comment";
+import { getTags } from "@/services/tag";
 import {
-  FileTextOutlined,
   CommentOutlined,
   EyeOutlined,
-  TagsOutlined,
+  FileTextOutlined,
   FolderOutlined,
-} from '@ant-design/icons';
-import { getArticles } from '@/services/article';
-import { getComments } from '@/services/comment';
-import { getCategories } from '@/services/category';
-import { getTags } from '@/services/tag';
-import type { PostWithRelations } from '@blog/shared-types';
+  TagsOutlined,
+} from "@ant-design/icons";
+import { PageContainer } from "@ant-design/pro-components";
+import type { PostWithRelations } from "@blog/shared-types";
+import { Card, Col, List, Row, Space, Statistic, Tag } from "antd";
+import { useEffect, useState } from "react";
 
 interface DashboardStats {
   articleCount: number;
@@ -59,8 +59,8 @@ export function Dashboard() {
 
       setStats({
         articleCount: articles.length,
-        publishedCount: articles.filter((a) => a.status === 'published').length,
-        draftCount: articles.filter((a) => a.status === 'draft').length,
+        publishedCount: articles.filter((a) => a.status === "published").length,
+        draftCount: articles.filter((a) => a.status === "draft").length,
         commentCount: comments.length,
         pendingCommentCount: comments.filter((c) => !c.isApproved).length,
         categoryCount: categories.length,
@@ -71,7 +71,7 @@ export function Dashboard() {
       setRecentArticles(articles.slice(0, 5));
       setRecentComments(comments.slice(0, 5));
     } catch (error) {
-      console.error('Failed to fetch dashboard data:', error);
+      console.error("Failed to fetch dashboard data:", error);
     } finally {
       setLoading(false);
     }
@@ -82,11 +82,7 @@ export function Dashboard() {
       <Row gutter={[16, 16]}>
         <Col xs={24} sm={12} lg={6}>
           <Card>
-            <Statistic
-              title="总文章数"
-              value={stats.articleCount}
-              prefix={<FileTextOutlined />}
-            />
+            <Statistic title="总文章数" value={stats.articleCount} prefix={<FileTextOutlined />} />
           </Card>
         </Col>
         <Col xs={24} sm={12} lg={6}>
@@ -94,7 +90,7 @@ export function Dashboard() {
             <Statistic
               title="已发布"
               value={stats.publishedCount}
-              valueStyle={{ color: '#3f8600' }}
+              valueStyle={{ color: "#3f8600" }}
               prefix={<FileTextOutlined />}
             />
           </Card>
@@ -104,27 +100,19 @@ export function Dashboard() {
             <Statistic
               title="草稿"
               value={stats.draftCount}
-              valueStyle={{ color: '#cf1322' }}
+              valueStyle={{ color: "#cf1322" }}
               prefix={<FileTextOutlined />}
             />
           </Card>
         </Col>
         <Col xs={24} sm={12} lg={6}>
           <Card>
-            <Statistic
-              title="总浏览量"
-              value={stats.totalViews}
-              prefix={<EyeOutlined />}
-            />
+            <Statistic title="总浏览量" value={stats.totalViews} prefix={<EyeOutlined />} />
           </Card>
         </Col>
         <Col xs={24} sm={12} lg={6}>
           <Card>
-            <Statistic
-              title="评论总数"
-              value={stats.commentCount}
-              prefix={<CommentOutlined />}
-            />
+            <Statistic title="评论总数" value={stats.commentCount} prefix={<CommentOutlined />} />
           </Card>
         </Col>
         <Col xs={24} sm={12} lg={6}>
@@ -132,27 +120,19 @@ export function Dashboard() {
             <Statistic
               title="待审核评论"
               value={stats.pendingCommentCount}
-              valueStyle={{ color: stats.pendingCommentCount > 0 ? '#cf1322' : '#3f8600' }}
+              valueStyle={{ color: stats.pendingCommentCount > 0 ? "#cf1322" : "#3f8600" }}
               prefix={<CommentOutlined />}
             />
           </Card>
         </Col>
         <Col xs={24} sm={12} lg={6}>
           <Card>
-            <Statistic
-              title="分类数量"
-              value={stats.categoryCount}
-              prefix={<FolderOutlined />}
-            />
+            <Statistic title="分类数量" value={stats.categoryCount} prefix={<FolderOutlined />} />
           </Card>
         </Col>
         <Col xs={24} sm={12} lg={6}>
           <Card>
-            <Statistic
-              title="标签数量"
-              value={stats.tagCount}
-              prefix={<TagsOutlined />}
-            />
+            <Statistic title="标签数量" value={stats.tagCount} prefix={<TagsOutlined />} />
           </Card>
         </Col>
       </Row>
@@ -168,8 +148,8 @@ export function Dashboard() {
                     title={item.title}
                     description={
                       <Space>
-                        <Tag color={item.status === 'published' ? 'success' : 'default'}>
-                          {item.status === 'published' ? '已发布' : '草稿'}
+                        <Tag color={item.status === "published" ? "success" : "default"}>
+                          {item.status === "published" ? "已发布" : "草稿"}
                         </Tag>
                         <span>{item.category?.name}</span>
                         <span>{item.viewCount} 浏览</span>
@@ -193,22 +173,22 @@ export function Dashboard() {
                         <img
                           src={item.githubAvatar}
                           alt={item.githubUsername}
-                          style={{ width: 32, height: 32, borderRadius: '50%' }}
+                          style={{ width: 32, height: 32, borderRadius: "50%" }}
                         />
                       ) : null
                     }
                     title={
                       <Space>
                         <span>{item.githubUsername}</span>
-                        <Tag color={item.isApproved ? 'success' : 'warning'}>
-                          {item.isApproved ? '已通过' : '待审核'}
+                        <Tag color={item.isApproved ? "success" : "warning"}>
+                          {item.isApproved ? "已通过" : "待审核"}
                         </Tag>
                       </Space>
                     }
                     description={
                       <div>
                         <div>文章: {item.article?.title}</div>
-                        <div style={{ color: '#999', marginTop: 4 }}>{item.content}</div>
+                        <div style={{ color: "#999", marginTop: 4 }}>{item.content}</div>
                       </div>
                     }
                   />

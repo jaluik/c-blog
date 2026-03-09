@@ -1,8 +1,8 @@
-import { useState } from 'react';
-import { PageContainer } from '@ant-design/pro-components';
-import { ProForm, ProFormText } from '@ant-design/pro-components';
-import { Card, message, Alert } from 'antd';
-import { changePassword } from '@/services/user';
+import { changePassword } from "@/services/user";
+import { PageContainer } from "@ant-design/pro-components";
+import { ProForm, ProFormText } from "@ant-design/pro-components";
+import { Alert, Card, message } from "antd";
+import { useState } from "react";
 
 export function ChangePassword() {
   const [, setLoading] = useState(false);
@@ -13,12 +13,12 @@ export function ChangePassword() {
     confirmPassword: string;
   }) => {
     if (values.newPassword !== values.confirmPassword) {
-      message.error('两次输入的新密码不一致');
+      message.error("两次输入的新密码不一致");
       return;
     }
 
     if (values.newPassword.length < 6) {
-      message.error('新密码长度不能少于6位');
+      message.error("新密码长度不能少于6位");
       return;
     }
 
@@ -28,9 +28,9 @@ export function ChangePassword() {
         oldPassword: values.oldPassword,
         newPassword: values.newPassword,
       });
-      message.success('密码修改成功');
+      message.success("密码修改成功");
     } catch (error: any) {
-      message.error(error.response?.data?.error || '密码修改失败');
+      message.error(error.response?.data?.error || "密码修改失败");
     } finally {
       setLoading(false);
     }
@@ -51,7 +51,7 @@ export function ChangePassword() {
           <ProFormText.Password
             name="oldPassword"
             label="当前密码"
-            rules={[{ required: true, message: '请输入当前密码' }]}
+            rules={[{ required: true, message: "请输入当前密码" }]}
             placeholder="请输入当前密码"
           />
 
@@ -59,8 +59,8 @@ export function ChangePassword() {
             name="newPassword"
             label="新密码"
             rules={[
-              { required: true, message: '请输入新密码' },
-              { min: 6, message: '密码长度不能少于6位' },
+              { required: true, message: "请输入新密码" },
+              { min: 6, message: "密码长度不能少于6位" },
             ]}
             placeholder="请输入新密码（至少6位）"
           />
@@ -69,13 +69,13 @@ export function ChangePassword() {
             name="confirmPassword"
             label="确认新密码"
             rules={[
-              { required: true, message: '请确认新密码' },
+              { required: true, message: "请确认新密码" },
               ({ getFieldValue }) => ({
                 validator(_, value) {
-                  if (!value || getFieldValue('newPassword') === value) {
+                  if (!value || getFieldValue("newPassword") === value) {
                     return Promise.resolve();
                   }
-                  return Promise.reject(new Error('两次输入的密码不一致'));
+                  return Promise.reject(new Error("两次输入的密码不一致"));
                 },
               }),
             ]}

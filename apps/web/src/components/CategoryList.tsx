@@ -1,31 +1,31 @@
-'use client';
+"use client";
 
-import { motion } from 'framer-motion';
-import Link from 'next/link';
+import type { Category } from "@blog/shared-types";
+import { motion } from "framer-motion";
 import {
-  FolderOpen,
-  Code2,
-  Database,
-  Globe,
-  Smartphone,
   Cloud,
+  Code2,
   Cpu,
+  Database,
+  FolderOpen,
+  Globe,
   Layers,
   Settings,
+  Smartphone,
   Sparkles,
-} from 'lucide-react';
-import type { Category } from '@blog/shared-types';
+} from "lucide-react";
+import Link from "next/link";
 
 const iconMap: Record<string, React.ElementType> = {
-  'frontend': Code2,
-  'backend': Database,
-  'fullstack': Layers,
-  'mobile': Smartphone,
-  'cloud': Cloud,
-  'devops': Settings,
-  'ai': Cpu,
-  'web': Globe,
-  'default': FolderOpen,
+  frontend: Code2,
+  backend: Database,
+  fullstack: Layers,
+  mobile: Smartphone,
+  cloud: Cloud,
+  devops: Settings,
+  ai: Cpu,
+  web: Globe,
+  default: FolderOpen,
 };
 
 interface CategoryListProps {
@@ -35,7 +35,7 @@ interface CategoryListProps {
 export function CategoryList({ categories }: CategoryListProps) {
   const getIcon = (slug: string) => {
     const key = Object.keys(iconMap).find((k) => slug.includes(k));
-    return iconMap[key || 'default'];
+    return iconMap[key || "default"];
   };
 
   const containerVariants = {
@@ -71,10 +71,10 @@ export function CategoryList({ categories }: CategoryListProps) {
             <Sparkles className="w-4 h-4" />
             内容分类
           </span>
-          <h2 className="font-display text-3xl sm:text-4xl font-bold text-white mb-4">
+          <h2 className="font-display text-3xl sm:text-4xl font-bold text-text-primary mb-4">
             探索不同领域的<span className="text-gradient">技术文章</span>
           </h2>
-          <p className="text-gray-400 max-w-2xl mx-auto">
+          <p className="text-text-secondary max-w-2xl mx-auto">
             按主题分类浏览文章，找到你感兴趣的技术内容
           </p>
         </motion.div>
@@ -99,12 +99,12 @@ export function CategoryList({ categories }: CategoryListProps) {
                     </div>
 
                     {/* Name */}
-                    <h3 className="font-medium text-white mb-1 group-hover:text-neon-cyan transition-colors">
+                    <h3 className="font-medium text-text-primary mb-1 group-hover:text-neon-cyan transition-colors">
                       {category.name}
                     </h3>
 
                     {/* Count */}
-                    <p className="text-sm text-gray-500">
+                    <p className="text-sm text-text-tertiary">
                       {category.articleCount || 0} 篇文章
                     </p>
 

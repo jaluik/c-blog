@@ -1,7 +1,7 @@
-import type { FastifyInstance } from 'fastify';
-import { prisma } from '../../prisma';
-import { z } from 'zod';
-import { slugify } from '@blog/shared-utils';
+import { slugify } from "@blog/shared-utils";
+import type { FastifyInstance } from "fastify";
+import { z } from "zod";
+import { prisma } from "../../prisma";
 
 const createPostSchema = z.object({
   title: z.string().min(1).max(255),
@@ -9,7 +9,7 @@ const createPostSchema = z.object({
   content: z.string().min(1),
   summary: z.string().optional(),
   coverImage: z.string().optional(),
-  status: z.enum(['draft', 'published']),
+  status: z.enum(["draft", "published"]),
   categoryId: z.number().optional(),
   tagIds: z.array(z.number()).optional(),
   metaTitle: z.string().optional(),
@@ -19,11 +19,15 @@ const createPostSchema = z.object({
 const updatePostSchema = createPostSchema.partial();
 
 export async function adminPostRoutes(app: FastifyInstance) {
-  app.addHook('onRequest', app.authenticateAdmin);
+  app.addHook("onRequest", app.authenticateAdmin);
 
   // 获取文章列表（包含草稿）
-  app.get('/admin/posts', async (request) => {
-    const { page = '1', pageSize = '10', status } = request.query as {
+  app.get("/admin/posts", async (request) => {
+    const {
+      page = "1",
+      pageSize = "10",
+      status,
+    } = request.query as {
       page?: string;
       pageSize?: string;
       status?: string;
@@ -41,7 +45,7 @@ export async function adminPostRoutes(app: FastifyInstance) {
         where,
         skip,
         take: size,
-        orderBy: { createdAt: 'desc' },
+        orderBy: { createdAt: "desc" },
         include: {
           category: { select: { id: true, name: true } },
           tags: { include: { tag: true } },
@@ -52,9 +56,9 @@ export async function adminPostRoutes(app: FastifyInstance) {
     ]);
 
     return {
-      data: posts.map(p => ({
+      data: posts.map((p) => ({
         ...p,
-        tags: p.tags.map(t => t.tag),
+        tags: p.tags.map((t) => t.tag),
         _count: undefined,
       })),
       meta: { total, page: pageNum, pageSize: size, totalPages: Math.ceil(total / size) },
@@ -62,7 +66,7 @@ export async function adminPostRoutes(app: FastifyInstance) {
   });
 
   // 获取单篇文章
-  app.get('/admin/posts/:id', async (request, reply) => {
+  app.get("/admin/posts/:id", async (request, reply) => {
     const { id } = request.params as { id: string };
 
     const post = await prisma.article.findUnique({
@@ -75,18 +79,18 @@ export async function adminPostRoutes(app: FastifyInstance) {
     });
 
     if (!post) {
-      return reply.status(404).send({ error: 'Article not found' });
+      return reply.status(404).send({ error: "Article not found" });
     }
 
-    return { ...post, tags: post.tags.map(t => t.tag) };
+    return { ...post, tags: post.tags.map((t) => t.tag) };
   });
 
   // 创建文章
-  app.post('/admin/posts', async (request, reply) => {
+  app.post("/admin/posts", async (request, reply) => {
     const body = createPostSchema.safeParse(request.body);
 
     if (!body.success) {
-      return reply.status(400).send({ error: 'Invalid input', details: body.error });
+      return reply.status(400).send({ error: "Invalid input", details: body.error });
     }
 
     const data = body.data;
@@ -94,7 +98,7 @@ export async function adminPostRoutes(app: FastifyInstance) {
 
     const existing = await prisma.article.findUnique({ where: { slug } });
     if (existing) {
-      return reply.status(400).send({ error: 'Slug already exists' });
+      return reply.status(400).send({ error: "Slug already exists" });
     }
 
     const post = await prisma.article.create({
@@ -106,12 +110,14 @@ export async function adminPostRoutes(app: FastifyInstance) {
         coverImage: data.coverImage,
         status: data.status,
         categoryId: data.categoryId,
-        publishedAt: data.status === 'published' ? new Date() : null,
+        publishedAt: data.status === "published" ? new Date() : null,
         metaTitle: data.metaTitle,
         metaDescription: data.metaDescription,
-        tags: data.tagIds ? {
-          create: data.tagIds.map(tagId => ({ tagId })),
-        } : undefined,
+        tags: data.tagIds
+          ? {
+              create: data.tagIds.map((tagId) => ({ tagId })),
+            }
+          : undefined,
       },
       include: {
         category: true,
@@ -119,29 +125,29 @@ export async function adminPostRoutes(app: FastifyInstance) {
       },
     });
 
-    return { data: post, message: 'Article created' };
+    return { data: post, message: "Article created" };
   });
 
   // 更新文章
-  app.put('/admin/posts/:id', async (request, reply) => {
+  app.put("/admin/posts/:id", async (request, reply) => {
     const { id } = request.params as { id: string };
     const body = updatePostSchema.safeParse(request.body);
 
     if (!body.success) {
-      return reply.status(400).send({ error: 'Invalid input', details: body.error });
+      return reply.status(400).send({ error: "Invalid input", details: body.error });
     }
 
     const data = body.data;
     const existing = await prisma.article.findUnique({ where: { id: Number(id) } });
 
     if (!existing) {
-      return reply.status(404).send({ error: 'Article not found' });
+      return reply.status(404).send({ error: "Article not found" });
     }
 
     if (data.slug && data.slug !== existing.slug) {
       const slugExists = await prisma.article.findUnique({ where: { slug: data.slug } });
       if (slugExists) {
-        return reply.status(400).send({ error: 'Slug already exists' });
+        return reply.status(400).send({ error: "Slug already exists" });
       }
     }
 
@@ -155,15 +161,16 @@ export async function adminPostRoutes(app: FastifyInstance) {
         coverImage: data.coverImage,
         status: data.status,
         categoryId: data.categoryId,
-        publishedAt: data.status === 'published' && existing.status === 'draft'
-          ? new Date()
-          : undefined,
+        publishedAt:
+          data.status === "published" && existing.status === "draft" ? new Date() : undefined,
         metaTitle: data.metaTitle,
         metaDescription: data.metaDescription,
-        tags: data.tagIds ? {
-          deleteMany: {},
-          create: data.tagIds.map(tagId => ({ tagId })),
-        } : undefined,
+        tags: data.tagIds
+          ? {
+              deleteMany: {},
+              create: data.tagIds.map((tagId) => ({ tagId })),
+            }
+          : undefined,
       },
       include: {
         category: true,
@@ -171,17 +178,17 @@ export async function adminPostRoutes(app: FastifyInstance) {
       },
     });
 
-    return { data: post, message: 'Article updated' };
+    return { data: post, message: "Article updated" };
   });
 
   // 删除文章
-  app.delete('/admin/posts/:id', async (request, reply) => {
+  app.delete("/admin/posts/:id", async (request, reply) => {
     const { id } = request.params as { id: string };
 
     await prisma.article.delete({
       where: { id: Number(id) },
     });
 
-    return { message: 'Article deleted' };
+    return { message: "Article deleted" };
   });
 }

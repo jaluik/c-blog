@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import Link from 'next/link';
-import { motion } from 'framer-motion';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
-import type { Post } from '@blog/shared-types';
+import type { Post } from "@blog/shared-types";
+import { motion } from "framer-motion";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import Link from "next/link";
 
 interface PostNavigationProps {
   prevPost: Post | null;
@@ -25,14 +25,14 @@ export function PostNavigation({ prevPost, nextPost }: PostNavigationProps) {
                 <ChevronLeft className="w-4 h-4" />
                 <span>上一篇</span>
               </div>
-              <h3 className="font-display font-semibold text-white group-hover:text-neon-cyan transition-colors line-clamp-2">
+              <h3 className="font-display font-semibold text-text-primary group-hover:text-neon-cyan transition-colors line-clamp-2">
                 {prevPost.title}
               </h3>
             </motion.div>
           </Link>
         ) : (
           <div className="p-6 rounded-xl glass opacity-50 h-full flex items-center">
-            <span className="text-gray-500">没有更早的文章了</span>
+            <span className="text-text-tertiary">没有更早的文章了</span>
           </div>
         )}
       </div>
@@ -49,14 +49,14 @@ export function PostNavigation({ prevPost, nextPost }: PostNavigationProps) {
                 <span>下一篇</span>
                 <ChevronRight className="w-4 h-4" />
               </div>
-              <h3 className="font-display font-semibold text-white group-hover:text-neon-cyan transition-colors line-clamp-2">
+              <h3 className="font-display font-semibold text-text-primary group-hover:text-neon-cyan transition-colors line-clamp-2">
                 {nextPost.title}
               </h3>
             </motion.div>
           </Link>
         ) : (
           <div className="p-6 rounded-xl glass opacity-50 h-full flex items-center justify-end">
-            <span className="text-gray-500">没有更新的文章了</span>
+            <span className="text-text-tertiary">没有更新的文章了</span>
           </div>
         )}
       </div>

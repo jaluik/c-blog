@@ -1,11 +1,11 @@
-'use client';
+"use client";
 
-import { motion } from 'framer-motion';
-import Link from 'next/link';
-import { format } from 'date-fns';
-import { zhCN } from 'date-fns/locale';
-import { ArrowUpRight, Calendar, Eye } from 'lucide-react';
-import type { PostWithRelations } from '@blog/shared-types';
+import type { PostWithRelations } from "@blog/shared-types";
+import { format } from "date-fns";
+import { zhCN } from "date-fns/locale";
+import { motion } from "framer-motion";
+import { ArrowUpRight, Calendar, Eye } from "lucide-react";
+import Link from "next/link";
 
 interface PostCardProps {
   post: PostWithRelations;
@@ -68,20 +68,20 @@ export function PostCard({ post, featured = false, index = 0 }: PostCardProps) {
               )}
 
               {/* Title */}
-              <h3 className="font-display text-2xl sm:text-3xl font-bold text-white mb-3 group-hover:text-neon-cyan transition-colors line-clamp-2">
+              <h3 className="font-display text-2xl sm:text-3xl font-bold text-text-primary mb-3 group-hover:text-neon-cyan transition-colors line-clamp-2">
                 {post.title}
               </h3>
 
               {/* Summary */}
               {post.summary && (
-                <p className="text-gray-400 line-clamp-2 mb-4">{post.summary}</p>
+                <p className="text-text-secondary line-clamp-2 mb-4">{post.summary}</p>
               )}
 
               {/* Meta */}
-              <div className="flex items-center gap-4 text-sm text-gray-500">
+              <div className="flex items-center gap-4 text-sm text-text-tertiary">
                 <span className="flex items-center gap-1">
                   <Calendar className="w-4 h-4" />
-                  {format(new Date(post.publishedAt || post.createdAt), 'yyyy年MM月dd日', {
+                  {format(new Date(post.publishedAt || post.createdAt), "yyyy年MM月dd日", {
                     locale: zhCN,
                   })}
                 </span>
@@ -94,7 +94,7 @@ export function PostCard({ post, featured = false, index = 0 }: PostCardProps) {
 
             {/* Hover Arrow */}
             <div className="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/10 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-              <ArrowUpRight className="w-5 h-5 text-white" />
+              <ArrowUpRight className="w-5 h-5 text-text-primary" />
             </div>
           </div>
         </Link>
@@ -131,29 +131,25 @@ export function PostCard({ post, featured = false, index = 0 }: PostCardProps) {
             {/* Category & Tags */}
             <div className="flex items-center gap-2 mb-3">
               {post.category && (
-                <span className="text-xs text-neon-cyan font-medium">
-                  {post.category.name}
-                </span>
+                <span className="text-xs text-neon-cyan font-medium">{post.category.name}</span>
               )}
             </div>
 
             {/* Title */}
-            <h3 className="font-display text-lg font-bold text-white mb-2 group-hover:text-neon-cyan transition-colors line-clamp-2">
+            <h3 className="font-display text-lg font-bold text-text-primary mb-2 group-hover:text-neon-cyan transition-colors line-clamp-2">
               {post.title}
             </h3>
 
             {/* Summary */}
             {post.summary && (
-              <p className="text-gray-400 text-sm line-clamp-2 mb-4 flex-1">
-                {post.summary}
-              </p>
+              <p className="text-text-secondary text-sm line-clamp-2 mb-4 flex-1">{post.summary}</p>
             )}
 
             {/* Meta */}
-            <div className="flex items-center justify-between text-xs text-gray-500 mt-auto">
+            <div className="flex items-center justify-between text-xs text-text-tertiary mt-auto">
               <span className="flex items-center gap-1">
                 <Calendar className="w-3 h-3" />
-                {format(new Date(post.publishedAt || post.createdAt), 'MM-dd', {
+                {format(new Date(post.publishedAt || post.createdAt), "MM-dd", {
                   locale: zhCN,
                 })}
               </span>
@@ -170,13 +166,13 @@ export function PostCard({ post, featured = false, index = 0 }: PostCardProps) {
               {post.tags.slice(0, 2).map((tag) => (
                 <span
                   key={tag.id}
-                  className="text-xs px-2 py-1 rounded-full bg-white/5 text-gray-400 border border-white/10"
+                  className="text-xs px-2 py-1 rounded-full bg-white/5 text-text-secondary border border-white/10"
                 >
                   {tag.name}
                 </span>
               ))}
               {post.tags.length > 2 && (
-                <span className="text-xs px-2 py-1 text-gray-500">
+                <span className="text-xs px-2 py-1 text-text-tertiary">
                   +{post.tags.length - 2}
                 </span>
               )}

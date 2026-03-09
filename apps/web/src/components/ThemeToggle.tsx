@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import { useTheme } from 'next-themes';
-import { useEffect, useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Sun, Moon, Monitor } from 'lucide-react';
+import { AnimatePresence, motion } from "framer-motion";
+import { Monitor, Moon, Sun } from "lucide-react";
+import { useTheme } from "next-themes";
+import { useEffect, useState } from "react";
 
 export function ThemeToggle() {
   const { theme, setTheme, resolvedTheme } = useTheme();
@@ -22,23 +22,23 @@ export function ThemeToggle() {
     );
   }
 
-  const currentTheme = theme || 'system';
+  const currentTheme = theme || "system";
 
   const toggleTheme = () => {
-    if (currentTheme === 'dark') {
-      setTheme('light');
-    } else if (currentTheme === 'light') {
-      setTheme('system');
+    if (currentTheme === "dark") {
+      setTheme("light");
+    } else if (currentTheme === "light") {
+      setTheme("system");
     } else {
-      setTheme('dark');
+      setTheme("dark");
     }
   };
 
   const getIcon = () => {
     switch (currentTheme) {
-      case 'light':
+      case "light":
         return <Sun className="w-5 h-5 text-yellow-500" />;
-      case 'dark':
+      case "dark":
         return <Moon className="w-5 h-5 text-neon-cyan" />;
       default:
         return <Monitor className="w-5 h-5 text-gray-400" />;
@@ -47,12 +47,12 @@ export function ThemeToggle() {
 
   const getLabel = () => {
     switch (currentTheme) {
-      case 'light':
-        return '亮色模式';
-      case 'dark':
-        return '暗黑模式';
+      case "light":
+        return "亮色模式";
+      case "dark":
+        return "暗黑模式";
       default:
-        return '跟随系统';
+        return "跟随系统";
     }
   };
 

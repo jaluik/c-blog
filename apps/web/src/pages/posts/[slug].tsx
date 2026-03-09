@@ -1,18 +1,29 @@
-import type { GetStaticProps, GetStaticPaths } from 'next';
-import type { PostWithRelations, Comment } from '@blog/shared-types';
-import Link from 'next/link';
-import { format } from 'date-fns';
-import { zhCN } from 'date-fns/locale';
-import { ArrowLeft, Calendar, Eye, FolderOpen, Clock, Share2, Twitter, Linkedin, Link as LinkIcon, MessageSquare } from 'lucide-react';
-import { api } from '@/lib/api';
-import { MarkdownContent } from '@/components/MarkdownContent';
-import { ReadingProgress } from '@/components/ReadingProgress';
-import { TableOfContents } from '@/components/TableOfContents';
-import { PostNavigation } from '@/components/PostNavigation';
-import { RelatedPosts } from '@/components/RelatedPosts';
-import { CommentList } from '@/components/CommentList';
-import { CommentForm } from '@/components/CommentForm';
-import { motion } from 'framer-motion';
+import { CommentForm } from "@/components/CommentForm";
+import { CommentList } from "@/components/CommentList";
+import { MarkdownContent } from "@/components/MarkdownContent";
+import { PostNavigation } from "@/components/PostNavigation";
+import { ReadingProgress } from "@/components/ReadingProgress";
+import { RelatedPosts } from "@/components/RelatedPosts";
+import { TableOfContents } from "@/components/TableOfContents";
+import { api } from "@/lib/api";
+import type { Comment, PostWithRelations } from "@blog/shared-types";
+import { format } from "date-fns";
+import { zhCN } from "date-fns/locale";
+import { motion } from "framer-motion";
+import {
+  ArrowLeft,
+  Calendar,
+  Clock,
+  Eye,
+  FolderOpen,
+  Link as LinkIcon,
+  Linkedin,
+  MessageSquare,
+  Share2,
+  Twitter,
+} from "lucide-react";
+import type { GetStaticPaths, GetStaticProps } from "next";
+import Link from "next/link";
 
 interface PostPageProps {
   post: PostWithRelations;
@@ -30,13 +41,13 @@ export const getStaticPaths: GetStaticPaths = async () => {
 
   return {
     paths,
-    fallback: 'blocking',
+    fallback: "blocking",
   };
 };
 
 export const getStaticProps: GetStaticProps<PostPageProps> = async ({ params }) => {
   try {
-    const API_URL = process.env.API_URL || 'http://localhost:4000';
+    const API_URL = process.env.API_URL || "http://localhost:4000";
 
     // Fetch current post, comments, and all posts in parallel
     const [postRes, commentsRes, allPostsRes] = await Promise.all([
@@ -109,7 +120,7 @@ export default function PostPage({ post, comments, prevPost, nextPost, allPosts 
           >
             <Link
               href="/"
-              className="inline-flex items-center gap-2 text-gray-400 hover:text-neon-cyan transition-colors mb-8 group"
+              className="inline-flex items-center gap-2 text-text-secondary hover:text-neon-cyan transition-colors mb-8 group"
             >
               <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
               返回首页
@@ -135,15 +146,15 @@ export default function PostPage({ post, comments, prevPost, nextPost, allPosts 
             )}
 
             {/* Title */}
-            <h1 className="font-display text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-6 leading-tight">
+            <h1 className="font-display text-3xl sm:text-4xl lg:text-5xl font-bold text-text-primary mb-6 leading-tight">
               {post.title}
             </h1>
 
             {/* Meta Info */}
-            <div className="flex flex-wrap items-center gap-4 text-sm text-gray-400">
+            <div className="flex flex-wrap items-center gap-4 text-sm text-text-secondary">
               <span className="flex items-center gap-1">
                 <Calendar className="w-4 h-4" />
-                {format(new Date(post.publishedAt || post.createdAt), 'yyyy年MM月dd日', {
+                {format(new Date(post.publishedAt || post.createdAt), "yyyy年MM月dd日", {
                   locale: zhCN,
                 })}
               </span>
@@ -161,11 +172,7 @@ export default function PostPage({ post, comments, prevPost, nextPost, allPosts 
             {post.tags && post.tags.length > 0 && (
               <div className="flex flex-wrap gap-2 mt-6">
                 {post.tags.map((tag) => (
-                  <Link
-                    key={tag.id}
-                    href={`/tags/${tag.slug}`}
-                    className="tag"
-                  >
+                  <Link key={tag.id} href={`/tags/${tag.slug}`} className="tag">
                     #{tag.name}
                   </Link>
                 ))}
@@ -181,11 +188,7 @@ export default function PostPage({ post, comments, prevPost, nextPost, allPosts 
               transition={{ duration: 0.6, delay: 0.2 }}
               className="relative aspect-video rounded-2xl overflow-hidden mb-10 shadow-2xl"
             >
-              <img
-                src={post.coverImage}
-                alt={post.title}
-                className="w-full h-full object-cover"
-              />
+              <img src={post.coverImage} alt={post.title} className="w-full h-full object-cover" />
               <div className="absolute inset-0 bg-gradient-to-t from-void-primary/50 to-transparent" />
             </motion.div>
           )}
@@ -207,32 +210,32 @@ export default function PostPage({ post, comments, prevPost, nextPost, allPosts 
             className="mt-16 pt-8 border-t border-white/10"
           >
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-              <h3 className="font-display font-semibold text-white flex items-center gap-2">
+              <h3 className="font-display font-semibold text-text-primary flex items-center gap-2">
                 <Share2 className="w-5 h-5 text-neon-cyan" />
                 分享文章
               </h3>
               <div className="flex items-center gap-3">
                 <a
-                  href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(post.title)}&url=${encodeURIComponent(typeof window !== 'undefined' ? window.location.href : '')}`}
+                  href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(post.title)}&url=${encodeURIComponent(typeof window !== "undefined" ? window.location.href : "")}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-10 h-10 rounded-lg glass flex items-center justify-center text-gray-400 hover:text-white hover:bg-[#1DA1F2]/20 transition-all"
+                  className="w-10 h-10 rounded-lg glass flex items-center justify-center text-text-secondary hover:text-text-primary hover:bg-[#1DA1F2]/20 transition-all"
                   aria-label="Share on Twitter"
                 >
                   <Twitter className="w-5 h-5" />
                 </a>
                 <a
-                  href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(typeof window !== 'undefined' ? window.location.href : '')}`}
+                  href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(typeof window !== "undefined" ? window.location.href : "")}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-10 h-10 rounded-lg glass flex items-center justify-center text-gray-400 hover:text-white hover:bg-[#0A66C2]/20 transition-all"
+                  className="w-10 h-10 rounded-lg glass flex items-center justify-center text-text-secondary hover:text-text-primary hover:bg-[#0A66C2]/20 transition-all"
                   aria-label="Share on LinkedIn"
                 >
                   <Linkedin className="w-5 h-5" />
                 </a>
                 <button
                   onClick={copyLink}
-                  className="w-10 h-10 rounded-lg glass flex items-center justify-center text-gray-400 hover:text-white hover:bg-neon-cyan/20 transition-all"
+                  className="w-10 h-10 rounded-lg glass flex items-center justify-center text-text-secondary hover:text-text-primary hover:bg-neon-cyan/20 transition-all"
                   aria-label="Copy link"
                 >
                   <LinkIcon className="w-5 h-5" />
@@ -254,11 +257,11 @@ export default function PostPage({ post, comments, prevPost, nextPost, allPosts 
             viewport={{ once: true }}
             className="mt-16 pt-8 border-t border-white/10"
           >
-            <h2 className="font-display text-2xl font-bold text-white mb-8 flex items-center gap-2">
+            <h2 className="font-display text-2xl font-bold text-text-primary mb-8 flex items-center gap-2">
               <MessageSquare className="w-6 h-6 text-neon-cyan" />
               评论
               {comments.length > 0 && (
-                <span className="text-lg text-gray-500">({comments.length})</span>
+                <span className="text-lg text-text-tertiary">({comments.length})</span>
               )}
             </h2>
 

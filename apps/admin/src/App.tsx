@@ -1,23 +1,23 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { ConfigProvider, App as AntApp } from 'antd';
-import zhCN from 'antd/locale/zh_CN';
-import { LoginPage } from './pages/Login';
-import { ProLayout } from './components/ProLayout';
-import { Dashboard } from './pages/Dashboard';
-import { ArticleList } from './pages/Article/List';
-import { ArticleCreate } from './pages/Article/Create';
-import { ArticleEdit } from './pages/Article/Edit';
-import { CommentList } from './pages/Comment/List';
-import { CategoryList } from './pages/Category/List';
-import { TagList } from './pages/Tag/List';
-import { UserProfile } from './pages/User/Profile';
-import { ChangePassword } from './pages/User/ChangePassword';
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { App as AntApp, ConfigProvider } from "antd";
+import zhCN from "antd/locale/zh_CN";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import { ProLayout } from "./components/ProLayout";
+import { ArticleCreate } from "./pages/Article/Create";
+import { ArticleEdit } from "./pages/Article/Edit";
+import { ArticleList } from "./pages/Article/List";
+import { CategoryList } from "./pages/Category/List";
+import { CommentList } from "./pages/Comment/List";
+import { Dashboard } from "./pages/Dashboard";
+import { LoginPage } from "./pages/Login";
+import { TagList } from "./pages/Tag/List";
+import { ChangePassword } from "./pages/User/ChangePassword";
+import { UserProfile } from "./pages/User/Profile";
 
 const queryClient = new QueryClient();
 
 function PrivateRoute({ children }: { children: React.ReactNode }) {
-  const token = localStorage.getItem('admin_token');
+  const token = localStorage.getItem("admin_token");
   return token ? <>{children}</> : <Navigate to="/login" />;
 }
 

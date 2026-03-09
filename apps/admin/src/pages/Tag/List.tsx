@@ -1,9 +1,16 @@
-import { useRef, useState } from 'react';
-import { ProTable, type ActionType, type ProColumns, ProFormText, ModalForm, PageContainer } from '@ant-design/pro-components';
-import { Button, Space, Popconfirm, message, Form } from 'antd';
-import { PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
-import { getTags, createTag, updateTag, deleteTag } from '@/services/tag';
-import type { TagWithCount } from '@/services/tag';
+import { createTag, deleteTag, getTags, updateTag } from "@/services/tag";
+import type { TagWithCount } from "@/services/tag";
+import { DeleteOutlined, EditOutlined, PlusOutlined } from "@ant-design/icons";
+import {
+  type ActionType,
+  ModalForm,
+  PageContainer,
+  type ProColumns,
+  ProFormText,
+  ProTable,
+} from "@ant-design/pro-components";
+import { Button, Form, Popconfirm, Space, message } from "antd";
+import { useRef, useState } from "react";
 
 export function TagList() {
   const actionRef = useRef<ActionType>();
@@ -14,10 +21,10 @@ export function TagList() {
   const handleDelete = async (id: number) => {
     try {
       await deleteTag(id);
-      message.success('删除成功');
+      message.success("删除成功");
       actionRef.current?.reload();
     } catch (error) {
-      message.error('删除失败');
+      message.error("删除失败");
     }
   };
 
@@ -25,17 +32,17 @@ export function TagList() {
     try {
       if (editingTag) {
         await updateTag(editingTag.id, values);
-        message.success('更新成功');
+        message.success("更新成功");
       } else {
         await createTag(values);
-        message.success('创建成功');
+        message.success("创建成功");
       }
       setModalVisible(false);
       form.resetFields();
       setEditingTag(null);
       actionRef.current?.reload();
     } catch (error: any) {
-      message.error(error.response?.data?.error || '操作失败');
+      message.error(error.response?.data?.error || "操作失败");
     }
   };
 
@@ -56,31 +63,31 @@ export function TagList() {
 
   const columns: ProColumns<TagWithCount>[] = [
     {
-      title: 'ID',
-      dataIndex: 'id',
+      title: "ID",
+      dataIndex: "id",
       width: 60,
       search: false,
     },
     {
-      title: '名称',
-      dataIndex: 'name',
+      title: "名称",
+      dataIndex: "name",
     },
     {
-      title: 'Slug',
-      dataIndex: 'slug',
+      title: "Slug",
+      dataIndex: "slug",
       search: false,
     },
     {
-      title: '文章数',
-      dataIndex: 'articleCount',
+      title: "文章数",
+      dataIndex: "articleCount",
       width: 100,
       search: false,
     },
     {
-      title: '操作',
-      key: 'action',
+      title: "操作",
+      key: "action",
       width: 150,
-      fixed: 'right',
+      fixed: "right",
       search: false,
       render: (_, record) => (
         <Space size="small">
@@ -118,12 +125,7 @@ export function TagList() {
           labelWidth: 120,
         }}
         toolBarRender={() => [
-          <Button
-            key="add"
-            type="primary"
-            icon={<PlusOutlined />}
-            onClick={openCreateModal}
-          >
+          <Button key="add" type="primary" icon={<PlusOutlined />} onClick={openCreateModal}>
             新建标签
           </Button>,
         ]}
@@ -139,7 +141,7 @@ export function TagList() {
       />
 
       <ModalForm
-        title={editingTag ? '编辑标签' : '新建标签'}
+        title={editingTag ? "编辑标签" : "新建标签"}
         open={modalVisible}
         onOpenChange={setModalVisible}
         form={form}
@@ -149,7 +151,7 @@ export function TagList() {
         <ProFormText
           name="name"
           label="名称"
-          rules={[{ required: true, message: '请输入标签名称' }]}
+          rules={[{ required: true, message: "请输入标签名称" }]}
           placeholder="请输入标签名称"
         />
         <ProFormText

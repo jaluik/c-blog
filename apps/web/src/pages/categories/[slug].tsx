@@ -1,9 +1,9 @@
-import type { GetStaticProps, GetStaticPaths } from 'next';
-import Link from 'next/link';
-import { motion } from 'framer-motion';
-import { ArrowLeft, FolderOpen } from 'lucide-react';
-import type { Category, PostWithRelations, PaginatedResponse } from '@blog/shared-types';
-import { PostCard } from '@/components/PostCard';
+import { PostCard } from "@/components/PostCard";
+import type { Category, PaginatedResponse, PostWithRelations } from "@blog/shared-types";
+import { motion } from "framer-motion";
+import { ArrowLeft, FolderOpen } from "lucide-react";
+import type { GetStaticPaths, GetStaticProps } from "next";
+import Link from "next/link";
 
 interface CategoryPageProps {
   category: Category | null;
@@ -18,7 +18,7 @@ interface CategoryPageProps {
 
 export const getStaticPaths: GetStaticPaths = async () => {
   try {
-    const API_URL = process.env.API_URL || 'http://localhost:4000';
+    const API_URL = process.env.API_URL || "http://localhost:4000";
     const res = await fetch(`${API_URL}/api/categories`);
     const data = await res.json();
     const categories: Category[] = data.data || [];
@@ -29,19 +29,19 @@ export const getStaticPaths: GetStaticPaths = async () => {
 
     return {
       paths,
-      fallback: 'blocking',
+      fallback: "blocking",
     };
   } catch {
     return {
       paths: [],
-      fallback: 'blocking',
+      fallback: "blocking",
     };
   }
 };
 
 export const getStaticProps: GetStaticProps<CategoryPageProps> = async ({ params }) => {
   try {
-    const API_URL = process.env.API_URL || 'http://localhost:4000';
+    const API_URL = process.env.API_URL || "http://localhost:4000";
 
     // Get all categories to find the current one
     const categoriesRes = await fetch(`${API_URL}/api/categories`);
@@ -54,7 +54,7 @@ export const getStaticProps: GetStaticProps<CategoryPageProps> = async ({ params
 
     // Get posts for this category
     const postsRes = await fetch(
-      `${API_URL}/api/posts?page=1&pageSize=20&category=${params?.slug}`
+      `${API_URL}/api/posts?page=1&pageSize=20&category=${params?.slug}`,
     );
     const postsData: PaginatedResponse<PostWithRelations> = await postsRes.json();
 
@@ -88,7 +88,7 @@ export default function CategoryPage({ category, posts, meta }: CategoryPageProp
     return (
       <div className="min-h-screen pt-24 pb-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-2xl text-white mb-4">分类不存在</h1>
+          <h1 className="text-2xl text-text-primary mb-4">分类不存在</h1>
           <Link href="/categories" className="text-neon-cyan hover:underline">
             返回分类列表
           </Link>
@@ -108,7 +108,7 @@ export default function CategoryPage({ category, posts, meta }: CategoryPageProp
         >
           <Link
             href="/categories"
-            className="inline-flex items-center gap-2 text-gray-400 hover:text-neon-cyan transition-colors mb-8 group"
+            className="inline-flex items-center gap-2 text-text-secondary hover:text-neon-cyan transition-colors mb-8 group"
           >
             <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
             返回分类
@@ -127,17 +127,15 @@ export default function CategoryPage({ category, posts, meta }: CategoryPageProp
               <FolderOpen className="w-8 h-8 text-neon-cyan" />
             </div>
             <div>
-              <h1 className="font-display text-3xl sm:text-4xl font-bold text-white">
+              <h1 className="font-display text-3xl sm:text-4xl font-bold text-text-primary">
                 {category.name}
               </h1>
-              <p className="text-gray-400 mt-1">
-                共 {meta.total} 篇文章
-              </p>
+              <p className="text-text-secondary mt-1">共 {meta.total} 篇文章</p>
             </div>
           </div>
 
           {category.description && (
-            <p className="text-gray-400 max-w-2xl">{category.description}</p>
+            <p className="text-text-secondary max-w-2xl">{category.description}</p>
           )}
         </motion.div>
 
@@ -159,15 +157,15 @@ export default function CategoryPage({ category, posts, meta }: CategoryPageProp
             animate={{ opacity: 1 }}
             className="text-center py-20"
           >
-            <FolderOpen className="w-16 h-16 text-gray-600 mx-auto mb-4" />
-            <p className="text-gray-400">该分类下暂无文章</p>
+            <FolderOpen className="w-16 h-16 text-text-muted mx-auto mb-4" />
+            <p className="text-text-secondary">该分类下暂无文章</p>
           </motion.div>
         )}
 
         {/* Pagination */}
         {meta.totalPages > 1 && (
           <div className="mt-12 text-center">
-            <p className="text-gray-500">
+            <p className="text-text-tertiary">
               第 {meta.page} 页，共 {meta.totalPages} 页
             </p>
           </div>

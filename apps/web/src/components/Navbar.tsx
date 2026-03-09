@@ -1,17 +1,17 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import Link from 'next/link';
-import { useRouter } from 'next/router';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, Home, FolderOpen, Tag, User, Sparkles } from 'lucide-react';
-import { ThemeToggle } from './ThemeToggle';
+import { AnimatePresence, motion } from "framer-motion";
+import { FolderOpen, Home, Menu, Sparkles, Tag, User, X } from "lucide-react";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
+import { ThemeToggle } from "./ThemeToggle";
 
 const navLinks = [
-  { href: '/', label: '首页', icon: Home },
-  { href: '/categories', label: '分类', icon: FolderOpen },
-  { href: '/tags', label: '标签', icon: Tag },
-  { href: '/about', label: '关于', icon: User },
+  { href: "/", label: "首页", icon: Home },
+  { href: "/categories", label: "分类", icon: FolderOpen },
+  { href: "/tags", label: "标签", icon: Tag },
+  { href: "/about", label: "关于", icon: User },
 ];
 
 export function Navbar() {
@@ -24,13 +24,13 @@ export function Navbar() {
       setIsScrolled(window.scrollY > 20);
     };
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   const isActive = (href: string) => {
-    if (href === '/') {
-      return router.pathname === '/';
+    if (href === "/") {
+      return router.pathname === "/";
     }
     return router.pathname.startsWith(href);
   };
@@ -39,11 +39,11 @@ export function Navbar() {
     <>
       <motion.header
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-          isScrolled ? 'glass shadow-lg' : 'bg-transparent'
+          isScrolled ? "glass shadow-lg" : "bg-transparent"
         }`}
         initial={{ y: -100 }}
         animate={{ y: 0 }}
-        transition={{ duration: 0.5, ease: 'easeOut' }}
+        transition={{ duration: 0.5, ease: "easeOut" }}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
@@ -57,9 +57,7 @@ export function Navbar() {
                 <div className="absolute inset-0 bg-gradient-to-br from-neon-cyan to-neon-purple rounded-lg opacity-80 group-hover:opacity-100 transition-opacity" />
                 <Sparkles className="relative w-5 h-5 text-white" />
               </motion.div>
-              <span className="font-display font-bold text-xl text-gradient">
-                VoidCode
-              </span>
+              <span className="font-display font-bold text-xl text-gradient">VoidCode</span>
             </Link>
 
             {/* Desktop Navigation */}
@@ -73,16 +71,14 @@ export function Navbar() {
                     key={link.href}
                     href={link.href}
                     className={`relative px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 flex items-center gap-2 ${
-                      active
-                        ? 'text-text-primary'
-                        : 'text-text-secondary hover:text-text-primary'
+                      active ? "text-text-primary" : "text-text-secondary hover:text-text-primary"
                     }`}
                   >
                     {active && (
                       <motion.div
                         className="absolute inset-0 bg-text-primary/10 rounded-lg"
                         layoutId="nav-active"
-                        transition={{ type: 'spring', bounce: 0.2, duration: 0.6 }}
+                        transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
                       />
                     )}
                     <span className="relative flex items-center gap-2">
@@ -111,11 +107,7 @@ export function Navbar() {
               className="md:hidden p-2 rounded-lg text-text-secondary hover:text-text-primary hover:bg-text-primary/10 transition-colors"
               aria-label="Toggle menu"
             >
-              {isMobileMenuOpen ? (
-                <X className="w-6 h-6" />
-              ) : (
-                <Menu className="w-6 h-6" />
-              )}
+              {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>
           </div>
         </div>
@@ -161,11 +153,11 @@ export function Navbar() {
                         onClick={() => setIsMobileMenuOpen(false)}
                         className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 ${
                           active
-                            ? 'bg-text-primary/10 text-text-primary'
-                            : 'text-text-secondary hover:text-text-primary hover:bg-text-primary/5'
+                            ? "bg-text-primary/10 text-text-primary"
+                            : "text-text-secondary hover:text-text-primary hover:bg-text-primary/5"
                         }`}
                       >
-                        <Icon className={`w-5 h-5 ${active ? 'text-accent-cyan' : ''}`} />
+                        <Icon className={`w-5 h-5 ${active ? "text-accent-cyan" : ""}`} />
                         <span className="font-medium">{link.label}</span>
                         {active && (
                           <motion.div

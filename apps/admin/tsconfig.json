@@ -21,8 +21,5 @@
     }
   },
   "include": ["src"],
-  "references": [
-    { "path": "./tsconfig.node.json" },
-    { "path": "../../packages/shared-types" }
-  ]
+  "references": [{ "path": "./tsconfig.node.json" }, { "path": "../../packages/shared-types" }]
 }

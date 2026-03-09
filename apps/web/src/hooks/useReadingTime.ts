@@ -1,16 +1,13 @@
-'use client';
+"use client";
 
-import { useMemo } from 'react';
+import { useMemo } from "react";
 
 interface UseReadingTimeOptions {
   wordsPerMinute?: number;
   chineseCharsPerMinute?: number;
 }
 
-export function useReadingTime(
-  content: string,
-  options: UseReadingTimeOptions = {}
-) {
+export function useReadingTime(content: string, options: UseReadingTimeOptions = {}) {
   const { wordsPerMinute = 200, chineseCharsPerMinute = 400 } = options;
 
   const readingTime = useMemo(() => {

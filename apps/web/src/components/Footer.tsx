@@ -1,30 +1,30 @@
-import Link from 'next/link';
-import { motion } from 'framer-motion';
-import { Sparkles, Github, Twitter, Mail, Heart } from 'lucide-react';
+import { motion } from "framer-motion";
+import { Github, Heart, Mail, Sparkles, Twitter } from "lucide-react";
+import Link from "next/link";
 
 const footerLinks = [
   {
-    title: '导航',
+    title: "导航",
     links: [
-      { label: '首页', href: '/' },
-      { label: '分类', href: '/categories' },
-      { label: '标签', href: '/tags' },
-      { label: '关于', href: '/about' },
+      { label: "首页", href: "/" },
+      { label: "分类", href: "/categories" },
+      { label: "标签", href: "/tags" },
+      { label: "关于", href: "/about" },
     ],
   },
   {
-    title: '更多',
+    title: "更多",
     links: [
-      { label: 'RSS 订阅', href: '/rss' },
-      { label: '站点地图', href: '/sitemap.xml' },
+      { label: "RSS 订阅", href: "/rss" },
+      { label: "站点地图", href: "/sitemap.xml" },
     ],
   },
 ];
 
 const socialLinks = [
-  { icon: Github, href: 'https://github.com', label: 'GitHub' },
-  { icon: Twitter, href: 'https://twitter.com', label: 'Twitter' },
-  { icon: Mail, href: 'mailto:hello@example.com', label: 'Email' },
+  { icon: Github, href: "https://github.com", label: "GitHub" },
+  { icon: Twitter, href: "https://twitter.com", label: "Twitter" },
+  { icon: Mail, href: "mailto:hello@example.com", label: "Email" },
 ];
 
 export function Footer() {
@@ -40,11 +40,9 @@ export function Footer() {
             <Link href="/" className="flex items-center gap-2 mb-4">
               <div className="relative w-8 h-8 flex items-center justify-center">
                 <div className="absolute inset-0 bg-gradient-to-br from-neon-cyan to-neon-purple rounded-lg opacity-80" />
-                <Sparkles className="relative w-5 h-5 text-white" />
+                <Sparkles className="relative w-5 h-5 text-text-primary" />
               </div>
-              <span className="font-display font-bold text-xl text-gradient">
-                VoidCode
-              </span>
+              <span className="font-display font-bold text-xl text-gradient">VoidCode</span>
             </Link>
             <p className="text-text-secondary text-sm max-w-sm mb-6">
               在代码的虚空中探索技术的边界，记录学习的点滴，分享编程的乐趣。
@@ -75,9 +73,7 @@ export function Footer() {
           {/* Links */}
           {footerLinks.map((group) => (
             <div key={group.title}>
-              <h3 className="font-display font-semibold text-text-primary mb-4">
-                {group.title}
-              </h3>
+              <h3 className="font-display font-semibold text-text-primary mb-4">{group.title}</h3>
               <ul className="space-y-2">
                 {group.links.map((link) => (
                   <li key={link.href}>

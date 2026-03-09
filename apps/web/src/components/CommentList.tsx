@@ -1,11 +1,11 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { motion } from 'framer-motion';
-import { format } from 'date-fns';
-import { zhCN } from 'date-fns/locale';
-import { MessageSquare, ChevronDown, ChevronUp, User } from 'lucide-react';
-import type { Comment } from '@blog/shared-types';
+import type { Comment } from "@blog/shared-types";
+import { format } from "date-fns";
+import { zhCN } from "date-fns/locale";
+import { motion } from "framer-motion";
+import { ChevronDown, ChevronUp, MessageSquare, User } from "lucide-react";
+import { useState } from "react";
 
 interface CommentListProps {
   comments: Comment[];
@@ -19,7 +19,7 @@ function CommentItem({ comment, depth = 0 }: { comment: Comment; depth?: number 
     <motion.div
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      className={`${depth > 0 ? 'ml-8 pl-4 border-l border-white/10' : ''}`}
+      className={`${depth > 0 ? "ml-8 pl-4 border-l border-white/10" : ""}`}
     >
       <div className="flex gap-4 py-4">
         {/* Avatar */}
@@ -31,8 +31,8 @@ function CommentItem({ comment, depth = 0 }: { comment: Comment; depth?: number 
               className="w-10 h-10 rounded-full border border-white/10"
             />
           ) : (
-            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-neon-cyan/20 to-neon-purple/20 flex items-center justify-center border border-white/10">
-              <User className="w-5 h-5 text-gray-400" />
+            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-neon-cyan/20 to-neon-purple/20 flex items-center justify-center border border-border-subtle">
+              <User className="w-5 h-5 text-text-secondary" />
             </div>
           )}
         </div>
@@ -40,17 +40,15 @@ function CommentItem({ comment, depth = 0 }: { comment: Comment; depth?: number 
         {/* Content */}
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-1">
-            <span className="font-medium text-white">
-              {comment.githubUsername}
-            </span>
-            <span className="text-gray-500 text-sm">
-              {format(new Date(comment.createdAt), 'yyyy-MM-dd HH:mm', {
+            <span className="font-medium text-text-primary">{comment.githubUsername}</span>
+            <span className="text-text-tertiary text-sm">
+              {format(new Date(comment.createdAt), "yyyy-MM-dd HH:mm", {
                 locale: zhCN,
               })}
             </span>
           </div>
 
-          <div className="text-gray-300 leading-relaxed whitespace-pre-wrap">
+          <div className="text-text-secondary leading-relaxed whitespace-pre-wrap">
             {comment.content}
           </div>
 
@@ -92,8 +90,8 @@ export function CommentList({ comments }: CommentListProps) {
   if (comments.length === 0) {
     return (
       <div className="text-center py-12">
-        <MessageSquare className="w-12 h-12 text-gray-600 mx-auto mb-4" />
-        <p className="text-gray-400">暂无评论，来发表第一条评论吧！</p>
+        <MessageSquare className="w-12 h-12 text-text-muted mx-auto mb-4" />
+        <p className="text-text-secondary">暂无评论，来发表第一条评论吧！</p>
       </div>
     );
   }
