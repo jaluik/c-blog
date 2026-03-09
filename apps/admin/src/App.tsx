@@ -9,6 +9,8 @@ import { ArticleList } from './pages/Article/List';
 import { ArticleCreate } from './pages/Article/Create';
 import { ArticleEdit } from './pages/Article/Edit';
 import { CommentList } from './pages/Comment/List';
+import { CategoryList } from './pages/Category/List';
+import { TagList } from './pages/Tag/List';
 import { UserProfile } from './pages/User/Profile';
 import { ChangePassword } from './pages/User/ChangePassword';
 
@@ -39,6 +41,8 @@ function App() {
                 <Route path="articles" element={<ArticleList />} />
                 <Route path="articles/create" element={<ArticleCreate />} />
                 <Route path="articles/edit/:id" element={<ArticleEdit />} />
+                <Route path="categories" element={<CategoryList />} />
+                <Route path="tags" element={<TagList />} />
                 <Route path="comments" element={<CommentList />} />
                 <Route path="user/profile" element={<UserProfile />} />
                 <Route path="user/change-password" element={<ChangePassword />} />
