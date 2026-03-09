@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react';
-import { ProTable, type ActionType, type ProColumns, ProFormText, ModalForm } from '@ant-design/pro-components';
+import { ProTable, type ActionType, type ProColumns, ProFormText, ModalForm, PageContainer } from '@ant-design/pro-components';
 import { Button, Space, Popconfirm, message, Form } from 'antd';
 import { PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import { getCategories, createCategory, updateCategory, deleteCategory } from '@/services/category';
@@ -122,9 +122,9 @@ export function CategoryList() {
   ];
 
   return (
-    <>
+    <PageContainer title="分类管理">
       <ProTable<CategoryWithCount>
-        headerTitle="分类管理"
+        headerTitle="分类列表"
         actionRef={actionRef}
         rowKey="id"
         search={{
@@ -177,6 +177,6 @@ export function CategoryList() {
           placeholder="可选，分类描述"
         />
       </ModalForm>
-    </>
+    </PageContainer>
   );
 }

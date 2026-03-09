@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react';
-import { ProTable, type ActionType, type ProColumns, ProFormText, ModalForm } from '@ant-design/pro-components';
+import { ProTable, type ActionType, type ProColumns, ProFormText, ModalForm, PageContainer } from '@ant-design/pro-components';
 import { Button, Space, Popconfirm, message, Form } from 'antd';
 import { PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import { getTags, createTag, updateTag, deleteTag } from '@/services/tag';
@@ -109,9 +109,9 @@ export function TagList() {
   ];
 
   return (
-    <>
+    <PageContainer title="标签管理">
       <ProTable<TagWithCount>
-        headerTitle="标签管理"
+        headerTitle="标签列表"
         actionRef={actionRef}
         rowKey="id"
         search={{
@@ -159,6 +159,6 @@ export function TagList() {
           help="将用于生成标签URL，如: javascript"
         />
       </ModalForm>
-    </>
+    </PageContainer>
   );
 }
