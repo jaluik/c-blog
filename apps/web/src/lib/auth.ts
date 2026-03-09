@@ -1,6 +1,14 @@
 import NextAuth from 'next-auth';
 import GitHubProvider from 'next-auth/providers/github';
 
+interface GitHubProfile {
+  id: number;
+  login: string;
+  avatar_url?: string;
+  name?: string;
+  email?: string;
+}
+
 export const {
   handlers: { GET, POST },
   auth,
@@ -16,6 +24,7 @@ export const {
   callbacks: {
     async jwt({ token, account, profile }) {
       if (account && profile) {
+        const githubProfile = profile as unknown as GitHubProfile;
         // 向后端换取 JWT
         const res = await fetch(`${process.env.API_URL}/api/auth/github`, {
           method: 'POST',
@@ -25,7 +34,7 @@ export const {
 
         const data = await res.json();
         token.backendToken = data.data.token;
-        token.userId = profile.id;
+        token.userId = githubProfile.id;
       }
       return token;
     },

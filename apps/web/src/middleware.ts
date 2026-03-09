@@ -7,6 +7,7 @@ const reservedPaths = [
   'posts',
   'categories',
   'tags',
+  'about',
   '_next',
   'static',
   'favicon.ico',

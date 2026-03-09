@@ -11,15 +11,33 @@ const createCommentSchema = z.object({
 export async function commentRoutes(app: FastifyInstance) {
   // 获取文章评论（只返回已审核的）
   app.get('/comments', async (request, reply) => {
-    const { articleId } = request.query as { articleId: string };
+    const { articleId, articleSlug } = request.query as { articleId?: string; articleSlug?: string };
 
-    if (!articleId) {
-      return reply.status(400).send({ error: 'articleId is required' });
+    if (!articleId && !articleSlug) {
+      return reply.status(400).send({ error: 'articleId or articleSlug is required' });
+    }
+
+    let actualArticleId: number;
+
+    if (articleId) {
+      actualArticleId = Number(articleId);
+    } else {
+      // Look up article by slug
+      const article = await prisma.article.findUnique({
+        where: { slug: articleSlug },
+        select: { id: true },
+      });
+
+      if (!article) {
+        return reply.status(404).send({ error: 'Article not found' });
+      }
+
+      actualArticleId = article.id;
     }
 
     const comments = await prisma.comment.findMany({
       where: {
-        articleId: Number(articleId),
+        articleId: actualArticleId,
         isApproved: true,
         parentId: null, // 只获取顶级评论
       },

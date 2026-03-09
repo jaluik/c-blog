@@ -1,15 +1,28 @@
 import type { GetStaticProps, GetStaticPaths } from 'next';
-import type { PostWithRelations } from '@blog/shared-types';
+import type { PostWithRelations, Comment } from '@blog/shared-types';
 import Link from 'next/link';
+import { format } from 'date-fns';
+import { zhCN } from 'date-fns/locale';
+import { ArrowLeft, Calendar, Eye, FolderOpen, Clock, Share2, Twitter, Linkedin, Link as LinkIcon, MessageSquare } from 'lucide-react';
 import { api } from '@/lib/api';
 import { MarkdownContent } from '@/components/MarkdownContent';
+import { ReadingProgress } from '@/components/ReadingProgress';
+import { TableOfContents } from '@/components/TableOfContents';
+import { PostNavigation } from '@/components/PostNavigation';
+import { RelatedPosts } from '@/components/RelatedPosts';
+import { CommentList } from '@/components/CommentList';
+import { CommentForm } from '@/components/CommentForm';
+import { motion } from 'framer-motion';
 
 interface PostPageProps {
   post: PostWithRelations;
+  comments: Comment[];
+  prevPost: PostWithRelations | null;
+  nextPost: PostWithRelations | null;
+  allPosts: PostWithRelations[];
 }
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  // 构建时预渲染所有文章
   const { data } = await api.posts.list(1, 100);
   const paths = data.map((post) => ({
     params: { slug: post.slug },
@@ -17,16 +30,44 @@ export const getStaticPaths: GetStaticPaths = async () => {
 
   return {
     paths,
-    fallback: 'blocking', // 新文章 ISR
+    fallback: 'blocking',
   };
 };
 
-export const getStaticProps: GetStaticProps<{ post: PostWithRelations }> = async ({ params }) => {
+export const getStaticProps: GetStaticProps<PostPageProps> = async ({ params }) => {
   try {
-    const post = await api.posts.get(params?.slug as string);
+    const API_URL = process.env.API_URL || 'http://localhost:4000';
+
+    // Fetch current post, comments, and all posts in parallel
+    const [postRes, commentsRes, allPostsRes] = await Promise.all([
+      fetch(`${API_URL}/api/posts/${params?.slug}`),
+      fetch(`${API_URL}/api/comments?articleSlug=${params?.slug}`),
+      fetch(`${API_URL}/api/posts?page=1&pageSize=100`),
+    ]);
+
+    if (!postRes.ok) {
+      return { notFound: true };
+    }
+
+    const post = await postRes.json();
+    const commentsData = await commentsRes.json();
+    const allPostsData = await allPostsRes.json();
+    const allPosts = allPostsData.data || [];
+
+    // Find prev and next posts
+    const currentIndex = allPosts.findIndex((p: PostWithRelations) => p.id === post.id);
+    const prevPost = currentIndex < allPosts.length - 1 ? allPosts[currentIndex + 1] : null;
+    const nextPost = currentIndex > 0 ? allPosts[currentIndex - 1] : null;
+
     return {
-      props: { post },
-      revalidate: 60, // ISR: 每分钟重新生成
+      props: {
+        post,
+        comments: commentsData.data || [],
+        prevPost,
+        nextPost,
+        allPosts,
+      },
+      revalidate: 60,
     };
   } catch {
     return {
@@ -35,65 +76,202 @@ export const getStaticProps: GetStaticProps<{ post: PostWithRelations }> = async
   }
 };
 
-export default function PostPage({ post }: PostPageProps) {
+// Calculate reading time
+function getReadingTime(content: string): number {
+  const wordsPerMinute = 200;
+  const words = content.trim().split(/\s+/).length;
+  return Math.ceil(words / wordsPerMinute);
+}
+
+export default function PostPage({ post, comments, prevPost, nextPost, allPosts }: PostPageProps) {
+  const readingTime = getReadingTime(post.content);
+
+  const copyLink = () => {
+    navigator.clipboard.writeText(window.location.href);
+    // Could add toast notification here
+  };
+
   return (
-    <div className="min-h-screen">
-      <header className="border-b">
-        <div className="max-w-4xl mx-auto px-4 py-6">
-          <Link href="/" className="text-blue-600 hover:underline">
-            ← 返回首页
-          </Link>
-        </div>
-      </header>
+    <>
+      {/* Reading Progress */}
+      <ReadingProgress />
 
-      <main className="max-w-4xl mx-auto px-4 py-8">
-        <article>
-          <header className="mb-8">
-            <h1 className="text-4xl font-bold mb-4">{post.title}</h1>
+      {/* Table of Contents Sidebar */}
+      <TableOfContents />
 
-            <div className="flex items-center gap-4 text-gray-500">
-              <time dateTime={post.publishedAt}>
-                {new Date(post.publishedAt || post.createdAt).toLocaleDateString('zh-CN')}
-              </time>
+      <article className="min-h-screen pt-24 pb-20">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          {/* Back Link */}
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            <Link
+              href="/"
+              className="inline-flex items-center gap-2 text-gray-400 hover:text-neon-cyan transition-colors mb-8 group"
+            >
+              <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
+              返回首页
+            </Link>
+          </motion.div>
 
-              {post.category && (
-                <Link
-                  href={`/categories/${post.category.slug}`}
-                  className="text-blue-600 hover:underline"
-                >
-                  {post.category.name}
-                </Link>
-              )}
+          {/* Article Header */}
+          <motion.header
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+            className="mb-10"
+          >
+            {/* Category */}
+            {post.category && (
+              <Link
+                href={`/categories/${post.category.slug}`}
+                className="inline-flex items-center gap-1 text-neon-cyan text-sm font-medium mb-4 hover:underline"
+              >
+                <FolderOpen className="w-4 h-4" />
+                {post.category.name}
+              </Link>
+            )}
 
-              <span>{post.viewCount} 阅读</span>
+            {/* Title */}
+            <h1 className="font-display text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-6 leading-tight">
+              {post.title}
+            </h1>
+
+            {/* Meta Info */}
+            <div className="flex flex-wrap items-center gap-4 text-sm text-gray-400">
+              <span className="flex items-center gap-1">
+                <Calendar className="w-4 h-4" />
+                {format(new Date(post.publishedAt || post.createdAt), 'yyyy年MM月dd日', {
+                  locale: zhCN,
+                })}
+              </span>
+              <span className="flex items-center gap-1">
+                <Clock className="w-4 h-4" />
+                {readingTime} 分钟阅读
+              </span>
+              <span className="flex items-center gap-1">
+                <Eye className="w-4 h-4" />
+                {post.viewCount} 阅读
+              </span>
             </div>
 
+            {/* Tags */}
             {post.tags && post.tags.length > 0 && (
-              <div className="flex gap-2 mt-4">
-                {post.tags.map(tag => (
+              <div className="flex flex-wrap gap-2 mt-6">
+                {post.tags.map((tag) => (
                   <Link
                     key={tag.id}
                     href={`/tags/${tag.slug}`}
-                    className="text-sm bg-gray-100 px-3 py-1 rounded-full hover:bg-gray-200"
+                    className="tag"
                   >
-                    {tag.name}
+                    #{tag.name}
                   </Link>
                 ))}
               </div>
             )}
-          </header>
+          </motion.header>
 
+          {/* Cover Image */}
           {post.coverImage && (
-            <img
-              src={post.coverImage}
-              alt={post.title}
-              className="w-full h-64 object-cover rounded-lg mb-8"
-            />
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="relative aspect-video rounded-2xl overflow-hidden mb-10 shadow-2xl"
+            >
+              <img
+                src={post.coverImage}
+                alt={post.title}
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-void-primary/50 to-transparent" />
+            </motion.div>
           )}
 
-          <MarkdownContent content={post.content} />
-        </article>
-      </main>
-    </div>
+          {/* Article Content */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+          >
+            <MarkdownContent content={post.content} />
+          </motion.div>
+
+          {/* Share Section */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="mt-16 pt-8 border-t border-white/10"
+          >
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              <h3 className="font-display font-semibold text-white flex items-center gap-2">
+                <Share2 className="w-5 h-5 text-neon-cyan" />
+                分享文章
+              </h3>
+              <div className="flex items-center gap-3">
+                <a
+                  href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(post.title)}&url=${encodeURIComponent(typeof window !== 'undefined' ? window.location.href : '')}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-10 h-10 rounded-lg glass flex items-center justify-center text-gray-400 hover:text-white hover:bg-[#1DA1F2]/20 transition-all"
+                  aria-label="Share on Twitter"
+                >
+                  <Twitter className="w-5 h-5" />
+                </a>
+                <a
+                  href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(typeof window !== 'undefined' ? window.location.href : '')}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-10 h-10 rounded-lg glass flex items-center justify-center text-gray-400 hover:text-white hover:bg-[#0A66C2]/20 transition-all"
+                  aria-label="Share on LinkedIn"
+                >
+                  <Linkedin className="w-5 h-5" />
+                </a>
+                <button
+                  onClick={copyLink}
+                  className="w-10 h-10 rounded-lg glass flex items-center justify-center text-gray-400 hover:text-white hover:bg-neon-cyan/20 transition-all"
+                  aria-label="Copy link"
+                >
+                  <LinkIcon className="w-5 h-5" />
+                </button>
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Post Navigation */}
+          <PostNavigation prevPost={prevPost} nextPost={nextPost} />
+
+          {/* Related Posts */}
+          <RelatedPosts posts={allPosts} currentPostId={post.id} />
+
+          {/* Comments Section */}
+          <motion.section
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="mt-16 pt-8 border-t border-white/10"
+          >
+            <h2 className="font-display text-2xl font-bold text-white mb-8 flex items-center gap-2">
+              <MessageSquare className="w-6 h-6 text-neon-cyan" />
+              评论
+              {comments.length > 0 && (
+                <span className="text-lg text-gray-500">({comments.length})</span>
+              )}
+            </h2>
+
+            {/* Comment Form */}
+            <div className="mb-10">
+              <CommentForm articleId={post.id} />
+            </div>
+
+            {/* Comments List */}
+            <CommentList comments={comments} />
+          </motion.section>
+        </div>
+      </article>
+    </>
   );
 }

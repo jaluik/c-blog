@@ -39,3 +39,6 @@ uploads/
 
 # Worktrees
 .worktrees/
+
+# TypeScript build info
+*.tsbuildinfo
