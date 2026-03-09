@@ -1,7 +1,7 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { Monitor, Moon, Sun } from "lucide-react";
+import { Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 
@@ -22,38 +22,20 @@ export function ThemeToggle() {
     );
   }
 
-  const currentTheme = theme || "system";
+  const isDark = resolvedTheme === "dark";
 
   const toggleTheme = () => {
-    if (currentTheme === "dark") {
-      setTheme("light");
-    } else if (currentTheme === "light") {
-      setTheme("system");
-    } else {
-      setTheme("dark");
-    }
+    setTheme(isDark ? "light" : "dark");
   };
 
   const getIcon = () => {
-    switch (currentTheme) {
-      case "light":
-        return <Sun className="w-5 h-5 text-yellow-500" />;
-      case "dark":
-        return <Moon className="w-5 h-5 text-neon-cyan" />;
-      default:
-        return <Monitor className="w-5 h-5 text-gray-400" />;
-    }
+    return isDark
+      ? <Sun className="w-5 h-5 text-yellow-500" />
+      : <Moon className="w-5 h-5 text-neon-cyan" />;
   };
 
   const getLabel = () => {
-    switch (currentTheme) {
-      case "light":
-        return "亮色模式";
-      case "dark":
-        return "暗黑模式";
-      default:
-        return "跟随系统";
-    }
+    return isDark ? "切换到亮色模式" : "切换到暗黑模式";
   };
 
   return (
@@ -66,7 +48,7 @@ export function ThemeToggle() {
     >
       <AnimatePresence mode="wait" initial={false}>
         <motion.div
-          key={currentTheme}
+          key={resolvedTheme}
           initial={{ y: -20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: 20, opacity: 0 }}

@@ -78,19 +78,19 @@ export function TableOfContents() {
   return (
     <>
       {/* Desktop TOC - Sidebar */}
-      <aside className="hidden xl:block fixed right-8 top-32 w-64 max-h-[calc(100vh-8rem)] overflow-y-auto">
-        <div className="glass rounded-xl p-4">
-          <h3 className="font-display font-semibold text-text-primary mb-4 flex items-center gap-2">
-            <span className="w-1 h-4 bg-gradient-to-b from-neon-cyan to-neon-purple rounded-full" />
+      <aside className="hidden 2xl:block fixed right-4 top-28 w-48 max-h-[calc(100vh-7rem)] overflow-y-auto z-40">
+        <div className="glass rounded-lg p-3">
+          <h3 className="font-display font-semibold text-text-primary mb-3 flex items-center gap-2 text-sm">
+            <span className="w-1 h-3 bg-gradient-to-b from-neon-cyan to-neon-purple rounded-full" />
             目录
           </h3>
-          <nav className="space-y-1">
+          <nav className="space-y-0.5">
             {headings.map((heading) => (
               <button
                 key={heading.id}
                 onClick={() => scrollToHeading(heading.id)}
-                className={`w-full text-left text-sm transition-all duration-200 rounded-lg px-3 py-2 ${
-                  heading.level === 2 ? "pl-3" : heading.level === 3 ? "pl-6" : "pl-9"
+                className={`w-full text-left text-xs transition-all duration-200 rounded-md px-2 py-1.5 truncate ${
+                  heading.level === 2 ? "pl-2" : heading.level === 3 ? "pl-4" : "pl-6"
                 } ${
                   activeId === heading.id
                     ? "text-neon-cyan bg-neon-cyan/10"
@@ -105,7 +105,7 @@ export function TableOfContents() {
       </aside>
 
       {/* Mobile TOC - Floating Button */}
-      <div className="xl:hidden">
+      <div className="2xl:hidden">
         <button
           onClick={() => setIsOpen(!isOpen)}
           className="fixed bottom-8 right-8 z-50 w-12 h-12 rounded-full glass border border-neon-cyan/30 flex items-center justify-center text-neon-cyan shadow-neon-cyan"
