@@ -3,3 +3,65 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* ProLayout 样式优化 */
+.ant-pro-layout .ant-pro-layout-content {
+  padding: 12px !important;
+}
+
+.ant-pro-page-container {
+  margin: -12px !important;
+}
+
+.ant-pro-page-container-warp {
+  padding: 12px 12px 0 !important;
+}
+
+.ant-pro-page-container-children-content {
+  padding: 12px !important;
+}
+
+/* 侧边栏样式优化 */
+.ant-pro-sider {
+  padding-top: 0 !important;
+}
+
+.ant-pro-sider-logo {
+  padding: 12px 16px !important;
+  height: 48px !important;
+}
+
+.ant-pro-sider-logo h1 {
+  font-size: 16px !important;
+}
+
+.ant-menu.ant-pro-sider-menu {
+  padding: 4px 0 !important;
+}
+
+.ant-menu-item,
+.ant-menu-submenu-title {
+  height: 36px !important;
+  line-height: 36px !important;
+  margin: 2px 8px !important;
+}
+
+/* 头部样式优化 */
+.ant-pro-layout-header {
+  height: 48px !important;
+  line-height: 48px !important;
+}
+
+/* 表格样式优化 */
+.ant-pro-table {
+  margin: -12px !important;
+}
+
+.ant-pro-table .ant-pro-table-search {
+  margin-bottom: 12px !important;
+  padding: 16px !important;
+}
+
+.ant-pro-table .ant-pro-table-toolbar {
+  padding: 12px 16px !important;
+}

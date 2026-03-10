@@ -117,7 +117,13 @@ export function TagList() {
   ];
 
   return (
-    <PageContainer title="标签管理">
+    <PageContainer
+      title="标签管理"
+      style={{ padding: 0 }}
+      header={{
+        style: { padding: "16px 24px", margin: 0 },
+      }}
+    >
       <ProTable<TagWithCount>
         headerTitle="标签列表"
         actionRef={actionRef}

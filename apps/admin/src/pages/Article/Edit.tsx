@@ -6,6 +6,7 @@ import type { TagWithCount } from "@/services/tag";
 import { uploadImage } from "@/services/user";
 import { ArrowLeftOutlined, UploadOutlined } from "@ant-design/icons";
 import {
+  PageContainer,
   PageLoading,
   ProForm,
   ProFormRadio,
@@ -113,13 +114,18 @@ export function ArticleEdit() {
   }
 
   return (
-    <>
-      <div style={{ marginBottom: 16 }}>
+    <PageContainer
+      title="编辑文章"
+      style={{ padding: 0 }}
+      header={{
+        style: { padding: "16px 24px", margin: 0 },
+      }}
+      extra={
         <Button icon={<ArrowLeftOutlined />} onClick={() => navigate("/articles")}>
           返回列表
         </Button>
-      </div>
-
+      }
+    >
       <ProForm
         form={form}
         onFinish={handleSubmit}
@@ -229,6 +235,6 @@ export function ArticleEdit() {
           </div>
         </Card>
       </ProForm>
-    </>
+    </PageContainer>
   );
 }

@@ -134,7 +134,13 @@ export function CommentList() {
   ];
 
   return (
-    <PageContainer title="评论管理">
+    <PageContainer
+      title="评论管理"
+      style={{ padding: 0 }}
+      header={{
+        style: { padding: "16px 24px", margin: 0 },
+      }}
+    >
       <ProTable<CommentWithArticle>
         headerTitle="评论列表"
         actionRef={actionRef}

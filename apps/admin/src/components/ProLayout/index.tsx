@@ -107,8 +107,8 @@ export function ProLayout() {
         menuItemRender={(item, dom) => <Link to={item.path || "/"}>{dom}</Link>}
         rightContentRender={() => (
           <Dropdown menu={{ items: userMenuItems }} placement="bottomRight">
-            <Button type="text">
-              <Avatar size="small" icon={<UserOutlined />} style={{ marginRight: 8 }} />
+            <Button type="text" size="small">
+              <Avatar size="small" icon={<UserOutlined />} style={{ marginRight: 6 }} />
               <span>{username || "管理员"}</span>
             </Button>
           </Dropdown>
@@ -118,7 +118,20 @@ export function ProLayout() {
         fixSiderbar
         fixedHeader
         contentStyle={{
-          padding: 24,
+          padding: 16,
+          margin: 0,
+          minHeight: "calc(100vh - 56px)",
+        }}
+        headerStyle={{
+          height: 48,
+          lineHeight: "48px",
+          padding: "0 16px",
+        }}
+        siderWidth={200}
+        menuProps={{
+          style: {
+            padding: "8px 0",
+          },
         }}
       >
         <Outlet />

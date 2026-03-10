@@ -38,7 +38,13 @@ export function ChangePassword() {
   };
 
   return (
-    <PageContainer title="修改密码">
+    <PageContainer
+      title="修改密码"
+      style={{ padding: 0 }}
+      header={{
+        style: { padding: "16px 24px", margin: 0 },
+      }}
+    >
       <Card style={{ maxWidth: 600 }}>
         <Alert
           message="安全提示"

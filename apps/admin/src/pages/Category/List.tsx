@@ -130,7 +130,13 @@ export function CategoryList() {
   ];
 
   return (
-    <PageContainer title="分类管理">
+    <PageContainer
+      title="分类管理"
+      style={{ padding: 0 }}
+      header={{
+        style: { padding: "16px 24px", margin: 0 },
+      }}
+    >
       <ProTable<CategoryWithCount>
         headerTitle="分类列表"
         actionRef={actionRef}

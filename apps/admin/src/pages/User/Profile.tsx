@@ -7,7 +7,13 @@ export function UserProfile() {
   const { username } = getCurrentUser();
 
   return (
-    <PageContainer title="个人信息">
+    <PageContainer
+      title="个人信息"
+      style={{ padding: 0 }}
+      header={{
+        style: { padding: "16px 24px", margin: 0 },
+      }}
+    >
       <Card>
         <div style={{ textAlign: "center", marginBottom: 24 }}>
           <Avatar size={80} icon={<UserOutlined />} />

@@ -123,7 +123,13 @@ export function ArticleList() {
   ];
 
   return (
-    <PageContainer title="文章管理">
+    <PageContainer
+      title="文章管理"
+      style={{ padding: 0 }}
+      header={{
+        style: { padding: "16px 24px", margin: 0 },
+      }}
+    >
       <ProTable<PostWithRelations>
         headerTitle="文章列表"
         actionRef={actionRef}

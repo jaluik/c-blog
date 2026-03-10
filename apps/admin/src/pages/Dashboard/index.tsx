@@ -78,7 +78,14 @@ export function Dashboard() {
   };
 
   return (
-    <PageContainer title="Dashboard" loading={loading}>
+    <PageContainer
+      title="Dashboard"
+      loading={loading}
+      style={{ padding: 0 }}
+      header={{
+        style: { padding: "16px 24px", margin: 0 },
+      }}
+    >
       <Row gutter={[16, 16]}>
         <Col xs={24} sm={12} lg={6}>
           <Card>
