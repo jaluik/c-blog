@@ -11,6 +11,7 @@ export async function categoryRoutes(app: FastifyInstance) {
     });
 
     return {
+      success: true,
       data: categories.map((c) => ({
         ...c,
         articleCount: c._count.articles,

@@ -17,6 +17,7 @@ export async function adminTagRoutes(app: FastifyInstance) {
       include: { _count: { select: { articles: true } } },
     });
     return {
+      success: true,
       data: tags.map((t) => ({ ...t, articleCount: t._count.articles, _count: undefined })),
     };
   });

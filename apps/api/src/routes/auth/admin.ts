@@ -38,6 +38,6 @@ export async function adminAuthRoutes(app: FastifyInstance) {
       type: "admin",
     });
 
-    return { data: { token, username: admin.username } };
+    return { success: true, data: { token, username: admin.username } };
   });
 }

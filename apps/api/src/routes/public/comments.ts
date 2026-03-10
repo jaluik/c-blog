@@ -53,7 +53,7 @@ export async function commentRoutes(app: FastifyInstance) {
       },
     });
 
-    return { data: comments };
+    return { success: true, data: comments };
   });
 
   // 发表评论（需要 JWT）

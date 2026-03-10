@@ -1,9 +1,9 @@
 import { approveComment, deleteComment, getComments } from "@/services/comment";
 import type { CommentListParams } from "@/services/comment";
 import { CheckOutlined, DeleteOutlined } from "@ant-design/icons";
-import { type ActionType, type ProColumns, ProTable } from "@ant-design/pro-components";
+import { type ActionType, PageContainer, type ProColumns, ProTable } from "@ant-design/pro-components";
 import type { Comment } from "@blog/shared-types";
-import { Avatar, Button, Popconfirm, Space, Tag, message } from "antd";
+import { Avatar, Button, Popconfirm, Space, Tag, App } from "antd";
 import { useRef } from "react";
 
 interface CommentWithArticle extends Comment {
@@ -16,6 +16,7 @@ interface CommentWithArticle extends Comment {
 
 export function CommentList() {
   const actionRef = useRef<ActionType>();
+  const { message } = App.useApp();
 
   const handleApprove = async (id: number, isApproved: boolean) => {
     try {
@@ -133,33 +134,35 @@ export function CommentList() {
   ];
 
   return (
-    <ProTable<CommentWithArticle>
-      headerTitle="评论列表"
-      actionRef={actionRef}
-      rowKey="id"
-      search={{
-        labelWidth: 120,
-      }}
-      request={async (params) => {
-        const queryParams: CommentListParams = {
-          page: params.current,
-          pageSize: params.pageSize,
-          isApproved: params.isApproved,
-        };
+    <PageContainer title="评论管理">
+      <ProTable<CommentWithArticle>
+        headerTitle="评论列表"
+        actionRef={actionRef}
+        rowKey="id"
+        search={{
+          labelWidth: 120,
+        }}
+        request={async (params) => {
+          const queryParams: CommentListParams = {
+            page: params.current,
+            pageSize: params.pageSize,
+            isApproved: params.isApproved,
+          };
 
-        const response = await getComments(queryParams);
-        return {
-          data: response.data,
-          success: true,
-          total: response.meta.total,
-        };
-      }}
-      columns={columns}
-      pagination={{
-        defaultPageSize: 20,
-        showSizeChanger: true,
-        showTotal: (total) => `共 ${total} 条`,
-      }}
-    />
+          const response = await getComments(queryParams);
+          return {
+            data: response.data,
+            success: true,
+            total: response.meta.total,
+          };
+        }}
+        columns={columns}
+        pagination={{
+          defaultPageSize: 20,
+          showSizeChanger: true,
+          showTotal: (total) => `共 ${total} 条`,
+        }}
+      />
+    </PageContainer>
   );
 }

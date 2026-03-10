@@ -19,6 +19,7 @@ export async function adminCategoryRoutes(app: FastifyInstance) {
       include: { _count: { select: { articles: true } } },
     });
     return {
+      success: true,
       data: categories.map((c) => ({ ...c, articleCount: c._count.articles, _count: undefined })),
     };
   });

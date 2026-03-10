@@ -46,6 +46,7 @@ export async function publicPostRoutes(app: FastifyInstance) {
     ]);
 
     return {
+      success: true,
       data: posts.map((p) => ({
         ...p,
         tags: p.tags.map((t) => t.tag),
@@ -85,10 +86,13 @@ export async function publicPostRoutes(app: FastifyInstance) {
     });
 
     return {
-      ...post,
-      tags: post.tags.map((t) => t.tag),
-      commentCount: post._count.comments,
-      _count: undefined,
+      success: true,
+      data: {
+        ...post,
+        tags: post.tags.map((t) => t.tag),
+        commentCount: post._count.comments,
+        _count: undefined,
+      },
     };
   });
 }

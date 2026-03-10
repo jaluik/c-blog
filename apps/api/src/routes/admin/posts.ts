@@ -82,7 +82,7 @@ export async function adminPostRoutes(app: FastifyInstance) {
       return reply.status(404).send({ error: "Article not found" });
     }
 
-    return { ...post, tags: post.tags.map((t) => t.tag) };
+    return { success: true, data: { ...post, tags: post.tags.map((t) => t.tag) } };
   });
 
   // 创建文章

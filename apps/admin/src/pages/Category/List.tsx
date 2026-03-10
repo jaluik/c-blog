@@ -9,7 +9,7 @@ import {
   ProFormText,
   ProTable,
 } from "@ant-design/pro-components";
-import { Button, Form, Popconfirm, Space, message } from "antd";
+import { App, Button, Form, Popconfirm, Space } from "antd";
 import { useRef, useState } from "react";
 
 export function CategoryList() {
@@ -17,6 +17,7 @@ export function CategoryList() {
   const [form] = Form.useForm();
   const [modalVisible, setModalVisible] = useState(false);
   const [editingCategory, setEditingCategory] = useState<CategoryWithCount | null>(null);
+  const { message } = App.useApp();
 
   const handleDelete = async (id: number) => {
     try {

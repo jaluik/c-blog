@@ -14,7 +14,7 @@ import {
 } from "@ant-design/pro-components";
 import type { CreatePostInput } from "@blog/shared-types";
 import MDEditor from "@uiw/react-md-editor";
-import { Button, Card, Image, Space, Upload, message } from "antd";
+import { App, Button, Card, Image, Space, Upload } from "antd";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -23,6 +23,7 @@ export function ArticleCreate() {
   const [form] = ProForm.useForm();
   const [, setLoading] = useState(false);
   const [content, setContent] = useState("");
+  const { message } = App.useApp();
   const [categories, setCategories] = useState<CategoryWithCount[]>([]);
   const [tags, setTags] = useState<TagWithCount[]>([]);
   const [coverImage, setCoverImage] = useState<string>("");
@@ -116,7 +117,7 @@ export function ArticleCreate() {
           <ProFormSelect
             name="categoryId"
             label="分类"
-            options={categories.map((cat) => ({
+            options={(categories || []).map((cat) => ({
               label: cat.name,
               value: cat.id,
             }))}
@@ -127,7 +128,7 @@ export function ArticleCreate() {
             name="tagIds"
             label="标签"
             mode="multiple"
-            options={tags.map((tag) => ({
+            options={(tags || []).map((tag) => ({
               label: tag.name,
               value: tag.id,
             }))}

@@ -40,6 +40,7 @@ export async function adminCommentRoutes(app: FastifyInstance) {
     ]);
 
     return {
+      success: true,
       data: comments,
       meta: { total, page: pageNum, pageSize: size, totalPages: Math.ceil(total / size) },
     };

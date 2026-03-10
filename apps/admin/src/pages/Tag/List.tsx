@@ -9,7 +9,7 @@ import {
   ProFormText,
   ProTable,
 } from "@ant-design/pro-components";
-import { Button, Form, Popconfirm, Space, message } from "antd";
+import { App, Button, Form, Popconfirm, Space } from "antd";
 import { useRef, useState } from "react";
 
 export function TagList() {
@@ -17,6 +17,7 @@ export function TagList() {
   const [form] = Form.useForm();
   const [modalVisible, setModalVisible] = useState(false);
   const [editingTag, setEditingTag] = useState<TagWithCount | null>(null);
+  const { message } = App.useApp();
 
   const handleDelete = async (id: number) => {
     try {

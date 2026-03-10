@@ -1,9 +1,9 @@
 import { deleteArticle, getArticles } from "@/services/article";
 import type { ArticleListParams } from "@/services/article";
 import { DeleteOutlined, EditOutlined, EyeOutlined, PlusOutlined } from "@ant-design/icons";
-import { type ActionType, type ProColumns, ProTable } from "@ant-design/pro-components";
+import { type ActionType, PageContainer, type ProColumns, ProTable } from "@ant-design/pro-components";
 import type { PostWithRelations, Tag as TagType } from "@blog/shared-types";
-import { Button, Image, Popconfirm, Space, Tag, message } from "antd";
+import { App, Button, Image, Popconfirm, Space, Tag } from "antd";
 import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -11,6 +11,7 @@ export function ArticleList() {
   const navigate = useNavigate();
   const actionRef = useRef<ActionType>();
   const [loading] = useState(false);
+  const { message } = App.useApp();
 
   const handleDelete = async (id: number) => {
     try {
@@ -156,50 +157,52 @@ export function ArticleList() {
   ];
 
   return (
-    <ProTable<PostWithRelations>
-      headerTitle="文章列表"
-      actionRef={actionRef}
-      rowKey="id"
-      search={{
-        labelWidth: 120,
-      }}
-      toolBarRender={() => [
-        <Button
-          key="add"
-          type="primary"
-          icon={<PlusOutlined />}
-          onClick={() => navigate("/articles/create")}
-        >
-          新建文章
-        </Button>,
-      ]}
-      request={async (params) => {
-        const queryParams: ArticleListParams = {
-          page: params.current,
-          pageSize: params.pageSize,
-          status: params.status,
-        };
+    <PageContainer title="文章管理">
+      <ProTable<PostWithRelations>
+        headerTitle="文章列表"
+        actionRef={actionRef}
+        rowKey="id"
+        search={{
+          labelWidth: 120,
+        }}
+        toolBarRender={() => [
+          <Button
+            key="add"
+            type="primary"
+            icon={<PlusOutlined />}
+            onClick={() => navigate("/articles/create")}
+          >
+            新建文章
+          </Button>,
+        ]}
+        request={async (params) => {
+          const queryParams: ArticleListParams = {
+            page: params.current,
+            pageSize: params.pageSize,
+            status: params.status,
+          };
 
-        // Handle title search
-        if (params.title) {
-          // Title search will be handled by the API
-          // For now, we just pass all params
-        }
+          // Handle title search
+          if (params.title) {
+            // Title search will be handled by the API
+            // For now, we just pass all params
+          }
 
-        const response = await getArticles(queryParams);
-        return {
-          data: response.data,
-          success: true,
-          total: response.meta.total,
-        };
-      }}
-      columns={columns}
-      pagination={{
-        defaultPageSize: 10,
-        showSizeChanger: true,
-        showTotal: (total) => `共 ${total} 条`,
-      }}
-      loading={loading}
-    />
+          const response = await getArticles(queryParams);
+          return {
+            data: response.data,
+            success: true,
+            total: response.meta.total,
+          };
+        }}
+        columns={columns}
+        pagination={{
+          defaultPageSize: 10,
+          showSizeChanger: true,
+          showTotal: (total) => `共 ${total} 条`,
+        }}
+        loading={loading}
+      />
+    </PageContainer>
   );
 }

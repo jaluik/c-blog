@@ -1,11 +1,12 @@
 import { changePassword } from "@/services/user";
 import { PageContainer } from "@ant-design/pro-components";
 import { ProForm, ProFormText } from "@ant-design/pro-components";
-import { Alert, Card, message } from "antd";
+import { Alert, App, Card } from "antd";
 import { useState } from "react";
 
 export function ChangePassword() {
   const [, setLoading] = useState(false);
+  const { message } = App.useApp();
 
   const handleSubmit = async (values: {
     oldPassword: string;

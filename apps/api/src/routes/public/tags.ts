@@ -11,6 +11,7 @@ export async function tagRoutes(app: FastifyInstance) {
     });
 
     return {
+      success: true,
       data: tags.map((t) => ({
         ...t,
         articleCount: t._count.articles,
