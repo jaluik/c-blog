@@ -42,3 +42,4 @@ uploads/
 
 # TypeScript build info
 *.tsbuildinfo
+.playwright-cli
