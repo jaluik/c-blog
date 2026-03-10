@@ -3,7 +3,7 @@ import type { ArticleListParams } from "@/services/article";
 import { DeleteOutlined, EditOutlined, EyeOutlined, PlusOutlined } from "@ant-design/icons";
 import { type ActionType, PageContainer, type ProColumns, ProTable } from "@ant-design/pro-components";
 import type { PostWithRelations, Tag as TagType } from "@blog/shared-types";
-import { App, Button, Image, Popconfirm, Space, Tag } from "antd";
+import { App, Button, Popconfirm, Space, Tag } from "antd";
 import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -27,27 +27,8 @@ export function ArticleList() {
     {
       title: "ID",
       dataIndex: "id",
-      width: 60,
+      width: 50,
       search: false,
-    },
-    {
-      title: "封面",
-      dataIndex: "coverImage",
-      width: 80,
-      search: false,
-      render: (_, record) =>
-        record.coverImage ? (
-          <Image
-            src={record.coverImage}
-            alt={record.title}
-            width={60}
-            height={40}
-            style={{ objectFit: "cover" }}
-            preview={false}
-          />
-        ) : (
-          <div style={{ width: 60, height: 40, backgroundColor: "#f0f0f0" }} />
-        ),
     },
     {
       title: "标题",
@@ -58,35 +39,32 @@ export function ArticleList() {
       },
     },
     {
-      title: "Slug",
-      dataIndex: "slug",
-      ellipsis: true,
-      search: false,
-    },
-    {
       title: "分类",
       dataIndex: "category",
-      width: 120,
+      width: 100,
       search: false,
       render: (_, record) => record.category?.name || "-",
     },
     {
       title: "标签",
       dataIndex: "tags",
-      width: 150,
+      width: 140,
       search: false,
       render: (_, record) => (
         <Space size="small" wrap>
-          {record.tags?.map((tag: TagType) => (
-            <Tag key={tag.id}>{tag.name}</Tag>
+          {record.tags?.slice(0, 2).map((tag: TagType) => (
+            <Tag key={tag.id} size="small">{tag.name}</Tag>
           ))}
+          {record.tags && record.tags.length > 2 && (
+            <Tag size="small">+{record.tags.length - 2}</Tag>
+          )}
         </Space>
       ),
     },
     {
       title: "状态",
       dataIndex: "status",
-      width: 100,
+      width: 80,
       valueEnum: {
         draft: { text: "草稿", status: "Default" },
         published: { text: "已发布", status: "Success" },
@@ -95,31 +73,25 @@ export function ArticleList() {
     {
       title: "浏览量",
       dataIndex: "viewCount",
-      width: 80,
+      width: 70,
       search: false,
       sorter: true,
     },
     {
       title: "发布时间",
       dataIndex: "publishedAt",
-      width: 180,
+      width: 110,
       search: false,
-      valueType: "dateTime",
       sorter: true,
-      render: (_, record) => record.publishedAt || "-",
-    },
-    {
-      title: "创建时间",
-      dataIndex: "createdAt",
-      width: 180,
-      search: false,
-      valueType: "dateTime",
-      sorter: true,
+      render: (_, record) =>
+        record.publishedAt
+          ? new Date(record.publishedAt).toLocaleDateString("zh-CN")
+          : "-",
     },
     {
       title: "操作",
       key: "action",
-      width: 180,
+      width: 140,
       fixed: "right",
       search: false,
       render: (_, record) => (
@@ -129,17 +101,13 @@ export function ArticleList() {
             size="small"
             icon={<EyeOutlined />}
             onClick={() => window.open(`/${record.slug}`, "_blank")}
-          >
-            查看
-          </Button>
+          />
           <Button
             type="link"
             size="small"
             icon={<EditOutlined />}
             onClick={() => navigate(`/articles/edit/${record.id}`)}
-          >
-            编辑
-          </Button>
+          />
           <Popconfirm
             title="确认删除"
             description="删除后无法恢复，是否确认删除？"
@@ -147,9 +115,7 @@ export function ArticleList() {
             okText="确认"
             cancelText="取消"
           >
-            <Button type="link" danger size="small" icon={<DeleteOutlined />}>
-              删除
-            </Button>
+            <Button type="link" danger size="small" icon={<DeleteOutlined />} />
           </Popconfirm>
         </Space>
       ),
