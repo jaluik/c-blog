@@ -2,7 +2,7 @@ import type { FastifyInstance } from "fastify";
 import { z } from "zod";
 
 const githubCallbackSchema = z.object({
-  code: z.string(),
+  access_token: z.string(),
 });
 
 interface GitHubUser {
@@ -18,40 +18,20 @@ export async function githubAuthRoutes(app: FastifyInstance) {
       return reply.status(400).send({ error: "Invalid input" });
     }
 
-    const { code } = body.data;
+    const { access_token } = body.data;
 
     try {
-      // 用 code 换 access_token
-      const tokenRes = await fetch("https://github.com/login/oauth/access_token", {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          client_id: process.env.GITHUB_CLIENT_ID,
-          client_secret: process.env.GITHUB_CLIENT_SECRET,
-          code,
-        }),
-      });
-
-      const tokenData = (await tokenRes.json()) as {
-        error?: string;
-        error_description?: string;
-        access_token?: string;
-      };
-
-      if (tokenData.error) {
-        return reply.status(400).send({ error: tokenData.error_description });
-      }
-
-      // 获取用户信息
+      // 使用 access_token 直接获取用户信息
       const userRes = await fetch("https://api.github.com/user", {
         headers: {
-          Authorization: `Bearer ${tokenData.access_token}`,
+          Authorization: `Bearer ${access_token}`,
           Accept: "application/vnd.github.v3+json",
         },
       });
+
+      if (!userRes.ok) {
+        return reply.status(400).send({ error: "Invalid access token" });
+      }
 
       const user = (await userRes.json()) as GitHubUser;
 

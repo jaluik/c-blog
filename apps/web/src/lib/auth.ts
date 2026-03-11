@@ -1,3 +1,4 @@
+import type { NextAuthOptions } from "next-auth";
 import NextAuth from "next-auth";
 import GitHubProvider from "next-auth/providers/github";
 
@@ -9,32 +10,41 @@ interface GitHubProfile {
   email?: string;
 }
 
-export const {
-  handlers: { GET, POST },
-  auth,
-  signIn,
-  signOut,
-} = NextAuth({
+export const authOptions: NextAuthOptions = {
   providers: [
     GitHubProvider({
       clientId: process.env.GITHUB_CLIENT_ID!,
       clientSecret: process.env.GITHUB_CLIENT_SECRET!,
     }),
   ],
+  pages: {
+    error: "/auth/error",
+  },
   callbacks: {
     async jwt({ token, account, profile }) {
       if (account && profile) {
         const githubProfile = profile as unknown as GitHubProfile;
-        // 向后端换取 JWT
-        const res = await fetch(`${process.env.API_URL}/api/auth/github`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ code: account.access_token }),
-        });
+        try {
+          // 向后端换取 JWT
+          const res = await fetch(`${process.env.API_URL}/api/auth/github`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ access_token: account.access_token }),
+          });
 
-        const data = await res.json();
-        token.backendToken = data.data.token;
-        token.userId = githubProfile.id;
+          if (!res.ok) {
+            const errorData = await res.json().catch(() => ({}));
+            console.error("Backend auth failed:", errorData);
+            throw new Error(errorData.error || "Backend authentication failed");
+          }
+
+          const data = await res.json();
+          token.backendToken = data.data.token;
+          token.userId = githubProfile.id;
+        } catch (error) {
+          console.error("JWT callback error:", error);
+          throw error;
+        }
       }
       return token;
     },
@@ -44,4 +54,6 @@ export const {
       return session;
     },
   },
-});
+};
+
+export default NextAuth(authOptions);

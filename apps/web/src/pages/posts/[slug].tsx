@@ -60,7 +60,8 @@ export const getStaticProps: GetStaticProps<PostPageProps> = async ({ params }) 
       return { notFound: true };
     }
 
-    const post = await postRes.json();
+    const postData = await postRes.json();
+    const post = postData.data;
     const commentsData = await commentsRes.json();
     const allPostsData = await allPostsRes.json();
     const allPosts = allPostsData.data || [];
@@ -88,7 +89,8 @@ export const getStaticProps: GetStaticProps<PostPageProps> = async ({ params }) 
 };
 
 // Calculate reading time
-function getReadingTime(content: string): number {
+function getReadingTime(content: string | undefined): number {
+  if (!content) return 0;
   const wordsPerMinute = 200;
   const words = content.trim().split(/\s+/).length;
   return Math.ceil(words / wordsPerMinute);
