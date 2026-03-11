@@ -7,10 +7,10 @@ import { useState } from "react";
 
 interface CommentFormProps {
   articleId: number;
-  onSubmit?: (content: string) => Promise<void>;
+  onSuccess?: () => void;
 }
 
-export function CommentForm({ articleId, onSubmit }: CommentFormProps) {
+export function CommentForm({ articleId, onSuccess }: CommentFormProps) {
   const { data: session, status } = useSession();
   const [content, setContent] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -27,28 +27,29 @@ export function CommentForm({ articleId, onSubmit }: CommentFormProps) {
     setSubmitStatus(null);
 
     try {
-      if (onSubmit) {
-        await onSubmit(content);
-      } else {
-        // Default API call
-        const res = await fetch("/api/comments", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            articleId,
-            content: content.trim(),
-          }),
-        });
+      // 调用 API 提交评论
+      const res = await fetch("/api/comments", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          articleId,
+          content: content.trim(),
+        }),
+      });
 
-        if (!res.ok) {
-          const errorData = await res.json().catch(() => ({}));
-          throw new Error(errorData.error || "提交失败，请稍后重试");
-        }
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => ({}));
+        throw new Error(errorData.error || "提交失败，请稍后重试");
       }
 
       setContent("");
       setSubmitStatus("success");
       setSubmitMessage("评论提交成功，等待审核后显示");
+
+      // 成功后刷新评论列表
+      if (onSuccess) {
+        onSuccess();
+      }
 
       // 3秒后清除提示
       setTimeout(() => {

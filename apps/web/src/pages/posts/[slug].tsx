@@ -302,7 +302,7 @@ export default function PostPage({ post, prevPost, nextPost, allPosts }: PostPag
 
             {/* Comment Form */}
             <div className="mb-10">
-              <CommentForm articleId={post.id} onSubmit={fetchComments} />
+              <CommentForm articleId={post.id} onSuccess={fetchComments} />
             </div>
 
             {/* Comments List */}
