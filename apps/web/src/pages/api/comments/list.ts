@@ -1,6 +1,6 @@
 import { authOptions } from "@/lib/auth";
 import type { NextApiRequest, NextApiResponse } from "next";
-import { getServerSession } from "next-auth";
+import { getServerSession, getToken } from "next-auth";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== "GET") {
@@ -13,8 +13,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(400).json({ error: "articleSlug is required" });
   }
 
-  const session = await getServerSession(req, res, authOptions);
-  const backendToken = (session as any)?.backendToken;
+  // 尝试从 JWT token 中获取 backendToken
+  const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
+  const backendToken = token?.backendToken as string | undefined;
 
   try {
     const API_URL = process.env.API_URL || "http://localhost:4000";

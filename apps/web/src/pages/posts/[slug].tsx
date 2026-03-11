@@ -103,7 +103,10 @@ export default function PostPage({ post, prevPost, nextPost, allPosts }: PostPag
   const fetchComments = async () => {
     setIsLoadingComments(true);
     try {
-      const res = await fetch(`/api/comments/list?articleSlug=${encodeURIComponent(post.slug)}`);
+      const res = await fetch(`/api/comments/list?articleSlug=${encodeURIComponent(post.slug)}`, {
+        credentials: "include",
+        cache: "no-store",
+      });
       if (res.ok) {
         const data = await res.json();
         setComments(data.data || []);
