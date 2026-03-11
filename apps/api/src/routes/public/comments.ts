@@ -9,7 +9,7 @@ const createCommentSchema = z.object({
 });
 
 export async function commentRoutes(app: FastifyInstance) {
-  // 获取文章评论（只返回已审核的）
+  // 获取文章评论（已审核的 + 当前用户自己的待审核评论）
   app.get("/comments", async (request, reply) => {
     const { articleId, articleSlug } = request.query as {
       articleId?: string;
@@ -38,16 +38,41 @@ export async function commentRoutes(app: FastifyInstance) {
       actualArticleId = article.id;
     }
 
+    // 尝试获取当前用户（可选认证）
+    let currentUserId: string | undefined;
+    try {
+      const decoded = await request.jwtVerify<{ userId: number; username: string; type: string }>();
+      currentUserId = String(decoded.userId);
+    } catch {
+      // 用户未登录，只返回已审核评论
+    }
+
+    // 构建查询条件：已审核的，或者当前用户自己的待审核评论
+    const whereCondition: any = {
+      articleId: actualArticleId,
+      parentId: null,
+      OR: [{ isApproved: true }],
+    };
+
+    // 如果用户已登录，也包含该用户的待审核评论
+    if (currentUserId) {
+      whereCondition.OR.push({
+        isApproved: false,
+        githubUserId: currentUserId,
+      });
+    }
+
     const comments = await prisma.comment.findMany({
-      where: {
-        articleId: actualArticleId,
-        isApproved: true,
-        parentId: null, // 只获取顶级评论
-      },
+      where: whereCondition,
       orderBy: { createdAt: "desc" },
       include: {
         replies: {
-          where: { isApproved: true },
+          where: {
+            OR: [
+              { isApproved: true },
+              ...(currentUserId ? [{ isApproved: false, githubUserId: currentUserId }] : []),
+            ],
+          },
           orderBy: { createdAt: "asc" },
         },
       },

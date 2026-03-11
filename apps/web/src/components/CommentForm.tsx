@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Loader2, MessageSquare, Send } from "lucide-react";
+import { CheckCircle, Loader2, MessageSquare, Send, XCircle } from "lucide-react";
 import { signIn, useSession } from "next-auth/react";
 import { useState } from "react";
 
@@ -15,6 +15,8 @@ export function CommentForm({ articleId, onSubmit }: CommentFormProps) {
   const [content, setContent] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [focused, setFocused] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState<"success" | "error" | null>(null);
+  const [submitMessage, setSubmitMessage] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -22,6 +24,7 @@ export function CommentForm({ articleId, onSubmit }: CommentFormProps) {
     if (!content.trim() || !session) return;
 
     setIsSubmitting(true);
+    setSubmitStatus(null);
 
     try {
       if (onSubmit) {
@@ -38,15 +41,23 @@ export function CommentForm({ articleId, onSubmit }: CommentFormProps) {
         });
 
         if (!res.ok) {
-          throw new Error("Failed to submit comment");
+          const errorData = await res.json().catch(() => ({}));
+          throw new Error(errorData.error || "提交失败，请稍后重试");
         }
       }
 
       setContent("");
-      // Could add toast notification here
+      setSubmitStatus("success");
+      setSubmitMessage("评论提交成功，等待审核后显示");
+
+      // 3秒后清除提示
+      setTimeout(() => {
+        setSubmitStatus(null);
+      }, 3000);
     } catch (error) {
       console.error("Error submitting comment:", error);
-      // Could add error toast here
+      setSubmitStatus("error");
+      setSubmitMessage(error instanceof Error ? error.message : "提交失败，请稍后重试");
     } finally {
       setIsSubmitting(false);
     }
@@ -121,6 +132,25 @@ export function CommentForm({ articleId, onSubmit }: CommentFormProps) {
         className="w-full bg-text-primary/5 border border-border-subtle rounded-xl px-4 py-3 text-text-primary placeholder-text-tertiary focus:outline-none focus:border-neon-cyan/50 resize-none transition-colors"
         disabled={isSubmitting}
       />
+
+      {submitStatus && (
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className={`mt-4 p-3 rounded-lg flex items-center gap-2 ${
+            submitStatus === "success"
+              ? "bg-green-500/10 border border-green-500/20 text-green-400"
+              : "bg-red-500/10 border border-red-500/20 text-red-400"
+          }`}
+        >
+          {submitStatus === "success" ? (
+            <CheckCircle className="w-5 h-5 flex-shrink-0" />
+          ) : (
+            <XCircle className="w-5 h-5 flex-shrink-0" />
+          )}
+          <span className="text-sm">{submitMessage}</span>
+        </motion.div>
+      )}
 
       <div className="flex items-center justify-between mt-4">
         <p className="text-sm text-text-tertiary">支持 Markdown 格式</p>

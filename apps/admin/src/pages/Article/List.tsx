@@ -1,7 +1,12 @@
 import { deleteArticle, getArticles } from "@/services/article";
 import type { ArticleListParams } from "@/services/article";
 import { DeleteOutlined, EditOutlined, EyeOutlined, PlusOutlined } from "@ant-design/icons";
-import { type ActionType, PageContainer, type ProColumns, ProTable } from "@ant-design/pro-components";
+import {
+  type ActionType,
+  PageContainer,
+  type ProColumns,
+  ProTable,
+} from "@ant-design/pro-components";
 import type { PostWithRelations, Tag as TagType } from "@blog/shared-types";
 import { App, Button, Popconfirm, Space, Tag } from "antd";
 import { useRef, useState } from "react";
@@ -53,7 +58,9 @@ export function ArticleList() {
       render: (_, record) => (
         <Space size="small" wrap>
           {record.tags?.slice(0, 2).map((tag: TagType) => (
-            <Tag key={tag.id} size="small">{tag.name}</Tag>
+            <Tag key={tag.id} size="small">
+              {tag.name}
+            </Tag>
           ))}
           {record.tags && record.tags.length > 2 && (
             <Tag size="small">+{record.tags.length - 2}</Tag>
@@ -84,9 +91,7 @@ export function ArticleList() {
       search: false,
       sorter: true,
       render: (_, record) =>
-        record.publishedAt
-          ? new Date(record.publishedAt).toLocaleDateString("zh-CN")
-          : "-",
+        record.publishedAt ? new Date(record.publishedAt).toLocaleDateString("zh-CN") : "-",
     },
     {
       title: "操作",

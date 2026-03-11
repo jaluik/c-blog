@@ -19,15 +19,16 @@ import {
   Link as LinkIcon,
   Linkedin,
   MessageSquare,
+  RefreshCw,
   Share2,
   Twitter,
 } from "lucide-react";
 import type { GetStaticPaths, GetStaticProps } from "next";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 
 interface PostPageProps {
   post: PostWithRelations;
-  comments: Comment[];
   prevPost: PostWithRelations | null;
   nextPost: PostWithRelations | null;
   allPosts: PostWithRelations[];
@@ -49,10 +50,9 @@ export const getStaticProps: GetStaticProps<PostPageProps> = async ({ params }) 
   try {
     const API_URL = process.env.API_URL || "http://localhost:4000";
 
-    // Fetch current post, comments, and all posts in parallel
-    const [postRes, commentsRes, allPostsRes] = await Promise.all([
+    // Fetch current post and all posts in parallel
+    const [postRes, allPostsRes] = await Promise.all([
       fetch(`${API_URL}/api/posts/${params?.slug}`),
-      fetch(`${API_URL}/api/comments?articleSlug=${params?.slug}`),
       fetch(`${API_URL}/api/posts?page=1&pageSize=100`),
     ]);
 
@@ -62,7 +62,6 @@ export const getStaticProps: GetStaticProps<PostPageProps> = async ({ params }) 
 
     const postData = await postRes.json();
     const post = postData.data;
-    const commentsData = await commentsRes.json();
     const allPostsData = await allPostsRes.json();
     const allPosts = allPostsData.data || [];
 
@@ -74,7 +73,6 @@ export const getStaticProps: GetStaticProps<PostPageProps> = async ({ params }) 
     return {
       props: {
         post,
-        comments: commentsData.data || [],
         prevPost,
         nextPost,
         allPosts,
@@ -96,8 +94,30 @@ function getReadingTime(content: string | undefined): number {
   return Math.ceil(words / wordsPerMinute);
 }
 
-export default function PostPage({ post, comments, prevPost, nextPost, allPosts }: PostPageProps) {
+export default function PostPage({ post, prevPost, nextPost, allPosts }: PostPageProps) {
   const readingTime = getReadingTime(post.content);
+  const [comments, setComments] = useState<Comment[]>([]);
+  const [isLoadingComments, setIsLoadingComments] = useState(true);
+
+  // 客户端获取评论（支持当前用户查看自己的待审核评论）
+  const fetchComments = async () => {
+    setIsLoadingComments(true);
+    try {
+      const res = await fetch(`/api/comments/list?articleSlug=${encodeURIComponent(post.slug)}`);
+      if (res.ok) {
+        const data = await res.json();
+        setComments(data.data || []);
+      }
+    } catch (error) {
+      console.error("Failed to fetch comments:", error);
+    } finally {
+      setIsLoadingComments(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchComments();
+  }, [post.slug]);
 
   const copyLink = () => {
     navigator.clipboard.writeText(window.location.href);
@@ -259,21 +279,37 @@ export default function PostPage({ post, comments, prevPost, nextPost, allPosts 
             viewport={{ once: true }}
             className="mt-16 pt-8 border-t border-white/10"
           >
-            <h2 className="font-display text-2xl font-bold text-text-primary mb-8 flex items-center gap-2">
-              <MessageSquare className="w-6 h-6 text-neon-cyan" />
-              评论
-              {comments.length > 0 && (
-                <span className="text-lg text-text-tertiary">({comments.length})</span>
-              )}
-            </h2>
+            <div className="flex items-center justify-between mb-8">
+              <h2 className="font-display text-2xl font-bold text-text-primary flex items-center gap-2">
+                <MessageSquare className="w-6 h-6 text-neon-cyan" />
+                评论
+                {!isLoadingComments && comments.length > 0 && (
+                  <span className="text-lg text-text-tertiary">({comments.length})</span>
+                )}
+              </h2>
+              <button
+                onClick={fetchComments}
+                disabled={isLoadingComments}
+                className="p-2 rounded-lg text-text-secondary hover:text-neon-cyan hover:bg-neon-cyan/10 transition-colors disabled:opacity-50"
+                title="刷新评论"
+              >
+                <RefreshCw className={`w-5 h-5 ${isLoadingComments ? "animate-spin" : ""}`} />
+              </button>
+            </div>
 
             {/* Comment Form */}
             <div className="mb-10">
-              <CommentForm articleId={post.id} />
+              <CommentForm articleId={post.id} onSubmit={fetchComments} />
             </div>
 
             {/* Comments List */}
-            <CommentList comments={comments} />
+            {isLoadingComments ? (
+              <div className="text-center py-12">
+                <div className="w-8 h-8 border-2 border-neon-cyan/30 border-t-neon-cyan rounded-full animate-spin mx-auto" />
+              </div>
+            ) : (
+              <CommentList comments={comments} />
+            )}
           </motion.section>
         </div>
       </article>

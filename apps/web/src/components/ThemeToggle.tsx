@@ -29,9 +29,11 @@ export function ThemeToggle() {
   };
 
   const getIcon = () => {
-    return isDark
-      ? <Sun className="w-5 h-5 text-yellow-500" />
-      : <Moon className="w-5 h-5 text-neon-cyan" />;
+    return isDark ? (
+      <Sun className="w-5 h-5 text-yellow-500" />
+    ) : (
+      <Moon className="w-5 h-5 text-neon-cyan" />
+    );
   };
 
   const getLabel = () => {

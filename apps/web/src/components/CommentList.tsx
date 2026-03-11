@@ -4,16 +4,28 @@ import type { Comment } from "@blog/shared-types";
 import { format } from "date-fns";
 import { zhCN } from "date-fns/locale";
 import { motion } from "framer-motion";
-import { ChevronDown, ChevronUp, MessageSquare, User } from "lucide-react";
+import { ChevronDown, ChevronUp, Clock, MessageSquare, User } from "lucide-react";
+import { useSession } from "next-auth/react";
 import { useState } from "react";
 
 interface CommentListProps {
   comments: Comment[];
 }
 
-function CommentItem({ comment, depth = 0 }: { comment: Comment; depth?: number }) {
+function CommentItem({
+  comment,
+  depth = 0,
+  currentUserId,
+}: {
+  comment: Comment;
+  depth?: number;
+  currentUserId?: string;
+}) {
   const [showReplies, setShowReplies] = useState(true);
   const hasReplies = comment.replies && comment.replies.length > 0;
+
+  // 判断是否是当前用户的待审核评论
+  const isOwnPendingComment = !comment.isApproved && currentUserId === comment.githubUserId;
 
   return (
     <motion.div
@@ -39,8 +51,14 @@ function CommentItem({ comment, depth = 0 }: { comment: Comment; depth?: number 
 
         {/* Content */}
         <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2 mb-1">
+          <div className="flex items-center gap-2 mb-1 flex-wrap">
             <span className="font-medium text-text-primary">{comment.githubUsername}</span>
+            {isOwnPendingComment && (
+              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-amber-500/10 text-amber-400 border border-amber-500/20">
+                <Clock className="w-3 h-3" />
+                审核中
+              </span>
+            )}
             <span className="text-text-tertiary text-sm">
               {format(new Date(comment.createdAt), "yyyy-MM-dd HH:mm", {
                 locale: zhCN,
@@ -48,7 +66,11 @@ function CommentItem({ comment, depth = 0 }: { comment: Comment; depth?: number 
             </span>
           </div>
 
-          <div className="text-text-secondary leading-relaxed whitespace-pre-wrap">
+          <div
+            className={`leading-relaxed whitespace-pre-wrap ${
+              isOwnPendingComment ? "text-text-secondary/70 italic" : "text-text-secondary"
+            }`}
+          >
             {comment.content}
           </div>
 
@@ -78,7 +100,12 @@ function CommentItem({ comment, depth = 0 }: { comment: Comment; depth?: number 
       {hasReplies && showReplies && (
         <div className="space-y-2">
           {comment.replies!.map((reply) => (
-            <CommentItem key={reply.id} comment={reply} depth={depth + 1} />
+            <CommentItem
+              key={reply.id}
+              comment={reply}
+              depth={depth + 1}
+              currentUserId={currentUserId}
+            />
           ))}
         </div>
       )}
@@ -87,6 +114,9 @@ function CommentItem({ comment, depth = 0 }: { comment: Comment; depth?: number 
 }
 
 export function CommentList({ comments }: CommentListProps) {
+  const { data: session } = useSession();
+  const currentUserId = (session as any)?.userId?.toString();
+
   if (comments.length === 0) {
     return (
       <div className="text-center py-12">
@@ -99,7 +129,7 @@ export function CommentList({ comments }: CommentListProps) {
   return (
     <div className="space-y-2">
       {comments.map((comment) => (
-        <CommentItem key={comment.id} comment={comment} />
+        <CommentItem key={comment.id} comment={comment} currentUserId={currentUserId} />
       ))}
     </div>
   );

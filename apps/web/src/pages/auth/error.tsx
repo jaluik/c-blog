@@ -21,9 +21,7 @@ export default function AuthError() {
         </p>
         {error === "Configuration" && (
           <div className="text-left bg-red-500/10 border border-red-500/20 rounded-lg p-4 mb-6 max-w-md">
-            <p className="text-red-400 text-sm">
-              可能的原因：
-            </p>
+            <p className="text-red-400 text-sm">可能的原因：</p>
             <ul className="text-red-400 text-sm list-disc list-inside mt-2">
               <li>GitHub Client ID 未配置</li>
               <li>GitHub Client Secret 未配置</li>
