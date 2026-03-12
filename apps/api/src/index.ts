@@ -1,10 +1,10 @@
 import "dotenv/config";
-import path from "path";
 import cors from "@fastify/cors";
 import jwt from "@fastify/jwt";
 import multipart from "@fastify/multipart";
 import staticPlugin from "@fastify/static";
 import fastify from "fastify";
+import path from "path";
 import authPlugin from "./plugins/auth";
 import storagePlugin from "./plugins/storage";
 import { adminCategoryRoutes } from "./routes/admin/categories";

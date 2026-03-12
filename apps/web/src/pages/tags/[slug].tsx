@@ -1,9 +1,9 @@
-import { PostCard } from "@/components/PostCard";
 import type { PaginatedResponse, PostWithRelations, Tag } from "@blog/shared-types";
 import { motion } from "framer-motion";
 import { ArrowLeft, Hash, Tag as TagIcon } from "lucide-react";
 import type { GetStaticPaths, GetStaticProps } from "next";
 import Link from "next/link";
+import { PostCard } from "@/components/PostCard";
 
 interface TagPageProps {
   tag: Tag | null;

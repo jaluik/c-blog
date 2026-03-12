@@ -1,11 +1,3 @@
-import { CommentForm } from "@/components/CommentForm";
-import { CommentList } from "@/components/CommentList";
-import { MarkdownContent } from "@/components/MarkdownContent";
-import { PostNavigation } from "@/components/PostNavigation";
-import { ReadingProgress } from "@/components/ReadingProgress";
-import { RelatedPosts } from "@/components/RelatedPosts";
-import { TableOfContents } from "@/components/TableOfContents";
-import { api } from "@/lib/api";
 import type { Comment, PostWithRelations } from "@blog/shared-types";
 import { format } from "date-fns";
 import { zhCN } from "date-fns/locale";
@@ -16,8 +8,8 @@ import {
   Clock,
   Eye,
   FolderOpen,
-  Link as LinkIcon,
   Linkedin,
+  Link as LinkIcon,
   MessageSquare,
   RefreshCw,
   Share2,
@@ -26,6 +18,14 @@ import {
 import type { GetStaticPaths, GetStaticProps } from "next";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { CommentForm } from "@/components/CommentForm";
+import { CommentList } from "@/components/CommentList";
+import { MarkdownContent } from "@/components/MarkdownContent";
+import { PostNavigation } from "@/components/PostNavigation";
+import { ReadingProgress } from "@/components/ReadingProgress";
+import { RelatedPosts } from "@/components/RelatedPosts";
+import { TableOfContents } from "@/components/TableOfContents";
+import { api } from "@/lib/api";
 
 interface PostPageProps {
   post: PostWithRelations;

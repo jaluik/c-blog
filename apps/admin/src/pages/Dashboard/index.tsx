@@ -1,7 +1,3 @@
-import { getArticles } from "@/services/article";
-import { getCategories } from "@/services/category";
-import { getComments } from "@/services/comment";
-import { getTags } from "@/services/tag";
 import {
   CommentOutlined,
   EyeOutlined,
@@ -13,6 +9,10 @@ import { PageContainer } from "@ant-design/pro-components";
 import type { PostWithRelations } from "@blog/shared-types";
 import { Card, Col, List, Row, Space, Statistic, Tag } from "antd";
 import { useEffect, useState } from "react";
+import { getArticles } from "@/services/article";
+import { getCategories } from "@/services/category";
+import { getComments } from "@/services/comment";
+import { getTags } from "@/services/tag";
 
 interface DashboardStats {
   articleCount: number;

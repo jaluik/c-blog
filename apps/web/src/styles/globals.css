@@ -106,7 +106,9 @@ body {
   line-height: 1.6;
   min-height: 100vh;
   overflow-x: hidden;
-  transition: background-color 0.3s ease, color 0.3s ease;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
 }
 
 /* Smooth transition for theme switching */
@@ -166,20 +168,29 @@ body {
 
 /* Neon Glow Text */
 .glow-text {
-  text-shadow: 0 0 10px var(--glow-cyan), 0 0 20px var(--glow-cyan), 0 0 40px var(--glow-cyan);
+  text-shadow:
+    0 0 10px var(--glow-cyan),
+    0 0 20px var(--glow-cyan),
+    0 0 40px var(--glow-cyan);
 }
 
 .glow-text-purple {
-  text-shadow: 0 0 10px var(--glow-purple), 0 0 20px var(--glow-purple);
+  text-shadow:
+    0 0 10px var(--glow-purple),
+    0 0 20px var(--glow-purple);
 }
 
 .glow-text-pink {
-  text-shadow: 0 0 10px var(--glow-pink), 0 0 20px var(--glow-pink);
+  text-shadow:
+    0 0 10px var(--glow-pink),
+    0 0 20px var(--glow-pink);
 }
 
 /* Neon Border */
 .glow-border {
-  box-shadow: 0 0 20px var(--glow-cyan), inset 0 0 20px rgba(0, 240, 255, 0.1);
+  box-shadow:
+    0 0 20px var(--glow-cyan),
+    inset 0 0 20px rgba(0, 240, 255, 0.1);
   border-color: var(--accent-cyan);
 }
 
@@ -239,7 +250,9 @@ body {
     box-shadow: 0 0 20px var(--glow-cyan);
   }
   50% {
-    box-shadow: 0 0 40px var(--glow-cyan), 0 0 60px var(--glow-purple);
+    box-shadow:
+      0 0 40px var(--glow-cyan),
+      0 0 60px var(--glow-purple);
   }
 }
 
@@ -276,7 +289,12 @@ body {
 }
 
 .shimmer {
-  background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.1) 50%, transparent 100%);
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.1) 50%,
+    transparent 100%
+  );
   background-size: 200% 100%;
   animation: shimmer 2s infinite;
 }
@@ -365,10 +383,9 @@ body {
 
 /* Grid Background */
 .grid-bg {
-  background-image: linear-gradient(
-      var(--grid-line-color, rgba(0, 240, 255, 0.03)) 1px,
-      transparent 1px
-    ), linear-gradient(90deg, var(--grid-line-color, rgba(0, 240, 255, 0.03)) 1px, transparent 1px);
+  background-image:
+    linear-gradient(var(--grid-line-color, rgba(0, 240, 255, 0.03)) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line-color, rgba(0, 240, 255, 0.03)) 1px, transparent 1px);
   background-size: 50px 50px;
 }
 
@@ -392,7 +409,9 @@ body {
 
 .card-hover:hover {
   transform: translateY(-4px);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3), 0 0 30px var(--glow-cyan);
+  box-shadow:
+    0 20px 40px rgba(0, 0, 0, 0.3),
+    0 0 30px var(--glow-cyan);
 }
 
 /* Button Styles */

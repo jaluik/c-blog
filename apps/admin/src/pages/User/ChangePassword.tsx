@@ -1,8 +1,7 @@
-import { changePassword } from "@/services/user";
-import { PageContainer } from "@ant-design/pro-components";
-import { ProForm, ProFormText } from "@ant-design/pro-components";
+import { PageContainer, ProForm, ProFormText } from "@ant-design/pro-components";
 import { Alert, App, Card } from "antd";
 import { useState } from "react";
+import { changePassword } from "@/services/user";
 
 export function ChangePassword() {
   const [, setLoading] = useState(false);

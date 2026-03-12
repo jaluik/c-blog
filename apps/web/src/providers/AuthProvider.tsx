@@ -8,5 +8,6 @@ interface AuthProviderProps {
 }
 
 export function AuthProvider({ children }: AuthProviderProps) {
-  return <SessionProvider>{children}</SessionProvider>;
+  // Type cast to work around next-auth v4 React 19 compatibility issue
+  return <SessionProvider>{children as React.ReactNode}</SessionProvider>;
 }

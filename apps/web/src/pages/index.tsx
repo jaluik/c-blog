@@ -1,13 +1,13 @@
-import { CategoryList } from "@/components/CategoryList";
-import { Hero } from "@/components/Hero";
-import { PostCard } from "@/components/PostCard";
-import { TagCloud } from "@/components/TagCloud";
-import { api } from "@/lib/api";
 import type { Category, PaginatedResponse, PostWithRelations, Tag } from "@blog/shared-types";
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import type { GetStaticProps } from "next";
 import Link from "next/link";
+import { CategoryList } from "@/components/CategoryList";
+import { Hero } from "@/components/Hero";
+import { PostCard } from "@/components/PostCard";
+import { TagCloud } from "@/components/TagCloud";
+import { api } from "@/lib/api";
 
 interface HomeProps {
   posts: PostWithRelations[];

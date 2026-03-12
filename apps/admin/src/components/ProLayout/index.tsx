@@ -1,4 +1,3 @@
-import { getCurrentUser, logout } from "@/services/user";
 import {
   CommentOutlined,
   DashboardOutlined,
@@ -11,6 +10,7 @@ import {
 import { ProLayout as AntProLayout } from "@ant-design/pro-components";
 import { Avatar, Button, Dropdown, message } from "antd";
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
+import { getCurrentUser, logout } from "@/services/user";
 
 const menuItems = [
   {
@@ -121,11 +121,6 @@ export function ProLayout() {
           padding: 16,
           margin: 0,
           minHeight: "calc(100vh - 56px)",
-        }}
-        headerStyle={{
-          height: 48,
-          lineHeight: "48px",
-          padding: "0 16px",
         }}
         siderWidth={200}
         menuProps={{

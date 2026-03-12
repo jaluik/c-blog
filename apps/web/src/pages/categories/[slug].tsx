@@ -1,9 +1,9 @@
-import { PostCard } from "@/components/PostCard";
 import type { Category, PaginatedResponse, PostWithRelations } from "@blog/shared-types";
 import { motion } from "framer-motion";
 import { ArrowLeft, FolderOpen } from "lucide-react";
 import type { GetStaticPaths, GetStaticProps } from "next";
 import Link from "next/link";
+import { PostCard } from "@/components/PostCard";
 
 interface CategoryPageProps {
   category: Category | null;

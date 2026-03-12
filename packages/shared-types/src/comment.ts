@@ -9,6 +9,7 @@ export interface Comment {
   githubAvatar?: string;
   content: string;
   status: CommentStatus;
+  isApproved: boolean;
   rejectionReason?: string;
   createdAt: string;
   updatedAt: string;

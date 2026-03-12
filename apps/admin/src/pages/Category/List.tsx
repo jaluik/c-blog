@@ -1,5 +1,3 @@
-import { createCategory, deleteCategory, getCategories, updateCategory } from "@/services/category";
-import type { CategoryWithCount } from "@/services/category";
 import { DeleteOutlined, EditOutlined, PlusOutlined } from "@ant-design/icons";
 import {
   type ActionType,
@@ -11,6 +9,8 @@ import {
 } from "@ant-design/pro-components";
 import { App, Button, Form, Popconfirm, Space } from "antd";
 import { useRef, useState } from "react";
+import type { CategoryWithCount } from "@/services/category";
+import { createCategory, deleteCategory, getCategories, updateCategory } from "@/services/category";
 
 export function CategoryList() {
   const actionRef = useRef<ActionType>();

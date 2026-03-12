@@ -1,7 +1,7 @@
-import { getCurrentUser } from "@/services/user";
 import { UserOutlined } from "@ant-design/icons";
 import { PageContainer } from "@ant-design/pro-components";
 import { Avatar, Card, Descriptions, Tag } from "antd";
+import { getCurrentUser } from "@/services/user";
 
 export function UserProfile() {
   const { username } = getCurrentUser();

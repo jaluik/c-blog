@@ -9,7 +9,7 @@ export function slugify(text: string): string {
     .trim()
     .replace(/\s+/g, "-")
     .replace(/[^\w\-\u4e00-\u9fa5]+/g, "") // Keep Chinese characters
-    .replace(/\-\-+/g, "-");
+    .replace(/--+/g, "-");
 
   // If result is empty (e.g., only Chinese chars were filtered), create a timestamp-based slug
   if (!normalized || normalized === "-") {

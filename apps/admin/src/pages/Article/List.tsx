@@ -1,5 +1,3 @@
-import { deleteArticle, getArticles } from "@/services/article";
-import type { ArticleListParams } from "@/services/article";
 import { DeleteOutlined, EditOutlined, EyeOutlined, PlusOutlined } from "@ant-design/icons";
 import {
   type ActionType,
@@ -11,6 +9,8 @@ import type { PostWithRelations, Tag as TagType } from "@blog/shared-types";
 import { App, Button, Popconfirm, Space, Tag } from "antd";
 import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import type { ArticleListParams } from "@/services/article";
+import { deleteArticle, getArticles } from "@/services/article";
 
 export function ArticleList() {
   const navigate = useNavigate();
@@ -23,7 +23,7 @@ export function ArticleList() {
       await deleteArticle(id);
       message.success("删除成功");
       actionRef.current?.reload();
-    } catch (error) {
+    } catch (_error) {
       message.error("删除失败");
     }
   };
@@ -58,12 +58,12 @@ export function ArticleList() {
       render: (_, record) => (
         <Space size="small" wrap>
           {record.tags?.slice(0, 2).map((tag: TagType) => (
-            <Tag key={tag.id} size="small">
+            <Tag key={tag.id} className="text-xs">
               {tag.name}
             </Tag>
           ))}
           {record.tags && record.tags.length > 2 && (
-            <Tag size="small">+{record.tags.length - 2}</Tag>
+            <Tag className="text-xs">+{record.tags.length - 2}</Tag>
           )}
         </Space>
       ),

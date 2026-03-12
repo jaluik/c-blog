@@ -1,5 +1,3 @@
-import { createTag, deleteTag, getTags, updateTag } from "@/services/tag";
-import type { TagWithCount } from "@/services/tag";
 import { DeleteOutlined, EditOutlined, PlusOutlined } from "@ant-design/icons";
 import {
   type ActionType,
@@ -11,6 +9,8 @@ import {
 } from "@ant-design/pro-components";
 import { App, Button, Form, Popconfirm, Space } from "antd";
 import { useRef, useState } from "react";
+import type { TagWithCount } from "@/services/tag";
+import { createTag, deleteTag, getTags, updateTag } from "@/services/tag";
 
 export function TagList() {
   const actionRef = useRef<ActionType>();

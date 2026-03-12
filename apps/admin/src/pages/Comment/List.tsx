@@ -1,11 +1,4 @@
 import {
-  type ModerateCommentData,
-  deleteComment,
-  getComments,
-  moderateComment,
-} from "@/services/comment";
-import type { CommentListParams } from "@/services/comment";
-import {
   CheckOutlined,
   CloseOutlined,
   DeleteOutlined,
@@ -33,6 +26,8 @@ import {
   Typography,
 } from "antd";
 import { useRef, useState } from "react";
+import type { CommentListParams } from "@/services/comment";
+import { deleteComment, getComments, moderateComment } from "@/services/comment";
 
 const { Text, Paragraph } = Typography;
 
@@ -67,7 +62,7 @@ export function CommentList() {
       await moderateComment(id, { status: "approved" });
       message.success("审核通过");
       actionRef.current?.reload();
-    } catch (error) {
+    } catch (_error) {
       message.error("操作失败");
     }
   };
@@ -96,7 +91,7 @@ export function CommentList() {
       setRejectingComment(null);
       setRejectionReason("");
       actionRef.current?.reload();
-    } catch (error) {
+    } catch (_error) {
       message.error("操作失败");
     }
   };
@@ -106,7 +101,7 @@ export function CommentList() {
       await moderateComment(id, { status: "pending" });
       message.success("已重置为待审核");
       actionRef.current?.reload();
-    } catch (error) {
+    } catch (_error) {
       message.error("操作失败");
     }
   };
@@ -116,7 +111,7 @@ export function CommentList() {
       await deleteComment(id);
       message.success("删除成功");
       actionRef.current?.reload();
-    } catch (error) {
+    } catch (_error) {
       message.error("删除失败");
     }
   };

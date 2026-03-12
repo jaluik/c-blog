@@ -1,10 +1,10 @@
-import { login } from "@/services/user";
-import type { LoginCredentials } from "@/services/user";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import { LoginForm, ProFormText } from "@ant-design/pro-components";
-import { Checkbox, Form, Tabs, message } from "antd";
+import { Checkbox, Form, message, Tabs } from "antd";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import type { LoginCredentials } from "@/services/user";
+import { login } from "@/services/user";
 
 export function LoginPage() {
   const navigate = useNavigate();
