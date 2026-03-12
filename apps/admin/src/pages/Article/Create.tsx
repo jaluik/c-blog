@@ -30,18 +30,17 @@ export function ArticleCreate() {
   const [coverImage, setCoverImage] = useState<string>("");
 
   useEffect(() => {
+    const fetchCategoriesAndTags = async () => {
+      try {
+        const [categoryData, tagData] = await Promise.all([getCategories(), getTags()]);
+        setCategories(categoryData);
+        setTags(tagData);
+      } catch (_error) {
+        message.error("获取分类或标签失败");
+      }
+    };
     fetchCategoriesAndTags();
-  }, []);
-
-  const fetchCategoriesAndTags = async () => {
-    try {
-      const [categoryData, tagData] = await Promise.all([getCategories(), getTags()]);
-      setCategories(categoryData);
-      setTags(tagData);
-    } catch (error) {
-      message.error("获取分类或标签失败");
-    }
-  };
+  }, [message]);
 
   const handleSubmit = async (values: any) => {
     setLoading(true);
@@ -74,7 +73,7 @@ export function ArticleCreate() {
       const url = await uploadImage(file);
       setCoverImage(url);
       message.success("上传成功");
-    } catch (error) {
+    } catch (_error) {
       message.error("上传失败");
     }
   };

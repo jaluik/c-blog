@@ -38,6 +38,7 @@ export default function AuthError() {
             返回首页
           </Link>
           <button
+            type="button"
             onClick={() => router.back()}
             className="px-6 py-3 rounded-lg border border-neon-cyan text-neon-cyan font-semibold hover:bg-neon-cyan/10 transition-colors"
           >

@@ -47,7 +47,7 @@ export async function adminTagRoutes(app: FastifyInstance) {
     return { data: tag, message: "Tag updated" };
   });
 
-  app.delete("/admin/tags/:id", async (request, reply) => {
+  app.delete("/admin/tags/:id", async (request, _reply) => {
     const { id } = request.params as { id: string };
     await prisma.tag.delete({ where: { id: Number(id) } });
     return { message: "Tag deleted" };

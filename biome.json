@@ -21,6 +21,23 @@
           "level": "error",
           "fix": "unsafe"
         }
+      },
+      "suspicious": {
+        "noExplicitAny": "warn"
+      },
+      "style": {
+        "noNonNullAssertion": "warn"
+      },
+      "complexity": {
+        "noImportantStyles": {
+          "level": "off"
+        }
+      },
+      "performance": {
+        "noImgElement": "off"
+      },
+      "a11y": {
+        "useButtonType": "error"
       }
     }
   },
@@ -31,5 +48,13 @@
     "indentStyle": "space",
     "indentWidth": 2,
     "lineWidth": 100
+  },
+  "css": {
+    "parser": {
+      "cssModules": true
+    },
+    "linter": {
+      "enabled": false
+    }
   }
 }

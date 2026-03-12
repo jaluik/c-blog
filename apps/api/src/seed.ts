@@ -11,7 +11,7 @@ async function main() {
     },
   });
 
-  const category2 = await prisma.category.create({
+  const _category2 = await prisma.category.create({
     data: {
       name: "生活",
       slug: "life",
@@ -29,7 +29,7 @@ async function main() {
     data: { name: "TypeScript", slug: "typescript" },
   });
 
-  const tag3 = await prisma.tag.create({
+  const _tag3 = await prisma.tag.create({
     data: { name: "Node.js", slug: "nodejs" },
   });
 

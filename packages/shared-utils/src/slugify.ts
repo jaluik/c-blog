@@ -18,6 +18,6 @@ export function slugify(text: string): string {
 
   // Replace Chinese characters with their char codes
   return normalized.replace(/[\u4e00-\u9fa5]/g, (char) => {
-    return "-" + char.charCodeAt(0).toString(36);
+    return `-${char.charCodeAt(0).toString(36)}`;
   });
 }

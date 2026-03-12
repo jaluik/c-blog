@@ -182,7 +182,7 @@ export async function adminPostRoutes(app: FastifyInstance) {
   });
 
   // 删除文章
-  app.delete("/admin/posts/:id", async (request, reply) => {
+  app.delete("/admin/posts/:id", async (request, _reply) => {
     const { id } = request.params as { id: string };
 
     await prisma.article.delete({

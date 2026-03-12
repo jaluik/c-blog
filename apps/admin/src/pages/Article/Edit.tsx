@@ -33,44 +33,44 @@ export function ArticleEdit() {
   const [coverImage, setCoverImage] = useState<string>("");
 
   useEffect(() => {
+    const fetchCategoriesAndTags = async () => {
+      try {
+        const [categoryData, tagData] = await Promise.all([getCategories(), getTags()]);
+        setCategories(categoryData);
+        setTags(tagData);
+      } catch (_error) {
+        message.error("获取分类或标签失败");
+      }
+    };
+
+    const fetchArticleData = async (articleId: number) => {
+      setFetching(true);
+      try {
+        const article = await getArticle(articleId);
+        form.setFieldsValue({
+          title: article.title,
+          slug: article.slug,
+          categoryId: article.categoryId,
+          tagIds: article.tags?.map((tag) => tag.id),
+          status: article.status,
+          summary: article.summary,
+          metaTitle: article.metaTitle,
+          metaDescription: article.metaDescription,
+        });
+        setContent(article.content);
+        setCoverImage(article.coverImage || "");
+      } catch (_error) {
+        message.error("获取文章失败");
+      } finally {
+        setFetching(false);
+      }
+    };
+
     fetchCategoriesAndTags();
     if (id) {
-      fetchArticle(Number(id));
+      fetchArticleData(Number(id));
     }
-  }, [id]);
-
-  const fetchCategoriesAndTags = async () => {
-    try {
-      const [categoryData, tagData] = await Promise.all([getCategories(), getTags()]);
-      setCategories(categoryData);
-      setTags(tagData);
-    } catch (error) {
-      message.error("获取分类或标签失败");
-    }
-  };
-
-  const fetchArticle = async (articleId: number) => {
-    setFetching(true);
-    try {
-      const article = await getArticle(articleId);
-      form.setFieldsValue({
-        title: article.title,
-        slug: article.slug,
-        categoryId: article.categoryId,
-        tagIds: article.tags?.map((tag) => tag.id),
-        status: article.status,
-        summary: article.summary,
-        metaTitle: article.metaTitle,
-        metaDescription: article.metaDescription,
-      });
-      setContent(article.content);
-      setCoverImage(article.coverImage || "");
-    } catch (error) {
-      message.error("获取文章失败");
-    } finally {
-      setFetching(false);
-    }
-  };
+  }, [id, form, message]);
 
   const handleSubmit = async (values: any) => {
     if (!id) return;
@@ -104,7 +104,7 @@ export function ArticleEdit() {
       const url = await uploadImage(file);
       setCoverImage(url);
       message.success("上传成功");
-    } catch (error) {
+    } catch (_error) {
       message.error("上传失败");
     }
   };

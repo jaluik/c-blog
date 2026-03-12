@@ -32,7 +32,7 @@ export function TableOfContents() {
       items.push({
         id,
         text: heading.textContent || "",
-        level: Number.parseInt(heading.tagName[1]),
+        level: Number.parseInt(heading.tagName[1], 10),
       });
     });
 
@@ -53,7 +53,9 @@ export function TableOfContents() {
       },
     );
 
-    headingElements.forEach((heading) => observer.observe(heading));
+    headingElements.forEach((heading) => {
+      void observer.observe(heading);
+    });
 
     return () => observer.disconnect();
   }, []);
@@ -87,6 +89,7 @@ export function TableOfContents() {
           <nav className="space-y-0.5">
             {headings.map((heading) => (
               <button
+                type="button"
                 key={heading.id}
                 onClick={() => scrollToHeading(heading.id)}
                 className={`w-full text-left text-xs transition-all duration-200 rounded-md px-2 py-1.5 truncate ${
@@ -107,6 +110,7 @@ export function TableOfContents() {
       {/* Mobile TOC - Floating Button */}
       <div className="2xl:hidden">
         <button
+          type="button"
           onClick={() => setIsOpen(!isOpen)}
           className="fixed bottom-8 right-8 z-50 w-12 h-12 rounded-full glass border border-neon-cyan/30 flex items-center justify-center text-neon-cyan shadow-neon-cyan"
           aria-label="Toggle table of contents"
@@ -126,6 +130,7 @@ export function TableOfContents() {
               <nav className="space-y-1">
                 {headings.map((heading) => (
                   <button
+                    type="button"
                     key={heading.id}
                     onClick={() => scrollToHeading(heading.id)}
                     className={`w-full text-left text-sm transition-all duration-200 rounded-lg px-3 py-2 ${

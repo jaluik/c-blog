@@ -49,7 +49,7 @@ export async function adminCategoryRoutes(app: FastifyInstance) {
     return { data: category, message: "Category updated" };
   });
 
-  app.delete("/admin/categories/:id", async (request, reply) => {
+  app.delete("/admin/categories/:id", async (request, _reply) => {
     const { id } = request.params as { id: string };
     await prisma.category.delete({ where: { id: Number(id) } });
     return { message: "Category deleted" };

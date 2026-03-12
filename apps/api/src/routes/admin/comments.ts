@@ -121,7 +121,7 @@ export async function adminCommentRoutes(app: FastifyInstance) {
   });
 
   // 删除评论
-  app.delete("/admin/comments/:id", async (request, reply) => {
+  app.delete("/admin/comments/:id", async (request, _reply) => {
     const { id } = request.params as { id: string };
     await prisma.comment.delete({ where: { id: Number(id) } });
     return { message: "Comment deleted" };

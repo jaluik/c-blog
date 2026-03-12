@@ -7,7 +7,6 @@ import { CategoryList } from "@/components/CategoryList";
 import { Hero } from "@/components/Hero";
 import { PostCard } from "@/components/PostCard";
 import { TagCloud } from "@/components/TagCloud";
-import { api } from "@/lib/api";
 
 interface HomeProps {
   posts: PostWithRelations[];

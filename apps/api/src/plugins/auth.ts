@@ -25,7 +25,7 @@ export default fp(async (app: FastifyInstance) => {
     try {
       const decoded = await request.jwtVerify<{ userId: number; username: string; type: string }>();
       request.user = decoded as UserPayload;
-    } catch (err) {
+    } catch (_err) {
       reply.status(401).send({ error: "Unauthorized" });
     }
   });
@@ -37,7 +37,7 @@ export default fp(async (app: FastifyInstance) => {
         return reply.status(403).send({ error: "Forbidden" });
       }
       request.user = decoded as UserPayload;
-    } catch (err) {
+    } catch (_err) {
       reply.status(401).send({ error: "Unauthorized" });
     }
   });

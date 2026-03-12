@@ -144,6 +144,7 @@ function CommentItem({
             <div className="flex items-center gap-3 mt-2">
               {onEdit && (
                 <button
+                  type="button"
                   onClick={() => onEdit(comment)}
                   className="flex items-center gap-1 text-sm text-neon-cyan hover:text-neon-cyan/80 transition-colors"
                 >
@@ -151,41 +152,42 @@ function CommentItem({
                   编辑
                 </button>
               )}
-              {onDelete && (
-                <>
-                  {!showDeleteConfirm ? (
+              {onDelete &&
+                (!showDeleteConfirm ? (
+                  <button
+                    type="button"
+                    onClick={() => setShowDeleteConfirm(true)}
+                    className="flex items-center gap-1 text-sm text-red-400 hover:text-red-300 transition-colors"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                    删除
+                  </button>
+                ) : (
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm text-text-secondary">确认删除？</span>
                     <button
-                      onClick={() => setShowDeleteConfirm(true)}
-                      className="flex items-center gap-1 text-sm text-red-400 hover:text-red-300 transition-colors"
+                      type="button"
+                      onClick={handleDelete}
+                      className="text-sm text-red-400 hover:text-red-300 font-medium"
                     >
-                      <Trash2 className="w-3.5 h-3.5" />
-                      删除
+                      确认
                     </button>
-                  ) : (
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm text-text-secondary">确认删除？</span>
-                      <button
-                        onClick={handleDelete}
-                        className="text-sm text-red-400 hover:text-red-300 font-medium"
-                      >
-                        确认
-                      </button>
-                      <button
-                        onClick={() => setShowDeleteConfirm(false)}
-                        className="text-sm text-text-tertiary hover:text-text-secondary"
-                      >
-                        取消
-                      </button>
-                    </div>
-                  )}
-                </>
-              )}
+                    <button
+                      type="button"
+                      onClick={() => setShowDeleteConfirm(false)}
+                      className="text-sm text-text-tertiary hover:text-text-secondary"
+                    >
+                      取消
+                    </button>
+                  </div>
+                ))}
             </div>
           )}
 
           {/* Replies Toggle */}
           {hasReplies && (
             <button
+              type="button"
               onClick={() => setShowReplies(!showReplies)}
               className="mt-2 flex items-center gap-1 text-sm text-neon-cyan hover:underline"
             >
@@ -197,7 +199,7 @@ function CommentItem({
               ) : (
                 <>
                   <ChevronDown className="w-4 h-4" />
-                  查看 {comment.replies!.length} 条回复
+                  查看 {comment.replies?.length} 条回复
                 </>
               )}
             </button>
@@ -208,7 +210,7 @@ function CommentItem({
       {/* Replies */}
       {hasReplies && showReplies && (
         <div className="space-y-2">
-          {comment.replies!.map((reply) => (
+          {comment.replies?.map((reply) => (
             <CommentItem
               key={reply.id}
               comment={reply}

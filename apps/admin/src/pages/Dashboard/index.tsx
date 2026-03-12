@@ -41,41 +41,40 @@ export function Dashboard() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    const fetchDashboardData = async () => {
+      setLoading(true);
+      try {
+        const [articlesRes, commentsRes, categoriesData, tagsData] = await Promise.all([
+          getArticles({ page: 1, pageSize: 100 }),
+          getComments({ page: 1, pageSize: 100 }),
+          getCategories(),
+          getTags(),
+        ]);
+
+        const articles = articlesRes.data;
+        const comments = commentsRes.data;
+
+        setStats({
+          articleCount: articles.length,
+          publishedCount: articles.filter((a) => a.status === "published").length,
+          draftCount: articles.filter((a) => a.status === "draft").length,
+          commentCount: comments.length,
+          pendingCommentCount: comments.filter((c) => !c.isApproved).length,
+          categoryCount: categoriesData.length,
+          tagCount: tagsData.length,
+          totalViews: articles.reduce((sum, a) => sum + (a.viewCount || 0), 0),
+        });
+
+        setRecentArticles(articles.slice(0, 5));
+        setRecentComments(comments.slice(0, 5));
+      } catch (error) {
+        console.error("Failed to fetch dashboard data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
     fetchDashboardData();
   }, []);
-
-  const fetchDashboardData = async () => {
-    setLoading(true);
-    try {
-      const [articlesRes, commentsRes, categories, tags] = await Promise.all([
-        getArticles({ page: 1, pageSize: 100 }),
-        getComments({ page: 1, pageSize: 100 }),
-        getCategories(),
-        getTags(),
-      ]);
-
-      const articles = articlesRes.data;
-      const comments = commentsRes.data;
-
-      setStats({
-        articleCount: articles.length,
-        publishedCount: articles.filter((a) => a.status === "published").length,
-        draftCount: articles.filter((a) => a.status === "draft").length,
-        commentCount: comments.length,
-        pendingCommentCount: comments.filter((c) => !c.isApproved).length,
-        categoryCount: categories.length,
-        tagCount: tags.length,
-        totalViews: articles.reduce((sum, a) => sum + (a.viewCount || 0), 0),
-      });
-
-      setRecentArticles(articles.slice(0, 5));
-      setRecentComments(comments.slice(0, 5));
-    } catch (error) {
-      console.error("Failed to fetch dashboard data:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   return (
     <PageContainer

@@ -18,7 +18,7 @@ const queryClient = new QueryClient();
 
 function PrivateRoute({ children }: { children: React.ReactNode }) {
   const token = localStorage.getItem("admin_token");
-  return token ? <>{children}</> : <Navigate to="/login" />;
+  return token ? children : <Navigate to="/login" />;
 }
 
 function App() {

@@ -175,7 +175,7 @@ export function Hero() {
             { label: "文章", value: "50+" },
             { label: "分类", value: "10+" },
             { label: "标签", value: "30+" },
-          ].map((stat, index) => (
+          ].map((stat, _index) => (
             <div key={stat.label} className="text-center">
               <div className="font-display text-2xl sm:text-3xl font-bold text-gradient mb-1">
                 {stat.value}

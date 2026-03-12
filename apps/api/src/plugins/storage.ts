@@ -1,7 +1,7 @@
+import fs from "node:fs/promises";
+import path from "node:path";
 import type { FastifyInstance } from "fastify";
 import fp from "fastify-plugin";
-import fs from "fs/promises";
-import path from "path";
 
 const UPLOAD_DIR = process.env.UPLOAD_DIR || "./uploads";
 

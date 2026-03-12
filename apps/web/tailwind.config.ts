@@ -121,7 +121,11 @@ const config: Config = {
   },
   plugins: [
     // Custom utilities
-    ({ addUtilities }: { addUtilities: Function }) => {
+    ({
+      addUtilities,
+    }: {
+      addUtilities: (utilities: Record<string, Record<string, string>>) => void;
+    }) => {
       addUtilities({
         ".text-gradient": {
           background:

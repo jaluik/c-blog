@@ -103,6 +103,7 @@ export function Navbar() {
 
             {/* Mobile Menu Button */}
             <button
+              type="button"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               className="md:hidden p-2 rounded-lg text-text-secondary hover:text-text-primary hover:bg-text-primary/10 transition-colors"
               aria-label="Toggle menu"

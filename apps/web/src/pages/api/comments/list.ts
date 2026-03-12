@@ -1,7 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { getServerSession } from "next-auth";
 import { getToken } from "next-auth/jwt";
-import { authOptions } from "@/lib/auth";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== "GET") {

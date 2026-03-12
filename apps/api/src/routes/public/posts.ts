@@ -3,7 +3,7 @@ import { prisma } from "../../prisma";
 
 export async function publicPostRoutes(app: FastifyInstance) {
   // 获取文章列表
-  app.get("/posts", async (request, reply) => {
+  app.get("/posts", async (request, _reply) => {
     const {
       page = "1",
       pageSize = "10",

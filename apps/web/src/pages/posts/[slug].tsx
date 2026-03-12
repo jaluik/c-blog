@@ -17,7 +17,7 @@ import {
 } from "lucide-react";
 import type { GetStaticPaths, GetStaticProps } from "next";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { CommentForm } from "@/components/CommentForm";
 import { CommentList } from "@/components/CommentList";
 import { MarkdownContent } from "@/components/MarkdownContent";
@@ -100,8 +100,8 @@ export default function PostPage({ post, prevPost, nextPost, allPosts }: PostPag
   const [isLoadingComments, setIsLoadingComments] = useState(true);
   const [editingComment, setEditingComment] = useState<Comment | null>(null);
 
-  // 客户端获取评论（支持当前用户查看自己的待审核评论）
-  const fetchComments = async () => {
+  // 获取评论函数
+  const fetchComments = useCallback(async () => {
     setIsLoadingComments(true);
     try {
       const res = await fetch(`/api/comments/list?articleSlug=${encodeURIComponent(post.slug)}`, {
@@ -117,11 +117,12 @@ export default function PostPage({ post, prevPost, nextPost, allPosts }: PostPag
     } finally {
       setIsLoadingComments(false);
     }
-  };
+  }, [post.slug]);
 
+  // 客户端获取评论（支持当前用户查看自己的待审核评论）
   useEffect(() => {
     fetchComments();
-  }, [post.slug]);
+  }, [fetchComments]);
 
   // 处理编辑评论
   const handleEditComment = (comment: Comment) => {
@@ -296,6 +297,7 @@ export default function PostPage({ post, prevPost, nextPost, allPosts }: PostPag
                   <Linkedin className="w-5 h-5" />
                 </a>
                 <button
+                  type="button"
                   onClick={copyLink}
                   className="w-10 h-10 rounded-lg glass flex items-center justify-center text-text-secondary hover:text-text-primary hover:bg-neon-cyan/20 transition-all"
                   aria-label="Copy link"
@@ -328,6 +330,7 @@ export default function PostPage({ post, prevPost, nextPost, allPosts }: PostPag
                 )}
               </h2>
               <button
+                type="button"
                 onClick={fetchComments}
                 disabled={isLoadingComments}
                 className="p-2 rounded-lg text-text-secondary hover:text-neon-cyan hover:bg-neon-cyan/10 transition-colors disabled:opacity-50"

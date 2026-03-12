@@ -144,9 +144,19 @@ export function CommentList() {
       dataIndex: "content",
       ellipsis: true,
       render: (_, record) => (
-        <div className="cursor-pointer hover:text-neon-cyan" onClick={() => showDetail(record)}>
+        <button
+          type="button"
+          className="cursor-pointer hover:text-neon-cyan text-left bg-transparent border-0 p-0"
+          onClick={() => showDetail(record)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              showDetail(record);
+            }
+          }}
+        >
           {record.content.length > 50 ? `${record.content.slice(0, 50)}...` : record.content}
-        </div>
+        </button>
       ),
     },
     {

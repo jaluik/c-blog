@@ -24,7 +24,7 @@ export function CategoryList() {
       await deleteCategory(id);
       message.success("删除成功");
       actionRef.current?.reload();
-    } catch (error) {
+    } catch (_error) {
       message.error("删除失败");
     }
   };
