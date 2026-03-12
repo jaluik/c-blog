@@ -10,11 +10,19 @@
     "check": "biome check --write .",
     "db:migrate": "pnpm --filter @blog/api db:migrate",
     "db:generate": "pnpm --filter @blog/api db:generate",
-    "db:seed": "pnpm --filter @blog/api db:seed"
+    "db:seed": "pnpm --filter @blog/api db:seed",
+    "prepare": "husky"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.4.6",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.3.3",
     "turbo": "^1.12.0"
   },
-  "packageManager": "pnpm@9.0.0"
+  "packageManager": "pnpm@9.0.0",
+  "lint-staged": {
+    "*.{js,ts,jsx,tsx,json,jsonc}": [
+      "biome check --write --no-errors-on-unmatched"
+    ]
+  }
 }
