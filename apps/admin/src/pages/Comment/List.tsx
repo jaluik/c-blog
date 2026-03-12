@@ -1,15 +1,40 @@
-import { approveComment, deleteComment, getComments } from "@/services/comment";
+import {
+  type ModerateCommentData,
+  deleteComment,
+  getComments,
+  moderateComment,
+} from "@/services/comment";
 import type { CommentListParams } from "@/services/comment";
-import { CheckOutlined, DeleteOutlined } from "@ant-design/icons";
+import {
+  CheckOutlined,
+  CloseOutlined,
+  DeleteOutlined,
+  EyeOutlined,
+  ReloadOutlined,
+} from "@ant-design/icons";
 import {
   type ActionType,
   PageContainer,
   type ProColumns,
   ProTable,
 } from "@ant-design/pro-components";
-import type { Comment } from "@blog/shared-types";
-import { App, Avatar, Button, Popconfirm, Space, Tag } from "antd";
-import { useRef } from "react";
+import type { Comment, CommentStatus } from "@blog/shared-types";
+import {
+  App,
+  Avatar,
+  Button,
+  Card,
+  Descriptions,
+  Input,
+  Modal,
+  Popconfirm,
+  Space,
+  Tag,
+  Typography,
+} from "antd";
+import { useRef, useState } from "react";
+
+const { Text, Paragraph } = Typography;
 
 interface CommentWithArticle extends Comment {
   article?: {
@@ -19,14 +44,67 @@ interface CommentWithArticle extends Comment {
   };
 }
 
+const statusMap: Record<
+  CommentStatus,
+  { text: string; color: string; status: "success" | "error" | "warning" | "default" }
+> = {
+  approved: { text: "已通过", color: "success", status: "success" },
+  rejected: { text: "已拒绝", color: "error", status: "error" },
+  pending: { text: "待审核", color: "warning", status: "warning" },
+};
+
 export function CommentList() {
   const actionRef = useRef<ActionType>();
   const { message } = App.useApp();
+  const [rejectModalVisible, setRejectModalVisible] = useState(false);
+  const [rejectingComment, setRejectingComment] = useState<CommentWithArticle | null>(null);
+  const [rejectionReason, setRejectionReason] = useState("");
+  const [detailModalVisible, setDetailModalVisible] = useState(false);
+  const [viewingComment, setViewingComment] = useState<CommentWithArticle | null>(null);
 
-  const handleApprove = async (id: number, isApproved: boolean) => {
+  const handleApprove = async (id: number) => {
     try {
-      await approveComment(id, isApproved);
-      message.success(isApproved ? "审核通过" : "已拒绝");
+      await moderateComment(id, { status: "approved" });
+      message.success("审核通过");
+      actionRef.current?.reload();
+    } catch (error) {
+      message.error("操作失败");
+    }
+  };
+
+  const handleReject = (record: CommentWithArticle) => {
+    setRejectingComment(record);
+    setRejectionReason("");
+    setRejectModalVisible(true);
+  };
+
+  const handleRejectSubmit = async () => {
+    if (!rejectingComment) return;
+
+    if (!rejectionReason.trim()) {
+      message.error("请输入拒绝原因");
+      return;
+    }
+
+    try {
+      await moderateComment(rejectingComment.id, {
+        status: "rejected",
+        rejectionReason: rejectionReason.trim(),
+      });
+      message.success("已拒绝并发送原因");
+      setRejectModalVisible(false);
+      setRejectingComment(null);
+      setRejectionReason("");
+      actionRef.current?.reload();
+    } catch (error) {
+      message.error("操作失败");
+    }
+  };
+
+  const handleResetToPending = async (id: number) => {
+    try {
+      await moderateComment(id, { status: "pending" });
+      message.success("已重置为待审核");
       actionRef.current?.reload();
     } catch (error) {
       message.error("操作失败");
@@ -41,6 +119,11 @@ export function CommentList() {
     } catch (error) {
       message.error("删除失败");
     }
+  };
+
+  const showDetail = (record: CommentWithArticle) => {
+    setViewingComment(record);
+    setDetailModalVisible(true);
   };
 
   const columns: ProColumns<CommentWithArticle>[] = [
@@ -65,6 +148,11 @@ export function CommentList() {
       title: "评论内容",
       dataIndex: "content",
       ellipsis: true,
+      render: (_, record) => (
+        <div className="cursor-pointer hover:text-neon-cyan" onClick={() => showDetail(record)}>
+          {record.content.length > 50 ? `${record.content.slice(0, 50)}...` : record.content}
+        </div>
+      ),
     },
     {
       title: "文章",
@@ -79,16 +167,22 @@ export function CommentList() {
     },
     {
       title: "状态",
-      dataIndex: "isApproved",
+      dataIndex: "status",
       width: 100,
       valueEnum: {
-        true: { text: "已通过", status: "Success" },
-        false: { text: "待审核", status: "Warning" },
+        pending: { text: "待审核", status: "Warning" },
+        approved: { text: "已通过", status: "Success" },
+        rejected: { text: "已拒绝", status: "Error" },
       },
       render: (_, record) => (
-        <Tag color={record.isApproved ? "success" : "warning"}>
-          {record.isApproved ? "已通过" : "待审核"}
-        </Tag>
+        <Space direction="vertical" size={0}>
+          <Tag color={statusMap[record.status].color}>{statusMap[record.status].text}</Tag>
+          {record.status === "rejected" && record.rejectionReason && (
+            <Text type="secondary" className="text-xs">
+              有拒绝原因
+            </Text>
+          )}
+        </Space>
       ),
     },
     {
@@ -102,24 +196,48 @@ export function CommentList() {
     {
       title: "操作",
       key: "action",
-      width: 180,
+      width: 200,
       fixed: "right",
       search: false,
       render: (_, record) => (
         <Space size="small">
-          {!record.isApproved && (
+          <Button
+            type="link"
+            size="small"
+            icon={<EyeOutlined />}
+            onClick={() => showDetail(record)}
+          >
+            详情
+          </Button>
+          {record.status !== "approved" && (
             <Button
               type="link"
               size="small"
               icon={<CheckOutlined />}
-              onClick={() => handleApprove(record.id, true)}
+              onClick={() => handleApprove(record.id)}
             >
               通过
             </Button>
           )}
-          {record.isApproved && (
-            <Button type="link" size="small" danger onClick={() => handleApprove(record.id, false)}>
+          {record.status !== "rejected" && (
+            <Button
+              type="link"
+              size="small"
+              danger
+              icon={<CloseOutlined />}
+              onClick={() => handleReject(record)}
+            >
               拒绝
+            </Button>
+          )}
+          {record.status === "rejected" && (
+            <Button
+              type="link"
+              size="small"
+              icon={<ReloadOutlined />}
+              onClick={() => handleResetToPending(record.id)}
+            >
+              重置
             </Button>
           )}
           <Popconfirm
@@ -157,7 +275,7 @@ export function CommentList() {
           const queryParams: CommentListParams = {
             page: params.current,
             pageSize: params.pageSize,
-            isApproved: params.isApproved,
+            status: params.status as CommentStatus,
           };
 
           const response = await getComments(queryParams);
@@ -174,6 +292,138 @@ export function CommentList() {
           showTotal: (total) => `共 ${total} 条`,
         }}
       />
+
+      {/* 拒绝原因输入弹窗 */}
+      <Modal
+        title="拒绝评论"
+        open={rejectModalVisible}
+        onOk={handleRejectSubmit}
+        onCancel={() => {
+          setRejectModalVisible(false);
+          setRejectingComment(null);
+          setRejectionReason("");
+        }}
+        okText="确认拒绝"
+        cancelText="取消"
+        okButtonProps={{ danger: true }}
+      >
+        <Space direction="vertical" className="w-full" size="large">
+          <div>
+            <Text type="secondary">评论内容：</Text>
+            <Paragraph className="mt-1 p-3 bg-gray-50 rounded">
+              {rejectingComment?.content}
+            </Paragraph>
+          </div>
+          <div>
+            <Text>拒绝原因（用户将看到此原因）：</Text>
+            <Input.TextArea
+              value={rejectionReason}
+              onChange={(e) => setRejectionReason(e.target.value)}
+              placeholder="请输入拒绝原因，例如：评论包含不当内容"
+              rows={4}
+              maxLength={500}
+              showCount
+            />
+          </div>
+        </Space>
+      </Modal>
+
+      {/* 评论详情弹窗 */}
+      <Modal
+        title="评论详情"
+        open={detailModalVisible}
+        onCancel={() => {
+          setDetailModalVisible(false);
+          setViewingComment(null);
+        }}
+        footer={
+          <Space>
+            {viewingComment?.status !== "approved" && (
+              <Button
+                type="primary"
+                onClick={() => {
+                  if (viewingComment) {
+                    handleApprove(viewingComment.id);
+                    setDetailModalVisible(false);
+                  }
+                }}
+              >
+                通过
+              </Button>
+            )}
+            {viewingComment?.status !== "rejected" && (
+              <Button
+                danger
+                onClick={() => {
+                  if (viewingComment) {
+                    setDetailModalVisible(false);
+                    handleReject(viewingComment);
+                  }
+                }}
+              >
+                拒绝
+              </Button>
+            )}
+            <Button
+              onClick={() => {
+                setDetailModalVisible(false);
+                setViewingComment(null);
+              }}
+            >
+              关闭
+            </Button>
+          </Space>
+        }
+        width={600}
+      >
+        {viewingComment && (
+          <Card bordered={false}>
+            <Descriptions column={1} bordered>
+              <Descriptions.Item label="评论ID">{viewingComment.id}</Descriptions.Item>
+              <Descriptions.Item label="评论者">
+                <Space>
+                  {viewingComment.githubAvatar && (
+                    <Avatar src={viewingComment.githubAvatar} size="small" />
+                  )}
+                  <span>{viewingComment.githubUsername}</span>
+                </Space>
+              </Descriptions.Item>
+              <Descriptions.Item label="评论文章">
+                <a
+                  href={`/${viewingComment.article?.slug}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {viewingComment.article?.title || "-"}
+                </a>
+              </Descriptions.Item>
+              <Descriptions.Item label="当前状态">
+                <Tag color={statusMap[viewingComment.status].color}>
+                  {statusMap[viewingComment.status].text}
+                </Tag>
+              </Descriptions.Item>
+              <Descriptions.Item label="创建时间">
+                {new Date(viewingComment.createdAt).toLocaleString()}
+              </Descriptions.Item>
+              {viewingComment.updatedAt !== viewingComment.createdAt && (
+                <Descriptions.Item label="最后更新">
+                  {new Date(viewingComment.updatedAt).toLocaleString()}
+                </Descriptions.Item>
+              )}
+              <Descriptions.Item label="评论内容">
+                <Paragraph style={{ whiteSpace: "pre-wrap" }}>{viewingComment.content}</Paragraph>
+              </Descriptions.Item>
+              {viewingComment.rejectionReason && (
+                <Descriptions.Item label="拒绝原因">
+                  <Text type="danger" style={{ whiteSpace: "pre-wrap" }}>
+                    {viewingComment.rejectionReason}
+                  </Text>
+                </Descriptions.Item>
+              )}
+            </Descriptions>
+          </Card>
+        )}
+      </Modal>
     </PageContainer>
   );
 }

@@ -39,7 +39,7 @@ export async function publicPostRoutes(app: FastifyInstance) {
         include: {
           category: { select: { id: true, name: true, slug: true } },
           tags: { include: { tag: { select: { id: true, name: true, slug: true } } } },
-          _count: { select: { comments: { where: { isApproved: true } } } },
+          _count: { select: { comments: { where: { status: "APPROVED" } } } },
         },
       }),
       prisma.article.count({ where }),
@@ -71,7 +71,7 @@ export async function publicPostRoutes(app: FastifyInstance) {
       include: {
         category: { select: { id: true, name: true, slug: true } },
         tags: { include: { tag: { select: { id: true, name: true, slug: true } } } },
-        _count: { select: { comments: { where: { isApproved: true } } } },
+        _count: { select: { comments: { where: { status: "APPROVED" } } } },
       },
     });
 

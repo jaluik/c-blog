@@ -63,23 +63,33 @@ model ArticleTag {
   @@map("article_tags")
 }
 
+enum CommentStatus {
+  PENDING   @map("pending")
+  APPROVED  @map("approved")
+  REJECTED  @map("rejected")
+
+  @@map("comment_status")
+}
+
 model Comment {
-  id             Int      @id @default(autoincrement())
-  content        String
-  isApproved     Boolean  @default(false)
-  createdAt      DateTime @default(now())
-  githubUserId   String
-  githubUsername String
-  githubAvatar   String?
+  id              Int           @id @default(autoincrement())
+  content         String
+  status          CommentStatus @default(PENDING)
+  rejectionReason String?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  githubUserId    String
+  githubUsername  String
+  githubAvatar    String?
 
   articleId Int
-  article   Article @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  article   Article   @relation(fields: [articleId], references: [id], onDelete: Cascade)
   parentId  Int?
   parent    Comment?  @relation("CommentReplies", fields: [parentId], references: [id], onDelete: Cascade)
   replies   Comment[] @relation("CommentReplies")
 
   @@index([articleId, createdAt])
-  @@index([articleId, isApproved])
+  @@index([articleId, status])
   @@map("comments")
 }
 

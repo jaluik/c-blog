@@ -1,22 +1,40 @@
 "use client";
 
+import type { Comment } from "@blog/shared-types";
 import { motion } from "framer-motion";
-import { CheckCircle, Loader2, MessageSquare, Send, XCircle } from "lucide-react";
+import { CheckCircle, Edit3, Loader2, MessageSquare, Send, X, XCircle } from "lucide-react";
 import { signIn, useSession } from "next-auth/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 interface CommentFormProps {
   articleId: number;
+  editingComment?: Comment | null;
+  onCancelEdit?: () => void;
   onSuccess?: () => void;
 }
 
-export function CommentForm({ articleId, onSuccess }: CommentFormProps) {
+export function CommentForm({
+  articleId,
+  editingComment,
+  onCancelEdit,
+  onSuccess,
+}: CommentFormProps) {
   const { data: session, status } = useSession();
   const [content, setContent] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [focused, setFocused] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<"success" | "error" | null>(null);
   const [submitMessage, setSubmitMessage] = useState("");
+  const isEditing = !!editingComment;
+
+  // 当进入编辑模式时，填充评论内容
+  useEffect(() => {
+    if (editingComment) {
+      setContent(editingComment.content);
+    } else {
+      setContent("");
+    }
+  }, [editingComment]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -27,24 +45,38 @@ export function CommentForm({ articleId, onSuccess }: CommentFormProps) {
     setSubmitStatus(null);
 
     try {
-      // 调用 API 提交评论
-      const res = await fetch("/api/comments", {
-        method: "POST",
+      const url = isEditing ? `/api/comments/${editingComment.id}` : "/api/comments";
+      const method = isEditing ? "PATCH" : "POST";
+
+      const res = await fetch(url, {
+        method,
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          articleId,
+          ...(isEditing ? {} : { articleId }),
           content: content.trim(),
         }),
       });
 
       if (!res.ok) {
         const errorData = await res.json().catch(() => ({}));
-        throw new Error(errorData.error || "提交失败，请稍后重试");
+        throw new Error(errorData.error || "操作失败，请稍后重试");
       }
 
+      const data = await res.json();
       setContent("");
       setSubmitStatus("success");
-      setSubmitMessage("评论提交成功，等待审核后显示");
+
+      if (isEditing) {
+        setSubmitMessage(data.message || "评论修改成功");
+        // 编辑成功后取消编辑模式
+        if (onCancelEdit) {
+          setTimeout(() => {
+            onCancelEdit();
+          }, 1500);
+        }
+      } else {
+        setSubmitMessage("评论提交成功，等待审核后显示");
+      }
 
       // 成功后刷新评论列表
       if (onSuccess) {
@@ -58,9 +90,17 @@ export function CommentForm({ articleId, onSuccess }: CommentFormProps) {
     } catch (error) {
       console.error("Error submitting comment:", error);
       setSubmitStatus("error");
-      setSubmitMessage(error instanceof Error ? error.message : "提交失败，请稍后重试");
+      setSubmitMessage(error instanceof Error ? error.message : "操作失败，请稍后重试");
     } finally {
       setIsSubmitting(false);
+    }
+  };
+
+  const handleCancel = () => {
+    setContent("");
+    setSubmitStatus(null);
+    if (onCancelEdit) {
+      onCancelEdit();
     }
   };
 
@@ -104,8 +144,25 @@ export function CommentForm({ articleId, onSuccess }: CommentFormProps) {
       onSubmit={handleSubmit}
       className={`glass rounded-xl p-6 transition-all duration-300 ${
         focused ? "border-neon-cyan/30 shadow-neon-cyan" : ""
-      }`}
+      } ${isEditing ? "border-neon-cyan/20 bg-neon-cyan/5" : ""}`}
     >
+      {/* 编辑模式标题 */}
+      {isEditing && (
+        <div className="flex items-center justify-between mb-4 pb-3 border-b border-white/10">
+          <div className="flex items-center gap-2">
+            <Edit3 className="w-4 h-4 text-neon-cyan" />
+            <span className="text-text-primary font-medium">编辑评论</span>
+          </div>
+          <button
+            type="button"
+            onClick={handleCancel}
+            className="text-text-tertiary hover:text-text-secondary transition-colors"
+          >
+            <X className="w-4 h-4" />
+          </button>
+        </div>
+      )}
+
       <div className="flex items-center gap-3 mb-4">
         {session.user?.image ? (
           <img
@@ -128,7 +185,7 @@ export function CommentForm({ articleId, onSuccess }: CommentFormProps) {
         onChange={(e) => setContent(e.target.value)}
         onFocus={() => setFocused(true)}
         onBlur={() => setFocused(false)}
-        placeholder="写下你的评论..."
+        placeholder={isEditing ? "修改你的评论..." : "写下你的评论..."}
         rows={4}
         className="w-full bg-text-primary/5 border border-border-subtle rounded-xl px-4 py-3 text-text-primary placeholder-text-tertiary focus:outline-none focus:border-neon-cyan/50 resize-none transition-colors"
         disabled={isSubmitting}
@@ -155,23 +212,35 @@ export function CommentForm({ articleId, onSuccess }: CommentFormProps) {
 
       <div className="flex items-center justify-between mt-4">
         <p className="text-sm text-text-tertiary">支持 Markdown 格式</p>
-        <button
-          type="submit"
-          disabled={!content.trim() || isSubmitting}
-          className="px-6 py-2 rounded-xl bg-gradient-to-r from-neon-cyan to-neon-purple text-void-primary font-semibold flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed hover:opacity-90 transition-opacity"
-        >
-          {isSubmitting ? (
-            <>
-              <Loader2 className="w-4 h-4 animate-spin" />
-              提交中...
-            </>
-          ) : (
-            <>
-              <Send className="w-4 h-4" />
-              发表评论
-            </>
+        <div className="flex items-center gap-2">
+          {isEditing && (
+            <button
+              type="button"
+              onClick={handleCancel}
+              disabled={isSubmitting}
+              className="px-4 py-2 rounded-xl text-text-secondary hover:text-text-primary transition-colors"
+            >
+              取消
+            </button>
           )}
-        </button>
+          <button
+            type="submit"
+            disabled={!content.trim() || isSubmitting}
+            className="px-6 py-2 rounded-xl bg-gradient-to-r from-neon-cyan to-neon-purple text-void-primary font-semibold flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed hover:opacity-90 transition-opacity"
+          >
+            {isSubmitting ? (
+              <>
+                <Loader2 className="w-4 h-4 animate-spin" />
+                {isEditing ? "保存中..." : "提交中..."}
+              </>
+            ) : (
+              <>
+                {isEditing ? <Edit3 className="w-4 h-4" /> : <Send className="w-4 h-4" />}
+                {isEditing ? "保存修改" : "发表评论"}
+              </>
+            )}
+          </button>
+        </div>
       </div>
     </motion.form>
   );

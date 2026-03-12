@@ -1,4 +1,9 @@
-import type { Comment, PaginatedResponse, PaginationParams } from "@blog/shared-types";
+import type {
+  Comment,
+  CommentStatus,
+  PaginatedResponse,
+  PaginationParams,
+} from "@blog/shared-types";
 import { request, requestPaginated } from "./api";
 
 interface CommentWithArticle extends Comment {
@@ -11,7 +16,12 @@ interface CommentWithArticle extends Comment {
 
 export interface CommentListParams extends PaginationParams {
   articleId?: number;
-  isApproved?: boolean;
+  status?: CommentStatus;
+}
+
+export interface ModerateCommentData {
+  status: CommentStatus;
+  rejectionReason?: string;
 }
 
 export async function getComments(
@@ -24,16 +34,16 @@ export async function getComments(
       page: params.page || 1,
       pageSize: params.pageSize || 20,
       articleId: params.articleId,
-      isApproved: params.isApproved,
+      status: params.status,
     },
   });
 }
 
-export async function approveComment(id: number, isApproved: boolean): Promise<Comment> {
+export async function moderateComment(id: number, data: ModerateCommentData): Promise<Comment> {
   return request<Comment>({
     method: "PATCH",
     url: `/admin/comments/${id}`,
-    data: { isApproved },
+    data,
   });
 }
 

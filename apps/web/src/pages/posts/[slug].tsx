@@ -98,6 +98,7 @@ export default function PostPage({ post, prevPost, nextPost, allPosts }: PostPag
   const readingTime = getReadingTime(post.content);
   const [comments, setComments] = useState<Comment[]>([]);
   const [isLoadingComments, setIsLoadingComments] = useState(true);
+  const [editingComment, setEditingComment] = useState<Comment | null>(null);
 
   // 客户端获取评论（支持当前用户查看自己的待审核评论）
   const fetchComments = async () => {
@@ -121,6 +122,42 @@ export default function PostPage({ post, prevPost, nextPost, allPosts }: PostPag
   useEffect(() => {
     fetchComments();
   }, [post.slug]);
+
+  // 处理编辑评论
+  const handleEditComment = (comment: Comment) => {
+    setEditingComment(comment);
+    // 滚动到评论表单
+    const commentForm = document.getElementById("comment-form");
+    if (commentForm) {
+      commentForm.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+  };
+
+  // 处理取消编辑
+  const handleCancelEdit = () => {
+    setEditingComment(null);
+  };
+
+  // 处理删除评论
+  const handleDeleteComment = async (commentId: number) => {
+    try {
+      const res = await fetch(`/api/comments?id=${commentId}`, {
+        method: "DELETE",
+        credentials: "include",
+      });
+
+      if (!res.ok) {
+        const data = await res.json();
+        throw new Error(data.error || "删除失败");
+      }
+
+      // 删除成功后刷新评论列表
+      fetchComments();
+    } catch (error) {
+      console.error("Failed to delete comment:", error);
+      alert(error instanceof Error ? error.message : "删除失败");
+    }
+  };
 
   const copyLink = () => {
     navigator.clipboard.writeText(window.location.href);
@@ -301,8 +338,13 @@ export default function PostPage({ post, prevPost, nextPost, allPosts }: PostPag
             </div>
 
             {/* Comment Form */}
-            <div className="mb-10">
-              <CommentForm articleId={post.id} onSuccess={fetchComments} />
+            <div id="comment-form" className="mb-10">
+              <CommentForm
+                articleId={post.id}
+                editingComment={editingComment}
+                onCancelEdit={handleCancelEdit}
+                onSuccess={fetchComments}
+              />
             </div>
 
             {/* Comments List */}
@@ -311,7 +353,11 @@ export default function PostPage({ post, prevPost, nextPost, allPosts }: PostPag
                 <div className="w-8 h-8 border-2 border-neon-cyan/30 border-t-neon-cyan rounded-full animate-spin mx-auto" />
               </div>
             ) : (
-              <CommentList comments={comments} />
+              <CommentList
+                comments={comments}
+                onEdit={handleEditComment}
+                onDelete={handleDeleteComment}
+              />
             )}
           </motion.section>
         </div>

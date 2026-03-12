@@ -1,3 +1,5 @@
+export type CommentStatus = "pending" | "approved" | "rejected";
+
 export interface Comment {
   id: number;
   articleId: number;
@@ -6,8 +8,10 @@ export interface Comment {
   githubUsername: string;
   githubAvatar?: string;
   content: string;
-  isApproved: boolean;
+  status: CommentStatus;
+  rejectionReason?: string;
   createdAt: string;
+  updatedAt: string;
   replies?: Comment[];
 }
 
@@ -15,4 +19,13 @@ export interface CreateCommentInput {
   articleId: number;
   parentId?: number;
   content: string;
+}
+
+export interface UpdateCommentInput {
+  content: string;
+}
+
+export interface ModerateCommentInput {
+  status: CommentStatus;
+  rejectionReason?: string;
 }
