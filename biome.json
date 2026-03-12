@@ -1,7 +1,16 @@
 {
-  "$schema": "https://biomejs.dev/schemas/1.5.3/schema.json",
-  "organizeImports": {
-    "enabled": true
+  "$schema": "https://biomejs.dev/schemas/2.4.6/schema.json",
+  "vcs": {
+    "enabled": true,
+    "clientKind": "git",
+    "useIgnoreFile": true
+  },
+  "assist": {
+    "actions": {
+      "source": {
+        "organizeImports": "on"
+      }
+    }
   },
   "linter": {
     "enabled": true,
@@ -11,6 +20,7 @@
   },
   "formatter": {
     "enabled": true,
+    "useEditorconfig": false,
     "formatWithErrors": false,
     "indentStyle": "space",
     "indentWidth": 2,
