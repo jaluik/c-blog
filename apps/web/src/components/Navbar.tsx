@@ -1,7 +1,7 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { FolderOpen, Home, Menu, Sparkles, Tag, User, X } from "lucide-react";
+import { FileText, FolderOpen, Home, Menu, Sparkles, Tag, User, X } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
@@ -9,6 +9,7 @@ import { ThemeToggle } from "./ThemeToggle";
 
 const navLinks = [
   { href: "/", label: "首页", icon: Home },
+  { href: "/posts", label: "文章", icon: FileText },
   { href: "/categories", label: "分类", icon: FolderOpen },
   { href: "/tags", label: "标签", icon: Tag },
   { href: "/about", label: "关于", icon: User },

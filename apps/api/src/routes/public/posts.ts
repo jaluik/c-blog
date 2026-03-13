@@ -1,3 +1,4 @@
+import type { Prisma } from "@prisma/client";
 import type { FastifyInstance } from "fastify";
 import { prisma } from "../../prisma";
 
@@ -9,18 +10,22 @@ export async function publicPostRoutes(app: FastifyInstance) {
       pageSize = "10",
       category,
       tag,
+      year,
+      month,
     } = request.query as {
       page?: string;
       pageSize?: string;
       category?: string;
       tag?: string;
+      year?: string;
+      month?: string;
     };
 
     const pageNum = Number(page);
     const size = Number(pageSize);
     const skip = (pageNum - 1) * size;
 
-    const where: any = { status: "published" };
+    const where: Prisma.ArticleWhereInput = { status: "published" };
 
     if (category) {
       where.category = { slug: category };
@@ -28,6 +33,19 @@ export async function publicPostRoutes(app: FastifyInstance) {
 
     if (tag) {
       where.tags = { some: { tag: { slug: tag } } };
+    }
+
+    // 按时间筛选（年/月）
+    if (year) {
+      const yearNum = Number(year);
+      const monthNum = month ? Number(month) : 0;
+
+      const startDate = new Date(yearNum, monthNum - 1, 1);
+      const endDate = month
+        ? new Date(yearNum, monthNum, 0, 23, 59, 59)
+        : new Date(yearNum + 1, 0, 0, 23, 59, 59);
+
+      where.publishedAt = { gte: startDate, lte: endDate };
     }
 
     const [posts, total] = await Promise.all([
