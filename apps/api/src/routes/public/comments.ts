@@ -20,6 +20,23 @@ const PrismaCommentStatus = {
   REJECTED: "REJECTED",
 } as const;
 
+// 将 Prisma 大写状态转换为前端小写状态
+function toLowerCaseStatus(status: string): CommentStatus {
+  return status.toLowerCase() as CommentStatus;
+}
+
+// 转换评论及其回复的状态为小写
+function transformCommentStatus(comment: any): any {
+  return {
+    ...comment,
+    status: toLowerCaseStatus(comment.status),
+    replies: comment.replies?.map((reply: any) => ({
+      ...reply,
+      status: toLowerCaseStatus(reply.status),
+    })),
+  };
+}
+
 export async function commentRoutes(app: FastifyInstance) {
   // 获取文章评论（已通过 + 当前用户自己的待审核和拒绝评论）
   app.get("/comments", async (request, reply) => {
@@ -97,7 +114,10 @@ export async function commentRoutes(app: FastifyInstance) {
       },
     });
 
-    return { success: true, data: comments };
+    // 转换状态值为小写
+    const transformedComments = comments.map(transformCommentStatus);
+
+    return { success: true, data: transformedComments };
   });
 
   // 获取当前用户的所有评论（用于用户中心）
@@ -128,7 +148,13 @@ export async function commentRoutes(app: FastifyInstance) {
         },
       });
 
-      return { success: true, data: comments };
+      // 转换状态值为小写
+      const transformedComments = comments.map((comment) => ({
+        ...comment,
+        status: toLowerCaseStatus(comment.status),
+      }));
+
+      return { success: true, data: transformedComments };
     },
   );
 
@@ -160,7 +186,7 @@ export async function commentRoutes(app: FastifyInstance) {
         },
       });
 
-      return { data: comment, message: "Comment submitted for moderation" };
+      return { data: transformCommentStatus(comment), message: "Comment submitted for moderation" };
     },
   );
 
@@ -208,7 +234,7 @@ export async function commentRoutes(app: FastifyInstance) {
         data: updateData,
       });
 
-      return { data: comment, message: "Comment updated successfully" };
+      return { data: transformCommentStatus(comment), message: "Comment updated successfully" };
     },
   );
 

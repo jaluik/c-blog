@@ -228,7 +228,7 @@ function CommentItem({
 
 export function CommentList({ comments, onEdit, onDelete }: CommentListProps) {
   const { data: session } = useSession();
-  const currentUserId = (session as any)?.userId?.toString();
+  const currentUserId = session?.userId?.toString();
 
   if (comments.length === 0) {
     return (

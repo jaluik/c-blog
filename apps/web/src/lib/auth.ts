@@ -47,11 +47,15 @@ export const authOptions: NextAuthOptions = {
           throw error;
         }
       }
+      // 确保 userId 始终是 number 类型
+      if (token.userId) {
+        token.userId = Number(token.userId);
+      }
       return token;
     },
     async session({ session, token }) {
-      (session as any).backendToken = token.backendToken;
-      (session as any).userId = token.userId;
+      session.backendToken = token.backendToken;
+      session.userId = token.userId ? Number(token.userId) : undefined;
       return session;
     },
   },
