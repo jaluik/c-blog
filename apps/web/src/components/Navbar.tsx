@@ -1,19 +1,12 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { FileText, FolderOpen, Home, Menu, Sparkles, Tag, User, X } from "lucide-react";
+import { Menu, Sparkles, X } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import { mainNav, siteConfig } from "@/config";
 import { ThemeToggle } from "./ThemeToggle";
-
-const navLinks = [
-  { href: "/", label: "首页", icon: Home },
-  { href: "/posts", label: "文章", icon: FileText },
-  { href: "/categories", label: "分类", icon: FolderOpen },
-  { href: "/tags", label: "标签", icon: Tag },
-  { href: "/about", label: "关于", icon: User },
-];
 
 export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -58,12 +51,14 @@ export function Navbar() {
                 <div className="absolute inset-0 bg-gradient-to-br from-neon-cyan to-neon-purple rounded-lg opacity-80 group-hover:opacity-100 transition-opacity" />
                 <Sparkles className="relative w-5 h-5 text-white" />
               </motion.div>
-              <span className="font-display font-bold text-xl text-gradient">VoidCode</span>
+              <span className="font-display font-bold text-xl text-gradient">
+                {siteConfig.name}
+              </span>
             </Link>
 
             {/* Desktop Navigation */}
             <nav className="hidden md:flex items-center gap-1">
-              {navLinks.map((link) => {
+              {mainNav.map((link) => {
                 const Icon = link.icon;
                 const active = isActive(link.href);
 
@@ -139,7 +134,7 @@ export function Navbar() {
               transition={{ duration: 0.2 }}
             >
               <div className="glass rounded-2xl p-2 space-y-1">
-                {navLinks.map((link, index) => {
+                {mainNav.map((link, index) => {
                   const Icon = link.icon;
                   const active = isActive(link.href);
 

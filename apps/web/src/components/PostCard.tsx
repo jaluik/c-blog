@@ -6,6 +6,7 @@ import { zhCN } from "date-fns/locale";
 import { motion } from "framer-motion";
 import { ArrowUpRight, Calendar, Eye } from "lucide-react";
 import Link from "next/link";
+import { displayConfig } from "@/config";
 
 interface PostCardProps {
   post: PostWithRelations;
@@ -20,8 +21,8 @@ export function PostCard({ post, featured = false, index = 0 }: PostCardProps) {
       opacity: 1,
       y: 0,
       transition: {
-        duration: 0.5,
-        delay: index * 0.1,
+        duration: displayConfig.animation.duration,
+        delay: index * displayConfig.animation.cardDelayInterval,
       },
     },
   };
@@ -53,7 +54,7 @@ export function PostCard({ post, featured = false, index = 0 }: PostCardProps) {
               {/* Featured Badge */}
               <div className="absolute top-4 left-4">
                 <span className="px-3 py-1 rounded-full bg-neon-cyan/20 text-neon-cyan text-sm font-medium border border-neon-cyan/30">
-                  精选
+                  {displayConfig.featured.badgeText}
                 </span>
               </div>
             </div>
@@ -79,16 +80,24 @@ export function PostCard({ post, featured = false, index = 0 }: PostCardProps) {
 
               {/* Meta */}
               <div className="flex items-center gap-4 text-sm text-text-tertiary">
-                <span className="flex items-center gap-1">
-                  <Calendar className="w-4 h-4" />
-                  {format(new Date(post.publishedAt || post.createdAt), "yyyy年MM月dd日", {
-                    locale: zhCN,
-                  })}
-                </span>
-                <span className="flex items-center gap-1">
-                  <Eye className="w-4 h-4" />
-                  {post.viewCount} 阅读
-                </span>
+                {displayConfig.postCard.showPublishDate && (
+                  <span className="flex items-center gap-1">
+                    <Calendar className="w-4 h-4" />
+                    {format(
+                      new Date(post.publishedAt || post.createdAt),
+                      displayConfig.postCard.dateFormat.full,
+                      {
+                        locale: zhCN,
+                      },
+                    )}
+                  </span>
+                )}
+                {displayConfig.postCard.showViewCount && (
+                  <span className="flex items-center gap-1">
+                    <Eye className="w-4 h-4" />
+                    {post.viewCount} 阅读
+                  </span>
+                )}
               </div>
             </div>
 
@@ -147,23 +156,31 @@ export function PostCard({ post, featured = false, index = 0 }: PostCardProps) {
 
             {/* Meta */}
             <div className="flex items-center justify-between text-xs text-text-tertiary mt-auto">
-              <span className="flex items-center gap-1">
-                <Calendar className="w-3 h-3" />
-                {format(new Date(post.publishedAt || post.createdAt), "MM-dd", {
-                  locale: zhCN,
-                })}
-              </span>
-              <span className="flex items-center gap-1">
-                <Eye className="w-3 h-3" />
-                {post.viewCount}
-              </span>
+              {displayConfig.postCard.showPublishDate && (
+                <span className="flex items-center gap-1">
+                  <Calendar className="w-3 h-3" />
+                  {format(
+                    new Date(post.publishedAt || post.createdAt),
+                    displayConfig.postCard.dateFormat.short,
+                    {
+                      locale: zhCN,
+                    },
+                  )}
+                </span>
+              )}
+              {displayConfig.postCard.showViewCount && (
+                <span className="flex items-center gap-1">
+                  <Eye className="w-3 h-3" />
+                  {post.viewCount}
+                </span>
+              )}
             </div>
           </div>
 
           {/* Tags */}
           {post.tags && post.tags.length > 0 && (
             <div className="px-5 pb-4 flex flex-wrap gap-2">
-              {post.tags.slice(0, 2).map((tag) => (
+              {post.tags.slice(0, displayConfig.postCard.maxTagsDisplay).map((tag) => (
                 <span
                   key={tag.id}
                   className="text-xs px-2 py-1 rounded-full bg-white/5 text-text-secondary border border-white/10"
@@ -171,9 +188,9 @@ export function PostCard({ post, featured = false, index = 0 }: PostCardProps) {
                   {tag.name}
                 </span>
               ))}
-              {post.tags.length > 2 && (
+              {post.tags.length > displayConfig.postCard.maxTagsDisplay && (
                 <span className="text-xs px-2 py-1 text-text-tertiary">
-                  +{post.tags.length - 2}
+                  +{post.tags.length - displayConfig.postCard.maxTagsDisplay}
                 </span>
               )}
             </div>

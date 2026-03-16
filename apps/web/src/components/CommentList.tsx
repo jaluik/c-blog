@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useState } from "react";
+import { contentConfig } from "@/config";
 
 interface CommentListProps {
   comments: Comment[];
@@ -26,26 +27,33 @@ interface CommentListProps {
 }
 
 function getStatusBadge(status: CommentStatus) {
+  const config = contentConfig.comments.status;
   switch (status) {
     case "pending":
       return (
-        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-amber-500/10 text-amber-400 border border-amber-500/20">
+        <span
+          className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium border ${config.pending.colorClass}`}
+        >
           <Clock className="w-3 h-3" />
-          审核中
+          {config.pending.label}
         </span>
       );
     case "approved":
       return (
-        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-green-500/10 text-green-400 border border-green-500/20">
+        <span
+          className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium border ${config.approved.colorClass}`}
+        >
           <CheckCircle className="w-3 h-3" />
-          已通过
+          {config.approved.label}
         </span>
       );
     case "rejected":
       return (
-        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-red-500/10 text-red-400 border border-red-500/20">
+        <span
+          className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium border ${config.rejected.colorClass}`}
+        >
           <XCircle className="w-3 h-3" />
-          未通过
+          {config.rejected.label}
         </span>
       );
   }
@@ -108,10 +116,12 @@ function CommentItem({
             <span className="font-medium text-text-primary">{comment.githubUsername}</span>
             {isOwnComment && getStatusBadge(comment.status)}
             <span className="text-text-tertiary text-sm">
-              {format(new Date(comment.createdAt), "yyyy-MM-dd HH:mm", {
+              {format(new Date(comment.createdAt), contentConfig.comments.dateFormat, {
                 locale: zhCN,
               })}
-              {comment.updatedAt !== comment.createdAt && <span className="ml-1">(已编辑)</span>}
+              {comment.updatedAt !== comment.createdAt && (
+                <span className="ml-1">{contentConfig.comments.moderation.edited}</span>
+              )}
             </span>
           </div>
 
@@ -121,9 +131,13 @@ function CommentItem({
               <div className="flex items-start gap-2">
                 <AlertCircle className="w-4 h-4 text-red-400 flex-shrink-0 mt-0.5" />
                 <div className="flex-1">
-                  <p className="text-sm text-red-300 font-medium">审核未通过</p>
+                  <p className="text-sm text-red-300 font-medium">
+                    {contentConfig.comments.moderation.rejectedTitle}
+                  </p>
                   <p className="text-sm text-red-200/80 mt-1">{comment.rejectionReason}</p>
-                  <p className="text-xs text-red-300/60 mt-2">您可以修改评论后重新提交审核</p>
+                  <p className="text-xs text-red-300/60 mt-2">
+                    {contentConfig.comments.moderation.rejectedMessage}
+                  </p>
                 </div>
               </div>
             </div>
@@ -149,7 +163,7 @@ function CommentItem({
                   className="flex items-center gap-1 text-sm text-neon-cyan hover:text-neon-cyan/80 transition-colors"
                 >
                   <Edit3 className="w-3.5 h-3.5" />
-                  编辑
+                  {contentConfig.comments.actions.edit}
                 </button>
               )}
               {onDelete &&
@@ -160,24 +174,26 @@ function CommentItem({
                     className="flex items-center gap-1 text-sm text-red-400 hover:text-red-300 transition-colors"
                   >
                     <Trash2 className="w-3.5 h-3.5" />
-                    删除
+                    {contentConfig.comments.actions.delete}
                   </button>
                 ) : (
                   <div className="flex items-center gap-2">
-                    <span className="text-sm text-text-secondary">确认删除？</span>
+                    <span className="text-sm text-text-secondary">
+                      {contentConfig.comments.actions.deleteConfirm}
+                    </span>
                     <button
                       type="button"
                       onClick={handleDelete}
                       className="text-sm text-red-400 hover:text-red-300 font-medium"
                     >
-                      确认
+                      {contentConfig.comments.actions.confirm}
                     </button>
                     <button
                       type="button"
                       onClick={() => setShowDeleteConfirm(false)}
                       className="text-sm text-text-tertiary hover:text-text-secondary"
                     >
-                      取消
+                      {contentConfig.comments.actions.cancel}
                     </button>
                   </div>
                 ))}
@@ -194,12 +210,15 @@ function CommentItem({
               {showReplies ? (
                 <>
                   <ChevronUp className="w-4 h-4" />
-                  收起回复
+                  {contentConfig.comments.replies.collapse}
                 </>
               ) : (
                 <>
                   <ChevronDown className="w-4 h-4" />
-                  查看 {comment.replies?.length} 条回复
+                  {contentConfig.comments.replies.viewReplies.replace(
+                    "{count}",
+                    String(comment.replies?.length || 0),
+                  )}
                 </>
               )}
             </button>
@@ -234,7 +253,7 @@ export function CommentList({ comments, onEdit, onDelete }: CommentListProps) {
     return (
       <div className="text-center py-12">
         <MessageSquare className="w-12 h-12 text-text-muted mx-auto mb-4" />
-        <p className="text-text-secondary">暂无评论，来发表第一条评论吧！</p>
+        <p className="text-text-secondary">{contentConfig.comments.emptyMessage}</p>
       </div>
     );
   }

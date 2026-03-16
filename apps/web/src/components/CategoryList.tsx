@@ -15,6 +15,7 @@ import {
   Sparkles,
 } from "lucide-react";
 import Link from "next/link";
+import { displayConfig } from "@/config";
 
 const iconMap: Record<string, React.ElementType> = {
   frontend: Code2,
@@ -69,13 +70,14 @@ export function CategoryList({ categories }: CategoryListProps) {
         >
           <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full glass text-sm text-neon-purple mb-4">
             <Sparkles className="w-4 h-4" />
-            内容分类
+            {displayConfig.categoryList.badgeText}
           </span>
           <h2 className="font-display text-3xl sm:text-4xl font-bold text-text-primary mb-4">
-            探索不同领域的<span className="text-gradient">技术文章</span>
+            {displayConfig.categoryList.title}
+            <span className="text-gradient">{displayConfig.categoryList.titleHighlight}</span>
           </h2>
           <p className="text-text-secondary max-w-2xl mx-auto">
-            按主题分类浏览文章，找到你感兴趣的技术内容
+            {displayConfig.categoryList.description}
           </p>
         </motion.div>
 
@@ -105,7 +107,7 @@ export function CategoryList({ categories }: CategoryListProps) {
 
                     {/* Count */}
                     <p className="text-sm text-text-tertiary">
-                      {category.articleCount || 0} 篇文章
+                      {category.articleCount || 0} {displayConfig.categoryList.articleCountSuffix}
                     </p>
 
                     {/* Hover Glow */}

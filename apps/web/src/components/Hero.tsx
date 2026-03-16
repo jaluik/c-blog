@@ -4,13 +4,7 @@ import { motion } from "framer-motion";
 import { ArrowDown, Code2, Cpu, Terminal } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-
-const typingTexts = [
-  "探索代码的无限可能",
-  "记录技术的点滴成长",
-  "分享编程的乐趣",
-  "在虚空中书写未来",
-];
+import { heroConfig } from "@/config";
 
 export function Hero() {
   const [currentTextIndex, setCurrentTextIndex] = useState(0);
@@ -18,7 +12,7 @@ export function Hero() {
   const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
-    const currentFullText = typingTexts[currentTextIndex];
+    const currentFullText = heroConfig.typingTexts[currentTextIndex];
 
     const timeout = setTimeout(
       () => {
@@ -26,18 +20,18 @@ export function Hero() {
           if (displayText.length < currentFullText.length) {
             setDisplayText(currentFullText.slice(0, displayText.length + 1));
           } else {
-            setTimeout(() => setIsDeleting(true), 2000);
+            setTimeout(() => setIsDeleting(true), heroConfig.animation.pauseDuration);
           }
         } else {
           if (displayText.length > 0) {
             setDisplayText(displayText.slice(0, -1));
           } else {
             setIsDeleting(false);
-            setCurrentTextIndex((prev) => (prev + 1) % typingTexts.length);
+            setCurrentTextIndex((prev) => (prev + 1) % heroConfig.typingTexts.length);
           }
         }
       },
-      isDeleting ? 50 : 100,
+      isDeleting ? heroConfig.animation.deletingSpeed : heroConfig.animation.typingSpeed,
     );
 
     return () => clearTimeout(timeout);
@@ -94,7 +88,7 @@ export function Hero() {
         >
           <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass text-sm text-neon-cyan border border-neon-cyan/30">
             <span className="w-2 h-2 rounded-full bg-neon-cyan animate-pulse" />
-            欢迎来到虚空代码
+            {heroConfig.welcomeBadge}
           </span>
         </motion.div>
 
@@ -105,8 +99,8 @@ export function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.1 }}
         >
-          <span className="text-text-primary">虚空</span>
-          <span className="text-gradient">代码</span>
+          <span className="text-text-primary">{heroConfig.title.prefix}</span>
+          <span className="text-gradient">{heroConfig.title.suffix}</span>
         </motion.h1>
 
         {/* Typing Text */}
@@ -129,8 +123,7 @@ export function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.3 }}
         >
-          一个专注于技术分享的个人博客，涵盖前端开发、后端架构、
-          人工智能等多个领域的学习心得与实践经验。
+          {heroConfig.description}
         </motion.p>
 
         {/* CTA Buttons */}
@@ -151,16 +144,16 @@ export function Hero() {
             <div className="absolute inset-0 bg-gradient-to-r from-neon-cyan to-neon-purple opacity-90 group-hover:opacity-100 transition-opacity" />
             <div className="absolute inset-0 bg-gradient-to-r from-neon-cyan to-neon-purple opacity-0 group-hover:opacity-100 blur-xl transition-opacity" />
             <span className="relative font-semibold text-void-primary flex items-center gap-2">
-              开始探索
+              {heroConfig.cta.primary.label}
               <ArrowDown className="w-4 h-4 group-hover:translate-y-1 transition-transform" />
             </span>
           </Link>
 
           <Link
-            href="/categories"
+            href={heroConfig.cta.secondary.href}
             className="px-8 py-4 rounded-xl border border-border-subtle text-text-primary font-medium hover:border-neon-cyan/50 hover:bg-white/5 transition-all duration-200"
           >
-            浏览分类
+            {heroConfig.cta.secondary.label}
           </Link>
         </motion.div>
 
@@ -171,11 +164,7 @@ export function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.5 }}
         >
-          {[
-            { label: "文章", value: "50+" },
-            { label: "分类", value: "10+" },
-            { label: "标签", value: "30+" },
-          ].map((stat, _index) => (
+          {heroConfig.stats.map((stat) => (
             <div key={stat.label} className="text-center">
               <div className="font-display text-2xl sm:text-3xl font-bold text-gradient mb-1">
                 {stat.value}

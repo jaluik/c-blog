@@ -4,6 +4,7 @@ import type { Tag } from "@blog/shared-types";
 import { motion } from "framer-motion";
 import { Hash, Sparkles } from "lucide-react";
 import Link from "next/link";
+import { displayConfig } from "@/config";
 
 interface TagCloudProps {
   tags: Tag[];
@@ -55,13 +56,14 @@ export function TagCloud({ tags }: TagCloudProps) {
         >
           <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full glass text-sm text-neon-pink mb-4">
             <Hash className="w-4 h-4" />
-            热门标签
+            {displayConfig.tagCloud.badgeText}
           </span>
           <h2 className="font-display text-3xl sm:text-4xl font-bold text-text-primary mb-4">
-            通过标签发现<span className="text-gradient">更多内容</span>
+            {displayConfig.tagCloud.title}
+            <span className="text-gradient">{displayConfig.tagCloud.titleHighlight}</span>
           </h2>
           <p className="text-text-secondary max-w-2xl mx-auto">
-            点击标签浏览相关文章，快速定位你感兴趣的技术话题
+            {displayConfig.tagCloud.description}
           </p>
         </motion.div>
 
@@ -83,7 +85,11 @@ export function TagCloud({ tags }: TagCloudProps) {
                 >
                   <Sparkles className="w-3 h-3 opacity-50" />
                   {tag.name}
-                  <span className="text-xs opacity-50">({tag.articleCount || 0})</span>
+                  <span className="text-xs opacity-50">
+                    {displayConfig.tagCloud.countPrefix}
+                    {tag.articleCount || 0}
+                    {displayConfig.tagCloud.countSuffix}
+                  </span>
                 </span>
               </Link>
             </motion.div>

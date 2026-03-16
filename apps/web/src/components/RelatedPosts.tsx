@@ -6,6 +6,7 @@ import { zhCN } from "date-fns/locale";
 import { motion } from "framer-motion";
 import { ArrowRight, Calendar } from "lucide-react";
 import Link from "next/link";
+import { displayConfig } from "@/config";
 
 interface RelatedPostsProps {
   posts: PostWithRelations[];
@@ -13,8 +14,10 @@ interface RelatedPostsProps {
 }
 
 export function RelatedPosts({ posts, currentPostId }: RelatedPostsProps) {
-  // Filter out current post and limit to 3
-  const relatedPosts = posts.filter((post) => post.id !== currentPostId).slice(0, 3);
+  // Filter out current post and limit
+  const relatedPosts = posts
+    .filter((post) => post.id !== currentPostId)
+    .slice(0, displayConfig.relatedPosts.maxCount);
 
   if (relatedPosts.length === 0) return null;
 

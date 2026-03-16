@@ -13,28 +13,22 @@ import {
   Zap,
 } from "lucide-react";
 import Link from "next/link";
+import { aboutConfig, socialNav } from "@/config";
 
-const skills = [
-  { name: "React / Next.js", level: 95, color: "from-blue-500 to-cyan-500" },
-  { name: "TypeScript", level: 90, color: "from-blue-600 to-blue-400" },
-  { name: "Node.js", level: 85, color: "from-green-600 to-green-400" },
-  { name: "Python", level: 75, color: "from-yellow-500 to-yellow-300" },
-  { name: "Database", level: 80, color: "from-orange-500 to-red-500" },
-  { name: "DevOps", level: 70, color: "from-purple-600 to-pink-500" },
-];
-
-const stats = [
-  { label: "文章", value: "50+", icon: Globe },
-  { label: "项目", value: "20+", icon: Terminal },
-  { label: "代码行", value: "100K+", icon: Code2 },
-  { label: "咖啡", value: "∞", icon: Coffee },
-];
-
-const socialLinks = [
-  { icon: Github, href: "https://github.com", label: "GitHub" },
-  { icon: Twitter, href: "https://twitter.com", label: "Twitter" },
-  { icon: Mail, href: "mailto:hello@example.com", label: "Email" },
-];
+// 图标映射
+const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
+  Code2,
+  Coffee,
+  Github,
+  Globe,
+  Heart,
+  Mail,
+  MapPin,
+  Sparkles,
+  Terminal,
+  Twitter,
+  Zap,
+};
 
 export async function getStaticProps() {
   return {
@@ -55,14 +49,12 @@ export default function AboutPage() {
         >
           <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full glass text-sm text-neon-cyan mb-6">
             <Sparkles className="w-4 h-4" />
-            关于博客
+            {aboutConfig.badge}
           </span>
           <h1 className="font-display text-4xl sm:text-5xl font-bold text-text-primary mb-6">
-            关于 <span className="text-gradient">VoidCode</span>
+            {aboutConfig.pageTitle}
           </h1>
-          <p className="text-text-secondary max-w-2xl mx-auto text-lg">
-            一个专注于技术分享的个人博客，记录学习历程，分享编程心得
-          </p>
+          <p className="text-text-secondary max-w-2xl mx-auto text-lg">{aboutConfig.subtitle}</p>
         </motion.div>
 
         {/* Stats */}
@@ -72,14 +64,19 @@ export default function AboutPage() {
           transition={{ duration: 0.6, delay: 0.1 }}
           className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-16"
         >
-          {stats.map((stat, index) => {
-            const Icon = stat.icon;
+          {aboutConfig.stats.map((stat, index) => {
+            const Icon = iconMap[stat.icon];
             return (
               <motion.div
                 key={stat.label}
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.4, delay: 0.2 + index * 0.1 }}
+                transition={{
+                  duration: 0.4,
+                  delay:
+                    aboutConfig.animation.statCardDelay +
+                    index * aboutConfig.animation.statCardInterval,
+                }}
                 className="p-6 rounded-2xl glass text-center"
               >
                 <Icon className="w-6 h-6 text-neon-cyan mx-auto mb-2" />
@@ -105,19 +102,19 @@ export default function AboutPage() {
               博客理念
             </h2>
             <div className="space-y-4 text-text-secondary">
-              <p>VoidCode（虚空代码）诞生于对技术的热爱和对知识的渴望。</p>
-              <p>博客名称「虚空代码」寓意着在代码的虚空中探索无限可能。</p>
-              <p>这里涵盖前端开发、后端架构、人工智能、云原生等多个技术领域。</p>
+              {aboutConfig.philosophy.map((text) => (
+                <p key={text.slice(0, 20)}>{text}</p>
+              ))}
             </div>
 
             <div className="mt-6 flex items-center gap-2 text-text-secondary">
               <MapPin className="w-4 h-4" />
-              <span>Made with love on Earth</span>
+              <span>{aboutConfig.location}</span>
             </div>
 
             <div className="mt-8 flex items-center gap-3">
-              {socialLinks.map((social) => {
-                const Icon = social.icon;
+              {socialNav.map((social) => {
+                const Icon = iconMap[social.icon];
                 return (
                   <motion.a
                     key={social.label}
@@ -146,12 +143,15 @@ export default function AboutPage() {
               技术栈
             </h2>
             <div className="space-y-4">
-              {skills.map((skill, index) => (
+              {aboutConfig.skills.map((skill, index) => (
                 <motion.div
                   key={skill.name}
                   initial={{ opacity: 0, x: 20 }}
                   animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.4, delay: 0.4 + index * 0.1 }}
+                  transition={{
+                    duration: 0.4,
+                    delay: 0.4 + index * aboutConfig.animation.skillBarInterval,
+                  }}
                 >
                   <div className="flex items-center justify-between mb-2">
                     <span className="text-text-secondary">{skill.name}</span>
@@ -162,7 +162,12 @@ export default function AboutPage() {
                       className={`h-full bg-gradient-to-r ${skill.color} rounded-full`}
                       initial={{ width: 0 }}
                       animate={{ width: `${skill.level}%` }}
-                      transition={{ duration: 1, delay: 0.5 + index * 0.1 }}
+                      transition={{
+                        duration: 1,
+                        delay:
+                          aboutConfig.animation.skillBarDelay +
+                          index * aboutConfig.animation.skillBarInterval,
+                      }}
                     />
                   </div>
                 </motion.div>
@@ -179,19 +184,10 @@ export default function AboutPage() {
           className="mb-16"
         >
           <h2 className="font-display text-2xl font-bold text-text-primary mb-8 text-center">
-            博客技术栈
+            {aboutConfig.techStack.title}
           </h2>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-            {[
-              { name: "Next.js", desc: "React Framework" },
-              { name: "TypeScript", desc: "Type Safety" },
-              { name: "Tailwind", desc: "Styling" },
-              { name: "Fastify", desc: "Backend API" },
-              { name: "Prisma", desc: "ORM" },
-              { name: "PostgreSQL", desc: "Database" },
-              { name: "Vercel", desc: "Deployment" },
-              { name: "GitHub", desc: "Version Control" },
-            ].map((tech, index) => (
+            {aboutConfig.techStack.items.map((tech, index) => (
               <motion.div
                 key={tech.name}
                 initial={{ opacity: 0, scale: 0.9 }}
@@ -200,7 +196,7 @@ export default function AboutPage() {
                 className="p-4 rounded-xl glass text-center"
               >
                 <div className="font-semibold text-text-primary">{tech.name}</div>
-                <div className="text-text-tertiary text-sm">{tech.desc}</div>
+                <div className="text-text-tertiary text-sm">{tech.description}</div>
               </motion.div>
             ))}
           </div>
@@ -215,22 +211,22 @@ export default function AboutPage() {
         >
           <div className="p-8 rounded-2xl glass">
             <Heart className="w-8 h-8 text-neon-pink mx-auto mb-4" />
-            <h3 className="font-display text-xl font-bold text-text-primary mb-2">感谢你的访问</h3>
-            <p className="text-text-secondary mb-6">
-              如果你对我的文章感兴趣，欢迎订阅 RSS 或通过社交媒体关注我
-            </p>
+            <h3 className="font-display text-xl font-bold text-text-primary mb-2">
+              {aboutConfig.cta.title}
+            </h3>
+            <p className="text-text-secondary mb-6">{aboutConfig.cta.description}</p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <Link
-                href="/"
+                href={aboutConfig.cta.primaryButton.href}
                 className="w-full sm:w-auto px-6 py-3 rounded-xl bg-gradient-to-r from-neon-cyan to-neon-purple text-void-primary font-semibold hover:opacity-90 transition-opacity"
               >
-                浏览文章
+                {aboutConfig.cta.primaryButton.label}
               </Link>
               <a
-                href="/rss"
+                href={aboutConfig.cta.secondaryButton.href}
                 className="w-full sm:w-auto px-6 py-3 rounded-xl glass border border-border-subtle text-text-primary font-medium hover:border-neon-cyan/50 transition-colors"
               >
-                订阅 RSS
+                {aboutConfig.cta.secondaryButton.label}
               </a>
             </div>
           </div>

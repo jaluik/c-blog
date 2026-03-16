@@ -1,10 +1,11 @@
 "use client";
 
+import { ExternalLink } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import rehypeHighlight from "rehype-highlight";
 import remarkGfm from "remark-gfm";
+import { contentConfig } from "@/config";
 import "highlight.js/styles/atom-one-dark.css";
-import { ExternalLink } from "lucide-react";
 
 interface MarkdownContentProps {
   content: string;
@@ -12,7 +13,7 @@ interface MarkdownContentProps {
 
 export function MarkdownContent({ content }: MarkdownContentProps) {
   return (
-    <div className="prose prose-lg max-w-none prose-headings:font-display dark:prose-invert">
+    <div className={contentConfig.markdown.proseClass}>
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
         rehypePlugins={[rehypeHighlight]}
