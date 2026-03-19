@@ -1,4 +1,11 @@
-import type { Category, PaginatedResponse, Post, Tag } from "@blog/shared-types";
+import type {
+  Category,
+  PaginatedResponse,
+  Post,
+  SearchRequest,
+  SearchResponse,
+  Tag,
+} from "@blog/shared-types";
 
 const API_BASE = process.env.API_URL || "http://localhost:4000";
 
@@ -46,5 +53,14 @@ export const api = {
   },
   tags: {
     list: () => fetchApi<{ data: Tag[] }>("/tags").then((r) => r.data),
+  },
+  search: {
+    search: (params: SearchRequest) => {
+      const { q, limit = 10, offset = 0 } = params;
+      return fetchApi<SearchResponse>("/search", {
+        method: "POST",
+        body: JSON.stringify({ q, limit, offset }),
+      });
+    },
   },
 };
