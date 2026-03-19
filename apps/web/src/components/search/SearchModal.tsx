@@ -77,14 +77,14 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
           onClick={handleBackdropClick}
         >
           <motion.div
-            className="absolute inset-0 bg-bg-primary/80 backdrop-blur-sm"
+            className="absolute inset-0 bg-bg-primary/90 backdrop-blur-sm"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
           />
 
           <motion.div
-            className="relative w-full max-w-2xl bg-bg-secondary/90 backdrop-blur-xl rounded-2xl border border-border-subtle shadow-2xl overflow-hidden"
+            className="relative w-full max-w-2xl bg-bg-secondary/95 backdrop-blur-xl rounded-2xl border border-border-default shadow-2xl overflow-hidden"
             initial={{ opacity: 0, y: -20, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -20, scale: 0.95 }}
