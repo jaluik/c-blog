@@ -17,6 +17,7 @@ import { githubAuthRoutes } from "./routes/auth/github";
 import { categoryRoutes } from "./routes/public/categories";
 import { commentRoutes } from "./routes/public/comments";
 import { publicPostRoutes } from "./routes/public/posts";
+import { searchRoutes } from "./routes/public/search";
 import { tagRoutes } from "./routes/public/tags";
 
 const app = fastify({ logger: true });
@@ -58,6 +59,7 @@ const start = async () => {
     await app.register(categoryRoutes, { prefix: "/api" });
     await app.register(tagRoutes, { prefix: "/api" });
     await app.register(commentRoutes, { prefix: "/api" });
+    await app.register(searchRoutes, { prefix: "/api" });
 
     // 认证路由
     await app.register(githubAuthRoutes, { prefix: "/api" });
