@@ -1,17 +1,27 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { Menu, Sparkles, X } from "lucide-react";
+import { Menu, Search, Sparkles, X } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { mainNav, siteConfig } from "@/config";
+import { useKeyboardShortcut } from "@/hooks/useKeyboardShortcut";
+import { SearchModal } from "./search/SearchModal";
 import { ThemeToggle } from "./ThemeToggle";
 
 export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
   const router = useRouter();
+
+  // Cmd+K shortcut
+  useKeyboardShortcut({
+    key: "k",
+    meta: true,
+    callback: () => setIsSearchOpen(true),
+  });
 
   useEffect(() => {
     const handleScroll = () => {
@@ -92,6 +102,19 @@ export function Navbar() {
               })}
             </nav>
 
+            {/* Search Button */}
+            <button
+              type="button"
+              onClick={() => setIsSearchOpen(true)}
+              className="relative px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 flex items-center gap-2 text-text-secondary hover:text-text-primary"
+            >
+              <Search className="w-4 h-4" />
+              <span className="hidden lg:inline">搜索</span>
+              <kbd className="hidden lg:inline-flex items-center px-1.5 py-0.5 rounded bg-text-primary/10 text-xs text-text-tertiary ml-1">
+                ⌘K
+              </kbd>
+            </button>
+
             {/* Theme Toggle */}
             <div className="hidden md:block">
               <ThemeToggle />
@@ -166,6 +189,24 @@ export function Navbar() {
                     </motion.div>
                   );
                 })}
+                {/* Mobile Search Button */}
+                <motion.div
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: mainNav.length * 0.05 }}
+                >
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIsMobileMenuOpen(false);
+                      setIsSearchOpen(true);
+                    }}
+                    className="w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-text-secondary hover:text-text-primary hover:bg-text-primary/5"
+                  >
+                    <Search className="w-5 h-5" />
+                    <span className="font-medium">搜索</span>
+                  </button>
+                </motion.div>
                 {/* Mobile Theme Toggle */}
                 <div className="pt-2 mt-2 border-t border-border-subtle">
                   <div className="flex items-center justify-between px-4 py-2">
@@ -178,6 +219,8 @@ export function Navbar() {
           </motion.div>
         )}
       </AnimatePresence>
+
+      <SearchModal isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
     </>
   );
 }
