@@ -24,7 +24,10 @@ export async function searchRoutes(app: FastifyInstance) {
     }
 
     try {
-      // Use pg_trgm for fuzzy search
+      // Set lower similarity threshold for better short keyword matching (especially Chinese)
+      await prisma.$executeRawUnsafe(`SET pg_trgm.similarity_threshold = 0.1`);
+
+      // Use pg_trgm for fuzzy search with ILIKE fallback for better Chinese support
       const results = await prisma.$queryRawUnsafe<any[]>(
         `
         SELECT
@@ -43,7 +46,10 @@ export async function searchRoutes(app: FastifyInstance) {
         FROM articles a
         LEFT JOIN categories c ON a."categoryId" = c.id
         WHERE a.status = 'published'
-          AND (a.title || ' ' || COALESCE(a.summary, '') || ' ' || a.content) % $1
+          AND (
+            (a.title || ' ' || COALESCE(a.summary, '') || ' ' || a.content) % $1
+            OR (a.title || COALESCE(a.summary, '') || a.content) ILIKE '%' || $1 || '%'
+          )
         ORDER BY
           (a.title || ' ' || COALESCE(a.summary, '') || ' ' || a.content) <-> $1 ASC,
           a."publishedAt" DESC NULLS LAST
@@ -60,7 +66,10 @@ export async function searchRoutes(app: FastifyInstance) {
         SELECT COUNT(*) as count
         FROM articles a
         WHERE a.status = 'published'
-          AND (a.title || ' ' || COALESCE(a.summary, '') || ' ' || a.content) % $1
+          AND (
+            (a.title || ' ' || COALESCE(a.summary, '') || ' ' || a.content) % $1
+            OR (a.title || COALESCE(a.summary, '') || a.content) ILIKE '%' || $1 || '%'
+          )
       `,
         keyword,
       );
