@@ -121,10 +121,8 @@ export default function PostsPage({ initialPosts, initialTags, availableYears }:
         month: selectedMonth,
         tag: selectedTag,
       });
-      if (response.success) {
-        setPosts(response.data);
-        setMeta(response.meta);
-      }
+      setPosts(response.data);
+      setMeta(response.meta);
     } catch (error) {
       console.error("Error fetching posts:", error);
     } finally {

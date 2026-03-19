@@ -8,6 +8,7 @@ const reservedPaths = [
   "categories",
   "tags",
   "about",
+  "search",
   "_next",
   "static",
   "favicon.ico",

@@ -35,7 +35,7 @@ interface PostPageProps {
 }
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const { data } = await api.posts.list(1, 100);
+  const { data } = await api.posts.list({ page: 1, pageSize: 100 });
   const paths = data.map((post) => ({
     params: { slug: post.slug },
   }));
