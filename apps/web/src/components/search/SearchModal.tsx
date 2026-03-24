@@ -70,7 +70,7 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
     <AnimatePresence>
       {isOpen && (
         <motion.div
-          className="fixed inset-0 z-50 flex items-start justify-center pt-[20vh] px-4"
+          className="fixed inset-0 z-50 flex items-start justify-center pt-[15vh] sm:pt-[20vh] px-4"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -100,7 +100,7 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
               />
             </div>
 
-            <div className="max-h-[50vh] overflow-y-auto">
+            <div className="max-h-[50vh] sm:max-h-[50vh] overflow-y-auto">
               {!query && (
                 <div className="p-8 text-center text-text-tertiary">
                   <FileSearch className="w-12 h-12 mx-auto mb-4 opacity-50" />
@@ -137,8 +137,8 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
               )}
             </div>
 
-            <div className="border-t border-border-subtle px-4 py-3 flex items-center justify-between text-xs text-text-tertiary">
-              <div className="flex items-center gap-4">
+            <div className="border-t border-border-subtle px-3 sm:px-4 py-2 sm:py-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-0 text-xs text-text-tertiary">
+              <div className="flex items-center gap-3 sm:gap-4">
                 <span className="flex items-center gap-1">
                   <Keyboard className="w-3 h-3" />
                   <kbd className="px-1.5 py-0.5 rounded bg-text-primary/10">↑↓</kbd>
@@ -148,7 +148,7 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
                   <kbd className="px-1.5 py-0.5 rounded bg-text-primary/10">↵</kbd>
                   <span>打开</span>
                 </span>
-                <span className="flex items-center gap-1">
+                <span className="hidden sm:inline-flex items-center gap-1">
                   <kbd className="px-1.5 py-0.5 rounded bg-text-primary/10">esc</kbd>
                   <span>关闭</span>
                 </span>

@@ -145,7 +145,7 @@ export function PostCard({ post, featured = false, index = 0 }: PostCardProps) {
             </div>
 
             {/* Title */}
-            <h3 className="font-display text-lg font-bold text-text-primary mb-2 group-hover:text-neon-cyan transition-colors line-clamp-2">
+            <h3 className="font-display text-lg sm:text-xl font-bold text-text-primary mb-2 group-hover:text-neon-cyan transition-colors line-clamp-2">
               {post.title}
             </h3>
 

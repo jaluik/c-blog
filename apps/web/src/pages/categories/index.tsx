@@ -80,23 +80,23 @@ export default function CategoriesPage({ categories }: CategoriesPageProps) {
   };
 
   return (
-    <div className="min-h-screen pt-24 pb-20">
+    <div className="min-h-screen pt-20 sm:pt-24 pb-16 sm:pb-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Page Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-16"
+          className="text-center mb-10 sm:mb-16"
         >
           <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full glass text-sm text-neon-purple mb-4">
             <Sparkles className="w-4 h-4" />
             内容分类
           </span>
-          <h1 className="font-display text-4xl sm:text-5xl font-bold text-text-primary mb-4">
+          <h1 className="font-display text-3xl sm:text-4xl md:text-5xl font-bold text-text-primary mb-4">
             文章分类
           </h1>
-          <p className="text-text-secondary max-w-2xl mx-auto">
+          <p className="text-text-secondary max-w-2xl mx-auto text-sm sm:text-base">
             浏览不同分类的文章，找到你感兴趣的技术话题
           </p>
         </motion.div>

@@ -41,9 +41,9 @@ export function RelatedPosts({ posts, currentPostId }: RelatedPostsProps) {
   };
 
   return (
-    <section className="mt-16">
-      <div className="flex items-center justify-between mb-8">
-        <h3 className="font-display text-2xl font-bold text-text-primary">相关文章</h3>
+    <section className="mt-12 sm:mt-16">
+      <div className="flex items-center justify-between mb-6 sm:mb-8">
+        <h3 className="font-display text-xl sm:text-2xl font-bold text-text-primary">相关文章</h3>
         <Link
           href="/"
           className="group flex items-center gap-1 text-sm text-neon-cyan hover:underline"

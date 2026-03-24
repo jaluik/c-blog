@@ -19,14 +19,14 @@ export function MarkdownContent({ content }: MarkdownContentProps) {
         rehypePlugins={[rehypeHighlight]}
         components={{
           h1: ({ children }) => (
-            <h1 className="font-display text-4xl font-bold mt-12 mb-6 text-text-primary">
+            <h1 className="font-display text-3xl sm:text-4xl font-bold mt-8 sm:mt-12 mb-4 sm:mb-6 text-text-primary">
               {children}
             </h1>
           ),
           h2: ({ children }) => (
             <h2
               id={String(children).toLowerCase().replace(/\s+/g, "-")}
-              className="font-display text-2xl font-bold mt-10 mb-4 text-text-primary border-b border-border-subtle pb-3 scroll-mt-24"
+              className="font-display text-xl sm:text-2xl font-bold mt-8 sm:mt-10 mb-3 sm:mb-4 text-text-primary border-b border-border-subtle pb-2 sm:pb-3 scroll-mt-24"
             >
               {children}
             </h2>
@@ -34,18 +34,18 @@ export function MarkdownContent({ content }: MarkdownContentProps) {
           h3: ({ children }) => (
             <h3
               id={String(children).toLowerCase().replace(/\s+/g, "-")}
-              className="font-display text-xl font-semibold mt-8 mb-3 text-text-primary scroll-mt-24"
+              className="font-display text-lg sm:text-xl font-semibold mt-6 sm:mt-8 mb-2 sm:mb-3 text-text-primary scroll-mt-24"
             >
               {children}
             </h3>
           ),
           h4: ({ children }) => (
-            <h4 className="font-display text-lg font-semibold mt-6 mb-2 text-text-secondary">
+            <h4 className="font-display text-base sm:text-lg font-semibold mt-4 sm:mt-6 mb-2 text-text-secondary">
               {children}
             </h4>
           ),
           p: ({ children }) => (
-            <p className="my-4 leading-relaxed text-text-secondary">{children}</p>
+            <p className="my-3 sm:my-4 leading-relaxed text-text-secondary">{children}</p>
           ),
           code: ({ children, className }) => {
             const isInline = !className;
@@ -78,7 +78,7 @@ export function MarkdownContent({ content }: MarkdownContentProps) {
             </a>
           ),
           blockquote: ({ children }) => (
-            <blockquote className="border-l-4 border-neon-cyan/50 bg-neon-cyan/5 pl-6 pr-4 py-4 my-6 rounded-r-xl">
+            <blockquote className="border-l-4 border-neon-cyan/50 bg-neon-cyan/5 pl-4 sm:pl-6 pr-3 sm:pr-4 py-3 sm:py-4 my-4 sm:my-6 rounded-r-xl">
               <div className="text-text-secondary italic">{children}</div>
             </blockquote>
           ),
@@ -103,7 +103,7 @@ export function MarkdownContent({ content }: MarkdownContentProps) {
             <img
               src={src}
               alt={alt}
-              className="rounded-xl my-6 shadow-lg border border-border-subtle"
+              className="rounded-lg sm:rounded-xl my-4 sm:my-6 shadow-lg border border-border-subtle"
             />
           ),
           strong: ({ children }) => (

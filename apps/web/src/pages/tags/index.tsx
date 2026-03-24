@@ -36,17 +36,17 @@ export default function TagsPage({ tags }: TagsPageProps) {
 
   // Calculate font size based on article count
   const getTagSize = (count: number) => {
-    if (sortedTags.length === 0) return "text-base";
+    if (sortedTags.length === 0) return "text-sm sm:text-base";
     const maxCount = Math.max(...sortedTags.map((t) => t.articleCount || 0));
     const minCount = Math.min(...sortedTags.map((t) => t.articleCount || 0));
     const range = maxCount - minCount || 1;
     const normalized = (count - minCount) / range;
 
-    if (normalized > 0.8) return "text-2xl px-6 py-3";
-    if (normalized > 0.6) return "text-xl px-5 py-2.5";
-    if (normalized > 0.4) return "text-lg px-4 py-2";
-    if (normalized > 0.2) return "text-base px-4 py-2";
-    return "text-sm px-3 py-1.5";
+    if (normalized > 0.8) return "text-lg sm:text-2xl px-4 sm:px-6 py-2 sm:py-3";
+    if (normalized > 0.6) return "text-base sm:text-xl px-3 sm:px-5 py-1.5 sm:py-2.5";
+    if (normalized > 0.4) return "text-sm sm:text-lg px-3 sm:px-4 py-1.5 sm:py-2";
+    if (normalized > 0.2) return "text-sm sm:text-base px-3 sm:px-4 py-1.5 sm:py-2";
+    return "text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-1.5";
   };
 
   const containerVariants = {
@@ -69,23 +69,23 @@ export default function TagsPage({ tags }: TagsPageProps) {
   };
 
   return (
-    <div className="min-h-screen pt-24 pb-20">
+    <div className="min-h-screen pt-20 sm:pt-24 pb-16 sm:pb-20">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Page Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-16"
+          className="text-center mb-10 sm:mb-16"
         >
           <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full glass text-sm text-neon-pink mb-4">
             <Sparkles className="w-4 h-4" />
             标签云
           </span>
-          <h1 className="font-display text-4xl sm:text-5xl font-bold text-text-primary mb-4">
+          <h1 className="font-display text-3xl sm:text-4xl md:text-5xl font-bold text-text-primary mb-4">
             文章标签
           </h1>
-          <p className="text-text-secondary max-w-2xl mx-auto">
+          <p className="text-text-secondary max-w-2xl mx-auto text-sm sm:text-base">
             通过标签快速定位感兴趣的技术话题，探索更多相关内容
           </p>
         </motion.div>
@@ -96,7 +96,7 @@ export default function TagsPage({ tags }: TagsPageProps) {
             variants={containerVariants}
             initial="hidden"
             animate="visible"
-            className="flex flex-wrap justify-center gap-3"
+            className="flex flex-wrap justify-center gap-2 sm:gap-3"
           >
             {sortedTags.map((tag) => (
               <motion.div key={tag.id} variants={itemVariants}>

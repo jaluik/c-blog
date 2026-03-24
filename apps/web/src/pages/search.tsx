@@ -132,7 +132,7 @@ export default function SearchPage({
         <meta name="description" content={query ? `"${query}" 的搜索结果` : "搜索博客文章"} />
       </Head>
 
-      <div className="min-h-screen pt-24 pb-20">
+      <div className="min-h-screen pt-20 sm:pt-24 pb-16 sm:pb-20">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -141,7 +141,7 @@ export default function SearchPage({
           >
             <Link
               href="/"
-              className="inline-flex items-center gap-2 text-text-secondary hover:text-neon-cyan transition-colors mb-6"
+              className="inline-flex items-center gap-2 text-sm sm:text-base text-text-secondary hover:text-neon-cyan transition-colors mb-4 sm:mb-6"
             >
               <ArrowLeft className="w-4 h-4" />
               返回首页
@@ -152,9 +152,11 @@ export default function SearchPage({
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.1 }}
-            className="mb-10"
+            className="mb-8 sm:mb-10"
           >
-            <h1 className="text-3xl sm:text-4xl font-bold text-text-primary mb-6">搜索文章</h1>
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-text-primary mb-4 sm:mb-6">
+              搜索文章
+            </h1>
 
             <form onSubmit={handleSearch} className="relative">
               <div className="absolute left-4 top-1/2 -translate-y-1/2 text-text-tertiary">
@@ -222,21 +224,21 @@ export default function SearchPage({
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.3, delay: index * 0.05 }}
-                  className="p-6 rounded-xl glass border border-border-subtle hover:border-neon-cyan/30 transition-all"
+                  className="p-4 sm:p-6 rounded-xl glass border border-border-subtle hover:border-neon-cyan/30 transition-all"
                 >
                   <Link href={`/posts/${post.slug}`}>
-                    <h2 className="text-xl font-semibold text-text-primary mb-2 hover:text-neon-cyan transition-colors">
+                    <h2 className="text-lg sm:text-xl font-semibold text-text-primary mb-2 hover:text-neon-cyan transition-colors">
                       {highlightText(post.title, query)}
                     </h2>
                   </Link>
 
                   {post.summary && (
-                    <p className="text-text-secondary mb-4 line-clamp-2">
+                    <p className="text-text-secondary mb-3 sm:mb-4 line-clamp-2 text-sm sm:text-base">
                       {highlightText(post.summary, query)}
                     </p>
                   )}
 
-                  <div className="flex flex-wrap items-center gap-4 text-sm text-text-tertiary">
+                  <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-xs sm:text-sm text-text-tertiary">
                     {post.publishedAt && (
                       <span>{new Date(post.publishedAt).toLocaleDateString("zh-CN")}</span>
                     )}

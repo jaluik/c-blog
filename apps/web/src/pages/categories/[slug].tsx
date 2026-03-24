@@ -98,7 +98,7 @@ export default function CategoryPage({ category, posts, meta }: CategoryPageProp
   }
 
   return (
-    <div className="min-h-screen pt-24 pb-20">
+    <div className="min-h-screen pt-20 sm:pt-24 pb-16 sm:pb-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Back Link */}
         <motion.div
@@ -108,7 +108,7 @@ export default function CategoryPage({ category, posts, meta }: CategoryPageProp
         >
           <Link
             href="/categories"
-            className="inline-flex items-center gap-2 text-text-secondary hover:text-neon-cyan transition-colors mb-8 group"
+            className="inline-flex items-center gap-2 text-sm sm:text-base text-text-secondary hover:text-neon-cyan transition-colors mb-6 sm:mb-8 group"
           >
             <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
             返回分类
@@ -120,22 +120,26 @@ export default function CategoryPage({ category, posts, meta }: CategoryPageProp
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.1 }}
-          className="mb-12"
+          className="mb-8 sm:mb-12"
         >
-          <div className="flex items-center gap-4 mb-4">
-            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-neon-cyan/20 to-neon-purple/20 flex items-center justify-center">
-              <FolderOpen className="w-8 h-8 text-neon-cyan" />
+          <div className="flex items-center gap-3 sm:gap-4 mb-4">
+            <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-xl sm:rounded-2xl bg-gradient-to-br from-neon-cyan/20 to-neon-purple/20 flex items-center justify-center">
+              <FolderOpen className="w-6 h-6 sm:w-8 sm:h-8 text-neon-cyan" />
             </div>
             <div>
-              <h1 className="font-display text-3xl sm:text-4xl font-bold text-text-primary">
+              <h1 className="font-display text-2xl sm:text-3xl md:text-4xl font-bold text-text-primary">
                 {category.name}
               </h1>
-              <p className="text-text-secondary mt-1">共 {meta.total} 篇文章</p>
+              <p className="text-text-secondary mt-1 text-sm sm:text-base">
+                共 {meta.total} 篇文章
+              </p>
             </div>
           </div>
 
           {category.description && (
-            <p className="text-text-secondary max-w-2xl">{category.description}</p>
+            <p className="text-text-secondary max-w-2xl text-sm sm:text-base">
+              {category.description}
+            </p>
           )}
         </motion.div>
 

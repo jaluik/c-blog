@@ -209,12 +209,12 @@ export default function PostPage({ post, prevPost, nextPost, allPosts }: PostPag
             )}
 
             {/* Title */}
-            <h1 className="font-display text-3xl sm:text-4xl lg:text-5xl font-bold text-text-primary mb-6 leading-tight">
+            <h1 className="font-display text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-text-primary mb-4 sm:mb-6 leading-tight">
               {post.title}
             </h1>
 
             {/* Meta Info */}
-            <div className="flex flex-wrap items-center gap-4 text-sm text-text-secondary">
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-text-secondary">
               <span className="flex items-center gap-1">
                 <Calendar className="w-4 h-4" />
                 {format(new Date(post.publishedAt || post.createdAt), "yyyy年MM月dd日", {
@@ -270,7 +270,7 @@ export default function PostPage({ post, prevPost, nextPost, allPosts }: PostPag
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="mt-16 pt-8 border-t border-white/10"
+            className="mt-12 sm:mt-16 pt-6 sm:pt-8 border-t border-white/10"
           >
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h3 className="font-display font-semibold text-text-primary flex items-center gap-2">
@@ -319,14 +319,16 @@ export default function PostPage({ post, prevPost, nextPost, allPosts }: PostPag
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="mt-16 pt-8 border-t border-white/10"
+            className="mt-12 sm:mt-16 pt-6 sm:pt-8 border-t border-white/10"
           >
-            <div className="flex items-center justify-between mb-8">
-              <h2 className="font-display text-2xl font-bold text-text-primary flex items-center gap-2">
+            <div className="flex items-center justify-between mb-6 sm:mb-8">
+              <h2 className="font-display text-xl sm:text-2xl font-bold text-text-primary flex items-center gap-2">
                 <MessageSquare className="w-6 h-6 text-neon-cyan" />
                 评论
                 {!isLoadingComments && comments.length > 0 && (
-                  <span className="text-lg text-text-tertiary">({comments.length})</span>
+                  <span className="text-base sm:text-lg text-text-tertiary">
+                    ({comments.length})
+                  </span>
                 )}
               </h2>
               <button
@@ -336,12 +338,14 @@ export default function PostPage({ post, prevPost, nextPost, allPosts }: PostPag
                 className="p-2 rounded-lg text-text-secondary hover:text-neon-cyan hover:bg-neon-cyan/10 transition-colors disabled:opacity-50"
                 title="刷新评论"
               >
-                <RefreshCw className={`w-5 h-5 ${isLoadingComments ? "animate-spin" : ""}`} />
+                <RefreshCw
+                  className={`w-4 h-4 sm:w-5 sm:h-5 ${isLoadingComments ? "animate-spin" : ""}`}
+                />
               </button>
             </div>
 
             {/* Comment Form */}
-            <div id="comment-form" className="mb-10">
+            <div id="comment-form" className="mb-8 sm:mb-10">
               <CommentForm
                 articleId={post.id}
                 editingComment={editingComment}
