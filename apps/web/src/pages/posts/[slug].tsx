@@ -99,6 +99,8 @@ export default function PostPage({ post, prevPost, nextPost, allPosts }: PostPag
   const [comments, setComments] = useState<Comment[]>([]);
   const [isLoadingComments, setIsLoadingComments] = useState(true);
   const [editingComment, setEditingComment] = useState<Comment | null>(null);
+  const [displayViewCount, setDisplayViewCount] = useState(post.viewCount);
+  const [_isLoadingViewCount, setIsLoadingViewCount] = useState(false);
 
   // 获取评论函数
   const fetchComments = useCallback(async () => {
@@ -123,6 +125,28 @@ export default function PostPage({ post, prevPost, nextPost, allPosts }: PostPag
   useEffect(() => {
     fetchComments();
   }, [fetchComments]);
+
+  // 获取实时阅读量
+  useEffect(() => {
+    setIsLoadingViewCount(true);
+
+    // Next.js 自动代理 /api 到后端
+    fetch(`/api/posts/${post.slug}/views`)
+      .then((res) => {
+        if (!res.ok) throw new Error("Failed to fetch");
+        return res.json();
+      })
+      .then((data) => {
+        if (data.success) {
+          setDisplayViewCount(data.data.viewCount);
+        }
+      })
+      .catch((err) => {
+        console.error("Failed to fetch view count:", err);
+        // 保持静态值，不中断用户体验
+      })
+      .finally(() => setIsLoadingViewCount(false));
+  }, [post.slug]);
 
   // 处理编辑评论
   const handleEditComment = (comment: Comment) => {
@@ -227,7 +251,7 @@ export default function PostPage({ post, prevPost, nextPost, allPosts }: PostPag
               </span>
               <span className="flex items-center gap-1">
                 <Eye className="w-4 h-4" />
-                {post.viewCount} 阅读
+                {displayViewCount} 阅读
               </span>
             </div>
 
