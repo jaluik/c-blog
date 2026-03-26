@@ -69,6 +69,7 @@ export async function publicPostRoutes(app: FastifyInstance) {
         ...p,
         tags: p.tags.map((t) => t.tag),
         commentCount: p._count.comments,
+        viewCount: p.viewCount,
         _count: undefined,
       })),
       meta: {
