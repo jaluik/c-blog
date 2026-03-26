@@ -1,6 +1,7 @@
 import type { Prisma } from "@prisma/client";
 import type { FastifyInstance } from "fastify";
 import { prisma } from "../../prisma";
+import { getClientIp, getViewCountConfig, hashIp } from "../../utils/viewCount";
 
 export async function publicPostRoutes(app: FastifyInstance) {
   // 获取文章列表
@@ -98,10 +99,61 @@ export async function publicPostRoutes(app: FastifyInstance) {
       return reply.status(404).send({ error: "Article not found" });
     }
 
-    // 增加浏览量
-    await prisma.article.update({
+    const config = getViewCountConfig();
+
+    // 防刷检查
+    if (config.enabled) {
+      const clientIp = getClientIp(request);
+      const ipHash = hashIp(clientIp);
+      const userAgent = request.headers["user-agent"] as string | undefined;
+
+      // 检查最近 24 小时内是否已记录
+      const cooldownDate = new Date();
+      cooldownDate.setHours(cooldownDate.getHours() - config.cooldownHours);
+
+      const existingLog = await prisma.viewLog.findFirst({
+        where: {
+          articleId: post.id,
+          ipHash,
+          viewedAt: { gte: cooldownDate },
+        },
+      });
+
+      if (!existingLog) {
+        // 新访问，增加计数并记录日志
+        await prisma.$transaction([
+          prisma.article.update({
+            where: { id: post.id },
+            data: { viewCount: { increment: 1 } },
+          }),
+          prisma.viewLog.create({
+            data: {
+              articleId: post.id,
+              ipHash,
+              userAgent,
+            },
+          }),
+          // 清理过期记录
+          prisma.viewLog.deleteMany({
+            where: {
+              articleId: post.id,
+              expiresAt: { lt: new Date() },
+            },
+          }),
+        ]);
+      }
+    } else {
+      // 防刷关闭，直接增加计数
+      await prisma.article.update({
+        where: { id: post.id },
+        data: { viewCount: { increment: 1 } },
+      });
+    }
+
+    // 重新获取最新的 viewCount（事务可能已更新）
+    const updatedPost = await prisma.article.findUnique({
       where: { id: post.id },
-      data: { viewCount: { increment: 1 } },
+      select: { viewCount: true },
     });
 
     return {
@@ -110,6 +162,7 @@ export async function publicPostRoutes(app: FastifyInstance) {
         ...post,
         tags: post.tags.map((t) => t.tag),
         commentCount: post._count.comments,
+        viewCount: updatedPost?.viewCount ?? post.viewCount,
         _count: undefined,
       },
     };
