@@ -33,6 +33,19 @@ model Article {
   @@map("articles")
 }
 
+model ViewLog {
+  id        Int      @id @default(autoincrement())
+  articleId Int
+  ipHash    String   // IP 哈希（隐私保护）
+  userAgent String?  // 浏览器标识
+  viewedAt  DateTime @default(now())
+  expiresAt DateTime @default(dbgenerated("NOW() + INTERVAL '24 hours'"))
+
+  @@index([articleId, ipHash])  // 用于查找特定用户访问记录
+  @@index([expiresAt])          // 用于清理过期数据
+  @@map("view_logs")
+}
+
 model Category {
   id          Int       @id @default(autoincrement())
   name        String
